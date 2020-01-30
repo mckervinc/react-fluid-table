@@ -1,11 +1,17 @@
-import React, { useRef, useContext, useState, useCallback } from 'react';
+import React, {
+  useRef,
+  useContext,
+  useState,
+  useCallback,
+  useLayoutEffect
+} from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { VariableSizeList } from 'react-window';
 import PropTypes from 'prop-types';
 import Header from './Header';
 import RowWrapper from './RowWrapper';
 import { TableContextProvider, TableContext } from './TableContext';
-import { randomString } from './util';
+import { randomString, findRowByUuidAndKey } from './util';
 
 const DEFAULT_ROW_HEIGHT = 37;
 const NO_COMPONENT = { offsetHeight: 0 };
@@ -25,8 +31,10 @@ const ListComponent = ({
   subComponent
 }) => {
   // hooks
+  const rowSizes = useRef({});
   const listRef = useRef(null);
-  const calcRef = useRef(null);
+  const tableRef = useRef(null);
+  const timeoutRef = useRef(null);
   const resetIndexRef = useRef(Infinity);
   const tableContext = useContext(TableContext);
 
@@ -49,18 +57,18 @@ const ListComponent = ({
       }
 
       if (index < resetIndexRef.current) {
-        if (calcRef.current) {
-          window.clearTimeout(calcRef.current);
+        if (timeoutRef.current) {
+          window.clearTimeout(timeoutRef.current);
         }
 
         resetIndexRef.current = index;
-        calcRef.current = window.setTimeout(() => {
+        timeoutRef.current = window.setTimeout(() => {
           resetIndexRef.current = Infinity;
           listRef.current.resetAfterIndex(index, forceUpdate);
-        }, 40);
+        }, 50);
       }
     },
-    [listRef]
+    [listRef, timeoutRef, resetIndexRef]
   );
 
   const calculateHeight = useCallback(
@@ -68,30 +76,34 @@ const ListComponent = ({
       const dataIndex =
         typeof queryParam === 'number' ? queryParam : optionalDataIndex;
       const key = generateKeyFromRow(data[dataIndex], dataIndex);
-      const row =
-        typeof queryParam === 'number'
-          ? document.querySelector(`[data-row-uuid='${uuid}-${key}'`)
-          : queryParam;
+      const row = typeof queryParam === 'number' ? findRowByUuidAndKey(uuid, key) : queryParam;
 
       if (!row) {
-        return rowHeight || DEFAULT_ROW_HEIGHT;
+        return rowHeight || rowSizes.current[dataIndex] || DEFAULT_ROW_HEIGHT;
       }
 
       const isExpanded = expanded[key];
       const rowComponent = row.children[0] || NO_COMPONENT;
       const subComponent = isExpanded ? row.children[1] : NO_COMPONENT;
 
-      return (
-        (rowHeight || rowComponent.offsetHeight) + subComponent.offsetHeight
-      );
+      const result =
+        (rowHeight || rowComponent.offsetHeight) + subComponent.offsetHeight;
+
+      rowSizes.current[dataIndex] = result;
+      return result;
     },
-    [uuid, data, rowHeight, expanded, generateKeyFromRow]
+    [uuid, data, rowHeight, expanded, rowSizes, generateKeyFromRow]
   );
+
+  useLayoutEffect(() => {
+    listRef.current.resetAfterIndex(0);
+  }, [listRef]);
 
   return (
     <VariableSizeList
-      ref={listRef}
       className={`react-fluid-table ${className || ''}`}
+      ref={listRef}
+      innerRef={tableRef}
       innerElementType={Header}
       height={height}
       width={width}
@@ -105,12 +117,13 @@ const ListComponent = ({
       itemSize={index => (!index ? 32 : calculateHeight(index - 1))}
       itemData={{
         ...metaData,
+        rows: data,
         rowHeight,
         generateKeyFromRow,
         clearSizeCache,
         calculateHeight,
         subComponent,
-        rows: data
+        tableRef
       }}
     >
       {RowWrapper}
