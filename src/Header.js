@@ -41,16 +41,16 @@ const ColumnCell = ({ column, pixelWidth }) => {
   };
 
   return (
-    <div className='header-cell' onClick={onClick} style={style}>
-      <div className='header-cell-text'>{column.name}</div>
+    <div className="header-cell" onClick={onClick} style={style}>
+      <div className="header-cell-text">{column.name}</div>
       {column.key !== col ? null : (
-        <span className='header-cell-arrow'>{dir === 'ASC' ? '▲' : '▼'}</span>
+        <span className="header-cell-arrow">{dir === 'ASC' ? '▲' : '▼'}</span>
       )}
     </div>
   );
 };
 
-const HeaderRow = () => {
+const HeaderRow = ({ tableRef }) => {
   // hooks
   const tableContext = useContext(TableContext);
   const [colWidths] = useState(
@@ -59,8 +59,9 @@ const HeaderRow = () => {
 
   const { uuid, columns, minColumnWidth } = tableContext.state;
   const { fixedWidth, remainingCols } = colWidths;
+  const table = tableRef ? tableRef.current || uuid : uuid;
   const pixelWidth = useCellResize(
-    `[data-uuid='${uuid}']`,
+    table,
     remainingCols,
     fixedWidth,
     minColumnWidth,
@@ -68,7 +69,7 @@ const HeaderRow = () => {
   );
 
   return (
-    <div className='react-fluid-table-header'>
+    <div className="react-fluid-table-header">
       {columns.map(c => (
         <ColumnCell key={c.key} column={c} pixelWidth={pixelWidth} />
       ))}
@@ -82,10 +83,10 @@ const Header = forwardRef(({ children, ...rest }, ref) => {
 
   return (
     <div id={id} ref={ref} data-uuid={uuid} {...rest}>
-      <div className='sticky-header'>
-        <HeaderRow />
+      <div className="sticky-header">
+        <HeaderRow tableRef={ref} />
       </div>
-      <div className='row-wrapper'>{children}</div>
+      <div className="row-wrapper">{children}</div>
     </div>
   );
 });
