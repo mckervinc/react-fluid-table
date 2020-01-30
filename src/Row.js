@@ -5,13 +5,13 @@ import React, {
   useEffect,
   useLayoutEffect,
   useCallback
-} from "react";
-import PropTypes from "prop-types";
-import { findColumnWidthConstants } from "./util";
-import { useCellResize } from "./useCellResize";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
-import { TableContext } from "./TableContext";
+} from 'react';
+import PropTypes from 'prop-types';
+import { findColumnWidthConstants } from './util';
+import { useCellResize } from './useCellResize';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
+import { TableContext } from './TableContext';
 
 // base scroll width
 const NO_PARENT = {
@@ -19,42 +19,50 @@ const NO_PARENT = {
 };
 
 const Row = ({
-  style,
   row,
   index,
+  style,
+  tableRef,
   rowHeight,
-  generateKeyFromRow,
+  subComponent,
   clearSizeCache,
   calculateHeight,
-  subComponent
+  generateKeyFromRow
 }) => {
   // hooks
   const rowRef = useRef(null);
   const resizeRef = useRef(null);
   const tableContext = useContext(TableContext);
   const [useRowWidth, setUseRowWidth] = useState(window.innerWidth > 1024);
-  const [colWidths] = useState(findColumnWidthConstants(tableContext.state.columns)); // variables
+  const [colWidths] = useState(
+    findColumnWidthConstants(tableContext.state.columns)
+  );
 
+  // variables
   const { dispatch } = tableContext;
-  const { uuid, columns, expanded, minColumnWidth } = tableContext.state; // calculate pixel width for remaining cols
+
+  // calculate pixel width for remaining cols
+  const { uuid, columns, expanded, minColumnWidth } = tableContext.state;
 
   const { fixedWidth, remainingCols } = colWidths;
   const pixelWidth = useCellResize(
-    `[data-uuid='${uuid}']`,
+    tableRef.current || uuid,
     remainingCols,
     fixedWidth,
     minColumnWidth,
     true
-  ); // key
+  );
 
+  // key
   const key = generateKeyFromRow(row, index);
-  const rowUuid = `${uuid}-${key}`; // expanded
+  const rowUuid = `${uuid}-${key}`;
 
-  // function(s)
+  // expanded
   const isExpanded = Boolean(expanded[key]);
 
+  // function(s)
   const onExpanderClick = () => {
-    dispatch({ type: "updateExpanded", key: generateKeyFromRow(row, index) });
+    dispatch({ type: 'updateExpanded', key: generateKeyFromRow(row, index) });
     clearSizeCache(index);
   };
   const onWindowResize = useCallback(() => {
@@ -63,11 +71,10 @@ const Row = ({
     }
 
     resizeRef.current = window.setTimeout(() => {
-      const { parentElement } =
-        document.querySelector(`[data-uuid='${uuid}']`) || NO_PARENT;
+      const { parentElement } = tableRef.current || NO_PARENT;
       setUseRowWidth(parentElement.scrollWidth <= parentElement.clientWidth);
     }, 50);
-  }, [resizeRef, uuid]);
+  }, [resizeRef, uuid, tableRef]);
 
   // cell renderer
   const cellRenderer = c => {
@@ -89,20 +96,20 @@ const Row = ({
     }
 
     const element = rowRef.current;
-    const height = element.offsetHeight;
+    const height = element.clientHeight;
     const correctHeight = calculateHeight(rowRef.current, index);
-    if (Math.abs(height - correctHeight) > 1) {
+    if (height !== correctHeight) {
       clearSizeCache(index, false);
     }
   }, [rowRef, calculateHeight, index, clearSizeCache]);
 
   useEffect(() => {
-    window.addEventListener("resize", onWindowResize);
+    window.addEventListener('resize', onWindowResize);
     return () => {
       if (resizeRef.current) {
         window.clearTimeout(resizeRef.current);
       }
-      window.removeEventListener("resize", onWindowResize);
+      window.removeEventListener('resize', onWindowResize);
     };
   }, [onWindowResize, resizeRef]);
 
@@ -131,7 +138,7 @@ const Row = ({
         })}
       </div>
       {!subComponent ? null : (
-        <div style={{ display: isExpanded ? undefined : "none" }}>
+        <div style={{ display: isExpanded ? undefined : 'none' }}>
           {subComponent({ row, index, isExpanded, clearSizeCache })}        
         </div>
       )}
