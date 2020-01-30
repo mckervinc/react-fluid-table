@@ -49,4 +49,8 @@ export const findColumnWidthConstants = columns => {
 export const randomString = (num = 5) =>
   Math.random()
     .toString(36)
-    .substring(2, num);
+    .substr(2, num);
+
+export const findTableByUuid = uuid => document.querySelector(`[data-uuid='${uuid}']`);
+
+export const findRowByUuidAndKey = (uuid, key) => document.querySelector(`[data-row-uuid='${uuid}-${key}']`)
