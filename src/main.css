@@ -1,0 +1,66 @@
+.react-fluid-table {
+  background-color: white;
+  border-bottom: 1px solid #ececec;
+}
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 32px;
+  z-index: 2;
+}
+
+.row-wrapper {
+  display: inline-block;
+}
+
+.react-fluid-table-header {
+  height: 32px;
+  display: flex;
+  background-color: #dedede;
+}
+
+.header-cell {
+  display: flex;
+  padding: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-cell-text,
+.header-cell-arrow {
+  font-family: Helvetica;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #7d7d7d;
+}
+
+.header-cell-arrow {
+  padding-left: 4px;
+}
+
+.react-fluid-table-row {
+  border-bottom: 1px solid #ececec;
+}
+
+.react-fluid-table-row:last-child {
+  border-bottom: none;
+}
+
+.row-container {
+  display: flex;
+}
+
+.cell {
+  display: flex;
+  position: relative;
+  align-items: center;
+  padding: 8px;
+  will-change: width, min-width;
+}
