@@ -19,7 +19,7 @@ const TextStyle = styled.div`
   text-overflow: ellipsis;
 `
 
-const data = _.range(1, 31).map(i => ({
+const data = _.range(1, 3100).map(i => ({
   id: i,
   firstName: faker.name.firstName(),
   lastName: faker.name.lastName(),
@@ -57,6 +57,7 @@ const App = () => {
       data={data}
       columns={columns}
       tableHeight={400}
+
       rowCount={data.length}
       itemKey={row => row.id}
     />

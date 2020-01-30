@@ -91,8 +91,8 @@ const Row = ({
     const element = rowRef.current;
     const height = element.offsetHeight;
     const correctHeight = calculateHeight(rowRef.current, index);
-    if (height !== correctHeight) {
-      clearSizeCache(index);
+    if (Math.abs(height - correctHeight) > 1) {
+      clearSizeCache(index, false);
     }
   }, [rowRef, calculateHeight, index, clearSizeCache]);
 
@@ -129,7 +129,7 @@ const Row = ({
             </div>
           );
         })}
-      </div> 
+      </div>
       {!subComponent ? null : (
         <div style={{ display: isExpanded ? undefined : "none" }}>
           {subComponent({ row, index, isExpanded, clearSizeCache })}        

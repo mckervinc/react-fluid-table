@@ -26,6 +26,8 @@ const ListComponent = ({
 }) => {
   // hooks
   const listRef = useRef(null);
+  const calcRef = useRef(null);
+  const resetIndexRef = useRef(Infinity);
   const tableContext = useContext(TableContext);
 
   // variables
@@ -42,8 +44,20 @@ const ListComponent = ({
 
   const clearSizeCache = useCallback(
     (index, forceUpdate = true) => {
-      if (listRef.current) {
-        listRef.current.resetAfterIndex(index, forceUpdate);
+      if (!listRef.current) {
+        return;
+      }
+
+      if (index < resetIndexRef.current) {
+        if (calcRef.current) {
+          window.clearTimeout(calcRef.current);
+        }
+
+        resetIndexRef.current = index;
+        calcRef.current = window.setTimeout(() => {
+          resetIndexRef.current = Infinity;
+          listRef.current.resetAfterIndex(index, forceUpdate);
+        }, 40);
       }
     },
     [listRef]
