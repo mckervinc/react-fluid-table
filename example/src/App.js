@@ -1,9 +1,9 @@
-import React from 'react'
-import _ from 'lodash'
-import faker from 'faker'
-import styled from 'styled-components'
+import React from "react";
+import _ from "lodash";
+import faker from "faker";
+import styled from "styled-components";
 
-import { Table } from 'react-fluid-table'
+import { Table } from "react-fluid-table";
 
 const TextStyle = styled.div`
   font-family: Helvetica;
@@ -17,39 +17,46 @@ const TextStyle = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-`
+`;
 
 const data = _.range(1, 3100).map(i => ({
   id: i,
   firstName: faker.name.firstName(),
   lastName: faker.name.lastName(),
   email: faker.internet.email()
-}))
+}));
 
 const columns = [
   {
-    key: '',
-    width: 33
+    key: "id",
+    name: "Id",
+    width: 50,
+    cell: row => <TextStyle>{row.id - 1}</TextStyle>
   },
   {
-    key: 'firstName',
-    name: 'First',
+    key: "firstName",
+    name: "First",
     width: 120,
     cell: row => <TextStyle>{row.firstName}</TextStyle>
   },
   {
-    key: 'lastName',
-    name: 'Last',
+    key: "lastName",
+    name: "Last",
     width: 120,
     cell: row => <TextStyle>{row.lastName}</TextStyle>
   },
   {
-    key: 'email',
-    name: 'Email',
+    key: "email",
+    name: "Email",
     width: 250,
     cell: row => <TextStyle>{row.email}</TextStyle>
+  },
+  {
+    key: "streetAddress",
+    name: "Street",
+    cell: () => <input />
   }
-]
+];
 
 const App = () => {
   return (
@@ -57,10 +64,9 @@ const App = () => {
       data={data}
       columns={columns}
       tableHeight={400}
-
       rowCount={data.length}
       itemKey={row => row.id}
     />
-  )
-}
-export default App
+  );
+};
+export default App;
