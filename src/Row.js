@@ -18,6 +18,7 @@ const Row = ({
 }) => {
   // hooks
   const rowRef = useRef(null);
+  const expandedCalledRef = useRef(false);
   const tableContext = useContext(TableContext);
 
   // variables
@@ -34,7 +35,7 @@ const Row = ({
   // function(s)
   const onExpanderClick = () => {
     dispatch({ type: "updateExpanded", key: generateKeyFromRow(row, index) });
-    clearSizeCache(index);
+    expandedCalledRef.current = true;
   };
 
   // cell renderer
@@ -42,6 +43,7 @@ const Row = ({
     if (c.expander) {
       return (
         <FontAwesomeIcon
+          className="expander"
           icon={isExpanded ? faMinusCircle : faPlusCircle}
           onClick={onExpanderClick}
         />
@@ -52,17 +54,23 @@ const Row = ({
   };
 
   useLayoutEffect(() => {
-    if (!rowRef.current) {
-      return;
+    if (expandedCalledRef.current) {
+      clearSizeCache(index, true);
+    }
+  }, [isExpanded, index, clearSizeCache, expandedCalledRef]);
+
+  useLayoutEffect(() => {
+    if (rowRef.current && !expandedCalledRef.current) {
+      const element = rowRef.current;
+      const height = element.clientHeight;
+      const correctHeight = calculateHeight(rowRef.current, index);
+      if (height !== correctHeight) {
+        clearSizeCache(index);
+      }
     }
 
-    const element = rowRef.current;
-    const height = element.clientHeight;
-    const correctHeight = calculateHeight(rowRef.current, index);
-    if (height !== correctHeight) {
-      clearSizeCache(index);
-    }
-  }, [rowRef, calculateHeight, index, clearSizeCache]);
+    expandedCalledRef.current = false;
+  }, [rowRef, index, isExpanded, clearSizeCache, calculateHeight, expandedCalledRef]);
 
   return (
     <div
@@ -86,8 +94,8 @@ const Row = ({
         })}
       </div>
       {!subComponent ? null : (
-        <div style={{ display: isExpanded ? undefined : "none" }}>
-          {subComponent({ row, index, isExpanded, clearSizeCache })}        
+        <div className={isExpanded ? undefined : "hidden"}>
+          {subComponent({ row, index, isExpanded, clearSizeCache })}
         </div>
       )}
     </div>

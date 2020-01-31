@@ -1,6 +1,10 @@
 .react-fluid-table {
   background-color: white;
-  border-bottom: 1px solid #ececec;
+  border: 1px solid #ececec;
+}
+
+.react-fluid-table-container {
+  will-change: height;
 }
 
 .sticky-header {
@@ -14,7 +18,6 @@
 
 .row-wrapper {
   display: inline-block;
-  will-change: width;
 }
 
 .react-fluid-table-header {
@@ -34,7 +37,6 @@
   padding: 8px;
   text-overflow: ellipsis;
   white-space: nowrap;
-  will-change: width, min-width, cursor;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -60,7 +62,6 @@
 }
 
 .react-fluid-table-row {
-  will-change: width;
   border-bottom: 1px solid #ececec;
 }
 
@@ -86,8 +87,15 @@
   -ms-flex-align: center;
   align-items: center;
   padding: 8px;
-  will-change: width, min-width;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+}
+
+.expander {
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
 }

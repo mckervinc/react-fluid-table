@@ -59,7 +59,7 @@ const ListComponent = ({
   );
 
   const clearSizeCache = useCallback(
-    (index, forceUpdate = true) => {
+    (dataIndex, forceUpdate = false) => {
       if (!listRef.current) {
         return;
       }
@@ -68,12 +68,18 @@ const ListComponent = ({
         window.clearTimeout(timeoutRef.current);
       }
 
+      const index = dataIndex + 1;
+      if (forceUpdate) {
+        listRef.current.resetAfterIndex(index);
+        return;
+      }
+
       resetIndexRef.current = Math.min(index, resetIndexRef.current);
       timeoutRef.current = window.setTimeout(() => {
         const resetNumber = resetIndexRef.current;
         resetIndexRef.current = Infinity;
-        listRef.current.resetAfterIndex(resetNumber, forceUpdate);
-      }, 50);
+        listRef.current.resetAfterIndex(resetNumber);
+      }, 75);
     },
     [listRef, timeoutRef, resetIndexRef]
   );
@@ -105,7 +111,7 @@ const ListComponent = ({
     }
   }, [tableRef, remainingCols, fixedWidth, minColumnWidth, pixelWidth]);
 
-  const onWindowResize = useCallback(() => {
+  const shouldUseRowWidth = useCallback(() => {
     if (resizeRef.current) {
       window.clearTimeout(resizeRef.current);
     }
@@ -130,30 +136,26 @@ const ListComponent = ({
   }, [listRef]);
 
   useLayoutEffect(() => {
-    if (!tableRef.current) {
-      return;
+    if (tableRef.current) {
+      pixelWidthHelper();
     }
-
-    pixelWidthHelper();
   }, [pixelWidth, pixelWidthHelper]);
 
   useEffect(() => {
     if (!tableRef.current) {
-      return;
+      setUseRowWidth(tableRef.current.scrollWidth <= tableRef.current.clientWidth);
     }
-
-    setUseRowWidth(tableRef.current.scrollWidth <= tableRef.current.clientWidth);
   }, [tableRef]);
 
   useEffect(() => {
-    window.addEventListener("resize", onWindowResize);
+    window.addEventListener("resize", shouldUseRowWidth);
     return () => {
       if (resizeRef.current) {
         window.clearTimeout(resizeRef.current);
       }
-      window.removeEventListener("resize", onWindowResize);
+      window.removeEventListener("resize", shouldUseRowWidth);
     };
-  }, [onWindowResize, resizeRef]);
+  }, [shouldUseRowWidth, resizeRef]);
 
   useEffect(() => {
     window.addEventListener("resize", calculatePixelWidth);

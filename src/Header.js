@@ -82,7 +82,7 @@ const Header = forwardRef(({ children, ...rest }, ref) => {
   const width = scrollWidth <= clientWidth ? "100%" : undefined;
 
   return (
-    <div id={id} ref={ref} data-uuid={uuid} {...rest}>
+    <div id={id} ref={ref} data-uuid={uuid} className="react-fluid-table-container" {...rest}>
       <div className="sticky-header">
         <div className="row-wrapper" style={{ width }}>
           <HeaderRow pixelWidth={pixelWidth} />
