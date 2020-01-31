@@ -12,8 +12,7 @@ export const calculateColumnWidth = (
   if (!element) return [0, 0];
   const n = Math.max(numColumns, 1);
   const parent = element.parentElement;
-  const totalWidth =
-    element.offsetWidth - (subtractScrollbar && scrollbarVisible(parent) ? 15 : 0);
+  const totalWidth = element.offsetWidth - (subtractScrollbar && scrollbarVisible(parent) ? 15 : 0);
   const freeSpace = Math.max(totalWidth - fixedColumnWidths, 0);
   const baseWidth = Math.floor(freeSpace / n);
   const remaining = Math.floor(freeSpace % n);
@@ -53,4 +52,5 @@ export const randomString = (num = 5) =>
 
 export const findTableByUuid = uuid => document.querySelector(`[data-uuid='${uuid}']`);
 
-export const findRowByUuidAndKey = (uuid, key) => document.querySelector(`[data-row-uuid='${uuid}-${key}']`)
+export const findRowByUuidAndKey = (uuid, key) =>
+  document.querySelector(`[data-row-uuid='${uuid}-${key}']`);

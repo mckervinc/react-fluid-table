@@ -1,3 +1,3 @@
-import './main.css';
+import "./main.css";
 
-export { default as Table } from './Table';
+export { default as Table } from "./Table";

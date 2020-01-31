@@ -5,13 +5,13 @@ import React, {
   useEffect,
   useLayoutEffect,
   useCallback
-} from 'react';
-import PropTypes from 'prop-types';
-import { findColumnWidthConstants } from './util';
-import { useCellResize } from './useCellResize';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
-import { TableContext } from './TableContext';
+} from "react";
+import PropTypes from "prop-types";
+import { findColumnWidthConstants } from "./util";
+import { useCellResize } from "./useCellResize";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
+import { TableContext } from "./TableContext";
 
 // base scroll width
 const NO_PARENT = {
@@ -34,9 +34,7 @@ const Row = ({
   const resizeRef = useRef(null);
   const tableContext = useContext(TableContext);
   const [useRowWidth, setUseRowWidth] = useState(true);
-  const [colWidths] = useState(
-    findColumnWidthConstants(tableContext.state.columns)
-  );
+  const [colWidths] = useState(findColumnWidthConstants(tableContext.state.columns));
 
   // variables
   const { dispatch } = tableContext;
@@ -62,7 +60,7 @@ const Row = ({
 
   // function(s)
   const onExpanderClick = () => {
-    dispatch({ type: 'updateExpanded', key: generateKeyFromRow(row, index) });
+    dispatch({ type: "updateExpanded", key: generateKeyFromRow(row, index) });
     clearSizeCache(index);
   };
   const onWindowResize = useCallback(() => {
@@ -104,12 +102,12 @@ const Row = ({
   }, [rowRef, calculateHeight, index, clearSizeCache]);
 
   useEffect(() => {
-    window.addEventListener('resize', onWindowResize);
+    window.addEventListener("resize", onWindowResize);
     return () => {
       if (resizeRef.current) {
         window.clearTimeout(resizeRef.current);
       }
-      window.removeEventListener('resize', onWindowResize);
+      window.removeEventListener("resize", onWindowResize);
     };
   }, [onWindowResize, resizeRef]);
 
@@ -128,10 +126,7 @@ const Row = ({
       data-row-uuid={rowUuid}
       style={{ ...style, width: useRowWidth ? style.width : undefined }}
     >
-      <div
-        className="row-container"
-        style={{ height: rowHeight ? `${rowHeight}px` : undefined }}
-      >
+      <div className="row-container" style={{ height: rowHeight ? `${rowHeight}px` : undefined }}>
         {columns.map(c => {
           const width = Math.max(c.width || pixelWidth, c.minWidth || 0);
           const style = {
@@ -146,7 +141,7 @@ const Row = ({
         })}
       </div>
       {!subComponent ? null : (
-        <div style={{ display: isExpanded ? undefined : 'none' }}>
+        <div style={{ display: isExpanded ? undefined : "none" }}>
           {subComponent({ row, index, isExpanded, clearSizeCache })}        
         </div>
       )}

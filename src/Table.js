@@ -1,17 +1,11 @@
-import React, {
-  useRef,
-  useContext,
-  useState,
-  useCallback,
-  useLayoutEffect
-} from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
-import { VariableSizeList } from 'react-window';
-import PropTypes from 'prop-types';
-import Header from './Header';
-import RowWrapper from './RowWrapper';
-import { TableContextProvider, TableContext } from './TableContext';
-import { randomString, findRowByUuidAndKey } from './util';
+import React, { useRef, useContext, useState, useCallback, useLayoutEffect } from "react";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { VariableSizeList } from "react-window";
+import PropTypes from "prop-types";
+import Header from "./Header";
+import RowWrapper from "./RowWrapper";
+import { TableContextProvider, TableContext } from "./TableContext";
+import { randomString, findRowByUuidAndKey } from "./util";
 
 const DEFAULT_ROW_HEIGHT = 37;
 const NO_COMPONENT = { offsetHeight: 0 };
@@ -73,10 +67,9 @@ const ListComponent = ({
 
   const calculateHeight = useCallback(
     (queryParam, optionalDataIndex = null) => {
-      const dataIndex =
-        typeof queryParam === 'number' ? queryParam : optionalDataIndex;
+      const dataIndex = typeof queryParam === "number" ? queryParam : optionalDataIndex;
       const key = generateKeyFromRow(data[dataIndex], dataIndex);
-      const row = typeof queryParam === 'number' ? findRowByUuidAndKey(uuid, key) : queryParam;
+      const row = typeof queryParam === "number" ? findRowByUuidAndKey(uuid, key) : queryParam;
 
       if (!row) {
         return rowHeight || rowSizes.current[dataIndex] || DEFAULT_ROW_HEIGHT;
@@ -86,8 +79,7 @@ const ListComponent = ({
       const rowComponent = row.children[0] || NO_COMPONENT;
       const subComponent = isExpanded ? row.children[1] : NO_COMPONENT;
 
-      const result =
-        (rowHeight || rowComponent.offsetHeight) + subComponent.offsetHeight;
+      const result = (rowHeight || rowComponent.offsetHeight) + subComponent.offsetHeight;
 
       rowSizes.current[dataIndex] = result;
       return result;
@@ -101,7 +93,7 @@ const ListComponent = ({
 
   return (
     <VariableSizeList
-      className={`react-fluid-table ${className || ''}`}
+      className={`react-fluid-table ${className || ""}`}
       ref={listRef}
       innerRef={tableRef}
       innerElementType={Header}
@@ -145,7 +137,7 @@ const Table = ({
   // TODO: do all prop validation here
   const disableHeight = tableHeight !== undefined;
   const disableWidth = tableWidth !== undefined;
-  const [uuid] = useState(`${id || 'data-table'}-${randomString()}`);
+  const [uuid] = useState(`${id || "data-table"}-${randomString()}`);
 
   return (
     <TableContextProvider
@@ -164,11 +156,7 @@ const Table = ({
       ) : (
         <AutoSizer disableHeight={disableHeight} disableWidth={disableWidth}>
           {({ height, width }) => (
-            <ListComponent
-              height={tableHeight || height}
-              width={tableWidth || width}
-              {...rest}
-            />
+            <ListComponent height={tableHeight || height} width={tableWidth || width} {...rest} />
           )}
         </AutoSizer>
       )}

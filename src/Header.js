@@ -1,8 +1,8 @@
-import React, { forwardRef, useState, useContext } from 'react';
-import PropTypes from 'prop-types';
-import { useCellResize } from './useCellResize';
-import { findColumnWidthConstants } from './util';
-import { TableContext } from './TableContext';
+import React, { forwardRef, useState, useContext } from "react";
+import PropTypes from "prop-types";
+import { useCellResize } from "./useCellResize";
+import { findColumnWidthConstants } from "./util";
+import { TableContext } from "./TableContext";
 
 const NO_REF = {
   scrollWidth: 0,
@@ -16,30 +16,34 @@ const ColumnCell = ({ column, pixelWidth }) => {
   const width = Math.max(column.width || pixelWidth, column.minWidth || 0);
 
   const style = {
-    cursor: column.sortable ? 'pointer' : undefined,
+    cursor: column.sortable ? "pointer" : undefined,
     width: width ? `${width}px` : undefined,
     minWidth: width ? `${width}px` : undefined
   };
 
   const onClick = () => {
-    if (!column.sortable) return; // change the state of the sorted column
+    // change the state of the sorted column
+    if (!column.sortable) return;
 
+    // sorting the same column
     const oldCol = col;
     const oldDir = dir;
-    let newDir = 'ASC';
-    let newCol = column.key; // sorting the same column
+    let newDir = "ASC";
+    let newCol = column.key;
 
     if (oldCol === newCol) {
-      newDir = !oldDir ? 'ASC' : oldDir === 'ASC' ? 'DESC' : null;
+      newDir = !oldDir ? "ASC" : oldDir === "ASC" ? "DESC" : null;
       newCol = !newDir ? null : newCol;
-    } // only changes the arrow
+    }
 
+    // only changes the arrow
     dispatch({
-      type: 'updateSortedColumn',
+      type: "updateSortedColumn",
       col: newCol,
       dir: newDir
-    }); // onSort actually changes the data
+    });
 
+    // onSort actually changes the data
     if (onSort) {
       onSort(newCol, newDir);
     }
@@ -49,7 +53,7 @@ const ColumnCell = ({ column, pixelWidth }) => {
     <div className="header-cell" onClick={onClick} style={style}>
       <div className="header-cell-text">{column.name}</div>
       {column.key !== col ? null : (
-        <span className="header-cell-arrow">{dir === 'ASC' ? '▲' : '▼'}</span>
+        <span className="header-cell-arrow">{dir === "ASC" ? "▲" : "▼"}</span>
       )}
     </div>
   );
@@ -58,20 +62,12 @@ const ColumnCell = ({ column, pixelWidth }) => {
 const HeaderRow = ({ tableRef }) => {
   // hooks
   const tableContext = useContext(TableContext);
-  const [colWidths] = useState(
-    findColumnWidthConstants(tableContext.state.columns)
-  ); // calculate pixel width for remaining cols
+  const [colWidths] = useState(findColumnWidthConstants(tableContext.state.columns)); // calculate pixel width for remaining cols
 
   const { uuid, columns, minColumnWidth } = tableContext.state;
   const { fixedWidth, remainingCols } = colWidths;
   const table = tableRef ? tableRef.current || uuid : uuid;
-  const pixelWidth = useCellResize(
-    table,
-    remainingCols,
-    fixedWidth,
-    minColumnWidth,
-    true
-  );
+  const pixelWidth = useCellResize(table, remainingCols, fixedWidth, minColumnWidth, true);
 
   return (
     <div className="react-fluid-table-header">
@@ -86,7 +82,7 @@ const Header = forwardRef(({ children, ...rest }, ref) => {
   const tableContext = useContext(TableContext);
   const { id, uuid } = tableContext.state;
   const { scrollWidth, clientWidth } = ref.current || NO_REF;
-  const width = scrollWidth <= clientWidth ? '100%' : undefined;
+  const width = scrollWidth <= clientWidth ? "100%" : undefined;
 
   return (
     <div id={id} ref={ref} data-uuid={uuid} {...rest}>
@@ -100,7 +96,7 @@ const Header = forwardRef(({ children, ...rest }, ref) => {
   );
 });
 
-Header.displayName = 'Header';
+Header.displayName = "Header";
 
 Header.propTypes = {
   children: PropTypes.any
