@@ -44,7 +44,7 @@ const Row = ({
 
   const { fixedWidth, remainingCols } = colWidths;
   const pixelWidth = useCellResize(
-    tableRef.current || uuid,
+    tableRef.current,
     remainingCols,
     fixedWidth,
     minColumnWidth,
@@ -130,8 +130,7 @@ const Row = ({
         {columns.map(c => {
           const width = Math.max(c.width || pixelWidth, c.minWidth || 0);
           const style = {
-            width: width ? `${width}px` : undefined,
-            minWidth: width ? `${width}px` : undefined
+            width: width ? `${width}px` : undefined
           };
           return (
             <div className="cell" key={`${uuid}-${c.key}-${key}`} style={style}>

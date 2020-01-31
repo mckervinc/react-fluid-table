@@ -1,25 +1,3 @@
-const scrollbarVisible = elem => {
-  const el = typeof elem === "string" ? document.getElementById(elem) : elem;
-  return Boolean(el) && el.scrollHeight > el.clientHeight;
-};
-
-export const calculateColumnWidth = (
-  element,
-  numColumns,
-  fixedColumnWidths = 0,
-  subtractScrollbar = false
-) => {
-  if (!element) return [0, 0];
-  const n = Math.max(numColumns, 1);
-  const parent = element.parentElement;
-  const totalWidth = element.offsetWidth - (subtractScrollbar && scrollbarVisible(parent) ? 15 : 0);
-  const freeSpace = Math.max(totalWidth - fixedColumnWidths, 0);
-  const baseWidth = Math.floor(freeSpace / n);
-  const remaining = Math.floor(freeSpace % n);
-
-  return [baseWidth, remaining];
-};
-
 export const distribute = (rem, numColumns) => {
   const n = Math.max(numColumns, 1);
   const result = [...Array(n)].fill(0);

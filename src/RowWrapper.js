@@ -7,9 +7,9 @@ const RowWrapper = React.memo(({ data, index, style }) => {
   const dataIndex = index - 1; // the header is at index 0
 
   const { rows, ...metaData } = data;
-  const row = rows[dataIndex] || {};
+  const row = rows[dataIndex];
 
-  return !rows[dataIndex] ? null : <Row row={row} index={dataIndex} style={style} {...metaData} />;
+  return !row ? null : <Row row={row} index={dataIndex} style={style} {...metaData} />;
 }, areEqual);
 
 RowWrapper.propTypes = {

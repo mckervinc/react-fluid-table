@@ -17,8 +17,7 @@ const ColumnCell = ({ column, pixelWidth }) => {
 
   const style = {
     cursor: column.sortable ? "pointer" : undefined,
-    width: width ? `${width}px` : undefined,
-    minWidth: width ? `${width}px` : undefined
+    width: width ? `${width}px` : undefined
   };
 
   const onClick = () => {
@@ -64,10 +63,15 @@ const HeaderRow = ({ tableRef }) => {
   const tableContext = useContext(TableContext);
   const [colWidths] = useState(findColumnWidthConstants(tableContext.state.columns)); // calculate pixel width for remaining cols
 
-  const { uuid, columns, minColumnWidth } = tableContext.state;
+  const { columns, minColumnWidth } = tableContext.state;
   const { fixedWidth, remainingCols } = colWidths;
-  const table = tableRef ? tableRef.current || uuid : uuid;
-  const pixelWidth = useCellResize(table, remainingCols, fixedWidth, minColumnWidth, true);
+  const pixelWidth = useCellResize(
+    tableRef.current,
+    remainingCols,
+    fixedWidth,
+    minColumnWidth,
+    true
+  );
 
   return (
     <div className="react-fluid-table-header">

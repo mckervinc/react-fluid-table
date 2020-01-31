@@ -1,4 +1,11 @@
-import React, { useRef, useContext, useState, useCallback, useLayoutEffect } from "react";
+import React, {
+  useRef,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  useLayoutEffect
+} from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { VariableSizeList } from "react-window";
 import PropTypes from "prop-types";
@@ -90,6 +97,14 @@ const ListComponent = ({
   useLayoutEffect(() => {
     listRef.current.resetAfterIndex(0);
   }, [listRef]);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        window.clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [timeoutRef]);
 
   return (
     <VariableSizeList
