@@ -7,7 +7,6 @@ import React, {
   useCallback
 } from "react";
 import PropTypes from "prop-types";
-import { findColumnWidthConstants } from "./util";
 import { useCellResize } from "./useCellResize";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
@@ -34,22 +33,13 @@ const Row = ({
   const resizeRef = useRef(null);
   const tableContext = useContext(TableContext);
   const [useRowWidth, setUseRowWidth] = useState(true);
-  const [colWidths] = useState(findColumnWidthConstants(tableContext.state.columns));
 
   // variables
   const { dispatch } = tableContext;
 
   // calculate pixel width for remaining cols
-  const { uuid, columns, expanded, minColumnWidth } = tableContext.state;
-
-  const { fixedWidth, remainingCols } = colWidths;
-  const pixelWidth = useCellResize(
-    tableRef.current,
-    remainingCols,
-    fixedWidth,
-    minColumnWidth,
-    true
-  );
+  const { uuid, columns, expanded, minColumnWidth, fixedWidth, remainingCols } = tableContext.state;
+  const pixelWidth = useCellResize(tableRef.current, remainingCols, fixedWidth, minColumnWidth);
 
   // key
   const key = generateKeyFromRow(row, index);

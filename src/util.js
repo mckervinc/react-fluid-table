@@ -13,16 +13,6 @@ export const distribute = (rem, numColumns) => {
   return result.reverse();
 };
 
-export const findColumnWidthConstants = columns => {
-  return columns.reduce(
-    (pv, c) => ({
-      fixedWidth: pv.fixedWidth + (c.width || 0),
-      remainingCols: pv.remainingCols + (c.width === undefined ? 1 : 0)
-    }),
-    { fixedWidth: 0, remainingCols: 0 }
-  );
-};
-
 export const randomString = (num = 5) =>
   Math.random()
     .toString(36)

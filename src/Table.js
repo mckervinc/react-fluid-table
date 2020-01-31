@@ -32,7 +32,6 @@ const ListComponent = ({
   subComponent
 }) => {
   // hooks
-  const rowSizes = useRef({});
   const listRef = useRef(null);
   const tableRef = useRef(null);
   const timeoutRef = useRef(null);
@@ -57,17 +56,16 @@ const ListComponent = ({
         return;
       }
 
-      if (index < resetIndexRef.current) {
-        if (timeoutRef.current) {
-          window.clearTimeout(timeoutRef.current);
-        }
-
-        resetIndexRef.current = index;
-        timeoutRef.current = window.setTimeout(() => {
-          resetIndexRef.current = Infinity;
-          listRef.current.resetAfterIndex(index, forceUpdate);
-        }, 50);
+      if (timeoutRef.current) {
+        window.clearTimeout(timeoutRef.current);
       }
+
+      resetIndexRef.current = Math.min(index, resetIndexRef.current);
+      timeoutRef.current = window.setTimeout(() => {
+        const resetNumber = resetIndexRef.current;
+        resetIndexRef.current = Infinity;
+        listRef.current.resetAfterIndex(resetNumber, forceUpdate);
+      }, 50);
     },
     [listRef, timeoutRef, resetIndexRef]
   );
@@ -79,19 +77,16 @@ const ListComponent = ({
       const row = typeof queryParam === "number" ? findRowByUuidAndKey(uuid, key) : queryParam;
 
       if (!row) {
-        return rowHeight || rowSizes.current[dataIndex] || DEFAULT_ROW_HEIGHT;
+        return rowHeight || DEFAULT_ROW_HEIGHT;
       }
 
       const isExpanded = expanded[key];
       const rowComponent = row.children[0] || NO_COMPONENT;
       const subComponent = isExpanded ? row.children[1] : NO_COMPONENT;
 
-      const result = (rowHeight || rowComponent.offsetHeight) + subComponent.offsetHeight;
-
-      rowSizes.current[dataIndex] = result;
-      return result;
+      return (rowHeight || rowComponent.offsetHeight) + subComponent.offsetHeight;
     },
-    [uuid, data, rowHeight, expanded, rowSizes, generateKeyFromRow]
+    [uuid, data, rowHeight, expanded, generateKeyFromRow]
   );
 
   useLayoutEffect(() => {

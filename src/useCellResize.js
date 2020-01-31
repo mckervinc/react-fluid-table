@@ -47,7 +47,7 @@ export const useCellResize = (
   numColumns,
   usedSpace,
   minColumnWidth = 0,
-  subtractScrollbar = false
+  subtractScrollbar = true
 ) => {
   const timeoutRef = useRef(null);
   const [pixelWidth, setPixelWidth] = useState(0);

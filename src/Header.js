@@ -1,7 +1,6 @@
-import React, { forwardRef, useState, useContext } from "react";
+import React, { forwardRef, useContext } from "react";
 import PropTypes from "prop-types";
 import { useCellResize } from "./useCellResize";
-import { findColumnWidthConstants } from "./util";
 import { TableContext } from "./TableContext";
 
 const NO_REF = {
@@ -9,7 +8,7 @@ const NO_REF = {
   clientWidth: 0
 };
 
-const ColumnCell = ({ column, pixelWidth }) => {
+const ColumnCell = React.memo(({ column, pixelWidth }) => {
   const tableContext = useContext(TableContext);
   const { sortColumn: col, sortDirection: dir, onSort } = tableContext.state;
   const { dispatch } = tableContext;
@@ -56,22 +55,14 @@ const ColumnCell = ({ column, pixelWidth }) => {
       )}
     </div>
   );
-};
+});
 
 const HeaderRow = ({ tableRef }) => {
   // hooks
   const tableContext = useContext(TableContext);
-  const [colWidths] = useState(findColumnWidthConstants(tableContext.state.columns)); // calculate pixel width for remaining cols
 
-  const { columns, minColumnWidth } = tableContext.state;
-  const { fixedWidth, remainingCols } = colWidths;
-  const pixelWidth = useCellResize(
-    tableRef.current,
-    remainingCols,
-    fixedWidth,
-    minColumnWidth,
-    true
-  );
+  const { columns, minColumnWidth, fixedWidth, remainingCols } = tableContext.state;
+  const pixelWidth = useCellResize(tableRef.current, remainingCols, fixedWidth, minColumnWidth);
 
   return (
     <div className="react-fluid-table-header">
