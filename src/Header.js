@@ -4,6 +4,11 @@ import { useCellResize } from './useCellResize';
 import { findColumnWidthConstants } from './util';
 import { TableContext } from './TableContext';
 
+const NO_REF = {
+  scrollWidth: 0,
+  clientWidth: 0
+};
+
 const ColumnCell = ({ column, pixelWidth }) => {
   const tableContext = useContext(TableContext);
   const { sortColumn: col, sortDirection: dir, onSort } = tableContext.state;
@@ -80,11 +85,15 @@ const HeaderRow = ({ tableRef }) => {
 const Header = forwardRef(({ children, ...rest }, ref) => {
   const tableContext = useContext(TableContext);
   const { id, uuid } = tableContext.state;
+  const { scrollWidth, clientWidth } = ref.current || NO_REF;
+  const width = scrollWidth <= clientWidth ? '100%' : undefined;
 
   return (
     <div id={id} ref={ref} data-uuid={uuid} {...rest}>
       <div className="sticky-header">
-        <HeaderRow tableRef={ref} />
+        <div className="row-wrapper" style={{ width }}>
+          <HeaderRow tableRef={ref} />
+        </div>
       </div>
       <div className="row-wrapper">{children}</div>
     </div>
