@@ -4,11 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { TableContext } from "./TableContext";
 
-// base scroll width
-const NO_PARENT = {
-  parentElement: { scrollWidth: 0, clientWidth: 0 }
-};
-
 const Row = ({
   row,
   index,
@@ -65,7 +60,7 @@ const Row = ({
     const height = element.clientHeight;
     const correctHeight = calculateHeight(rowRef.current, index);
     if (height !== correctHeight) {
-      clearSizeCache(index, false);
+      clearSizeCache(index);
     }
   }, [rowRef, calculateHeight, index, clearSizeCache]);
 

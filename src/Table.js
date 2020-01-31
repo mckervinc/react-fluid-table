@@ -160,10 +160,10 @@ const ListComponent = ({
         rowHeight,
         pixelWidth,
         useRowWidth,
-        generateKeyFromRow,
+        subComponent,
         clearSizeCache,
         calculateHeight,
-        subComponent
+        generateKeyFromRow,
       }}
     >
       {RowWrapper}
