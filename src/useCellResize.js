@@ -26,7 +26,8 @@ export const calculateColumnWidth = (
   if (!element) return [0, 0];
   const n = Math.max(numColumns, 1);
   const parent = element.parentElement;
-  const totalWidth = element.offsetWidth - (subtractScrollbar && scrollbarVisible(parent) ? scrollWidth : 0);
+  const totalWidth =
+    element.offsetWidth - (subtractScrollbar && scrollbarVisible(parent) ? scrollWidth : 0);
   const freeSpace = Math.max(totalWidth - fixedColumnWidths, 0);
   const baseWidth = Math.floor(freeSpace / n);
   const remaining = Math.floor(freeSpace % n);
@@ -51,19 +52,22 @@ export const useCellResize = (
 ) => {
   const timeoutRef = useRef(null);
   const [pixelWidth, setPixelWidth] = useState(0);
+
+  const updatePixelWidth = useCallback(() => {
+    const [val] = calculateColumnWidth(el, numColumns, usedSpace, subtractScrollbar);
+    const width = Math.max(val, minColumnWidth);
+    if (pixelWidth !== width) {
+      setPixelWidth(width);
+    }
+  }, [el, pixelWidth, numColumns, usedSpace, minColumnWidth, subtractScrollbar]);
+
   const resize = useCallback(() => {
     if (timeoutRef.current) {
       window.clearTimeout(timeoutRef.current);
     }
 
-    timeoutRef.current = window.setTimeout(() => {
-      const [val] = calculateColumnWidth(el, numColumns, usedSpace, subtractScrollbar);
-      const width = Math.max(val, minColumnWidth);
-      if (pixelWidth !== width) {
-        setPixelWidth(width);
-      }
-    }, 50);
-  }, [timeoutRef, el, pixelWidth, numColumns, usedSpace, minColumnWidth, subtractScrollbar]);
+    timeoutRef.current = window.setTimeout(updatePixelWidth, 50);
+  }, [timeoutRef, updatePixelWidth]);
 
   // effects
   // on resize re-calculate pixel width
@@ -78,10 +82,10 @@ export const useCellResize = (
   }, [resize, timeoutRef]);
 
   useLayoutEffect(() => {
-    if (!pixelWidth) {
-      resize();
+    if (el && !pixelWidth) {
+      updatePixelWidth();
     }
-  }, [pixelWidth, resize]);
+  }, [el, pixelWidth, updatePixelWidth]);
 
   return pixelWidth;
 };
