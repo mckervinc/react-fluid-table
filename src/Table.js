@@ -13,7 +13,7 @@ import Header from "./Header";
 import RowWrapper from "./RowWrapper";
 import { TableContextProvider, TableContext } from "./TableContext";
 import { randomString, findRowByUuidAndKey } from "./util";
-import { useCellResize } from "./useCellResize";
+import { calculateColumnWidth } from "./useCellResize";
 
 const DEFAULT_ROW_HEIGHT = 37;
 const NO_COMPONENT = { offsetHeight: 0 };
@@ -40,13 +40,14 @@ const ListComponent = ({
   const tableRef = useRef(null);
   const resizeRef = useRef(null);
   const timeoutRef = useRef(null);
+  const pixelWidthRef = useRef(null);
   const resetIndexRef = useRef(Infinity);
   const tableContext = useContext(TableContext);
   const [useRowWidth, setUseRowWidth] = useState(true);
+  const [pixelWidth, setPixelWidth] = useState(0);
 
   // variables
   const { uuid, expanded, minColumnWidth, fixedWidth, remainingCols } = tableContext.state;
-  const pixelWidth = useCellResize(tableRef.current, remainingCols, fixedWidth, minColumnWidth);
 
   // functions
   const generateKeyFromRow = useCallback(
@@ -96,6 +97,14 @@ const ListComponent = ({
     [uuid, data, rowHeight, expanded, generateKeyFromRow]
   );
 
+  const pixelWidthHelper = useCallback(() => {
+    const [val] = calculateColumnWidth(tableRef.current, remainingCols, fixedWidth, true);
+    const width = Math.max(val, minColumnWidth);
+    if (width !== pixelWidth) {
+      setPixelWidth(width);
+    }
+  }, [tableRef, remainingCols, fixedWidth, minColumnWidth, pixelWidth]);
+
   const onWindowResize = useCallback(() => {
     if (resizeRef.current) {
       window.clearTimeout(resizeRef.current);
@@ -107,10 +116,26 @@ const ListComponent = ({
     }, 50);
   }, [resizeRef, uuid, tableRef]);
 
+  const calculatePixelWidth = useCallback(() => {
+    if (pixelWidthRef.current) {
+      window.clearTimeout(pixelWidthRef.current);
+    }
+
+    pixelWidthRef.current = window.setTimeout(pixelWidthHelper, 50);
+  }, [pixelWidthRef, pixelWidthHelper]);
+
   // effects
   useLayoutEffect(() => {
     listRef.current.resetAfterIndex(0);
   }, [listRef]);
+
+  useLayoutEffect(() => {
+    if (!tableRef.current) {
+      return;
+    }
+
+    pixelWidthHelper();
+  }, [pixelWidth, pixelWidthHelper]);
 
   useEffect(() => {
     if (!tableRef.current) {
@@ -129,6 +154,16 @@ const ListComponent = ({
       window.removeEventListener("resize", onWindowResize);
     };
   }, [onWindowResize, resizeRef]);
+
+  useEffect(() => {
+    window.addEventListener("resize", calculatePixelWidth);
+    return () => {
+      if (pixelWidthRef.current) {
+        window.clearTimeout(pixelWidthRef.current);
+      }
+      window.removeEventListener("resize", calculatePixelWidth);
+    };
+  }, [calculatePixelWidth, pixelWidthRef]);
 
   useEffect(() => {
     return () => {
@@ -163,7 +198,7 @@ const ListComponent = ({
         subComponent,
         clearSizeCache,
         calculateHeight,
-        generateKeyFromRow,
+        generateKeyFromRow
       }}
     >
       {RowWrapper}

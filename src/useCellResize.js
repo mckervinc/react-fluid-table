@@ -17,7 +17,7 @@ const scrollWidth = scrollbarSize();
 
 const scrollbarVisible = el => Boolean(el) && el.scrollHeight > el.clientHeight;
 
-const calculateColumnWidth = (
+export const calculateColumnWidth = (
   element,
   numColumns,
   fixedColumnWidths = 0,
