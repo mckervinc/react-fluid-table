@@ -19,6 +19,13 @@ const TextStyle = styled.div`
   text-overflow: ellipsis;
 `;
 
+const SubStyle = styled.div`
+  height: 76px;
+  background-color: green;
+`;
+
+const SubComponent = () => <SubStyle>SubComponent content</SubStyle>;
+
 const data = _.range(1, 3100).map(i => ({
   id: i,
   firstName: faker.name.firstName(),
@@ -28,10 +35,9 @@ const data = _.range(1, 3100).map(i => ({
 
 const columns = [
   {
-    key: "id",
-    name: "Id",
+    key: "",
     width: 50,
-    cell: row => <TextStyle>{row.id - 1}</TextStyle>
+    expander: true
   },
   {
     key: "firstName",
@@ -66,6 +72,7 @@ const App = () => {
       tableHeight={400}
       rowCount={data.length}
       itemKey={row => row.id}
+      subComponent={SubComponent}
     />
   );
 };
