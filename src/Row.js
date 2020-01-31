@@ -33,7 +33,7 @@ const Row = ({
   const rowRef = useRef(null);
   const resizeRef = useRef(null);
   const tableContext = useContext(TableContext);
-  const [useRowWidth, setUseRowWidth] = useState(window.innerWidth > 1024);
+  const [useRowWidth, setUseRowWidth] = useState(true);
   const [colWidths] = useState(
     findColumnWidthConstants(tableContext.state.columns)
   );
@@ -112,6 +112,14 @@ const Row = ({
       window.removeEventListener('resize', onWindowResize);
     };
   }, [onWindowResize, resizeRef]);
+
+  useEffect(() => {
+    if (!tableRef.current) {
+      return;
+    }
+
+    setUseRowWidth(tableRef.current.scrollWidth <= tableRef.current.clientWidth);
+  }, [tableRef, pixelWidth]);
 
   return (
     <div
