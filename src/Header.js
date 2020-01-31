@@ -16,7 +16,8 @@ const ColumnCell = React.memo(({ column, pixelWidth }) => {
 
   const style = {
     cursor: column.sortable ? "pointer" : undefined,
-    width: width ? `${width}px` : undefined
+    width: width ? `${width}px` : undefined,
+    minWidth: width ? `${width}px` : undefined
   };
 
   const onClick = () => {
@@ -57,12 +58,10 @@ const ColumnCell = React.memo(({ column, pixelWidth }) => {
   );
 });
 
-const HeaderRow = ({ tableRef }) => {
+const HeaderRow = React.memo(({ pixelWidth }) => {
   // hooks
   const tableContext = useContext(TableContext);
-
-  const { columns, minColumnWidth, fixedWidth, remainingCols } = tableContext.state;
-  const pixelWidth = useCellResize(tableRef.current, remainingCols, fixedWidth, minColumnWidth);
+  const { columns } = tableContext.state;
 
   return (
     <div className="react-fluid-table-header">
@@ -71,11 +70,14 @@ const HeaderRow = ({ tableRef }) => {
       ))}
     </div>
   );
-};
+});
 
 const Header = forwardRef(({ children, ...rest }, ref) => {
   const tableContext = useContext(TableContext);
-  const { id, uuid } = tableContext.state;
+
+  // variables
+  const { id, uuid, remainingCols, fixedWidth, minColumnWidth } = tableContext.state;
+  const pixelWidth = useCellResize(ref.current, remainingCols, fixedWidth, minColumnWidth);
   const { scrollWidth, clientWidth } = ref.current || NO_REF;
   const width = scrollWidth <= clientWidth ? "100%" : undefined;
 
@@ -83,7 +85,7 @@ const Header = forwardRef(({ children, ...rest }, ref) => {
     <div id={id} ref={ref} data-uuid={uuid} {...rest}>
       <div className="sticky-header">
         <div className="row-wrapper" style={{ width }}>
-          <HeaderRow tableRef={ref} />
+          <HeaderRow pixelWidth={pixelWidth} />
         </div>
       </div>
       <div className="row-wrapper">{children}</div>

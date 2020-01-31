@@ -13,9 +13,13 @@ import Header from "./Header";
 import RowWrapper from "./RowWrapper";
 import { TableContextProvider, TableContext } from "./TableContext";
 import { randomString, findRowByUuidAndKey } from "./util";
+import { useCellResize } from "./useCellResize";
 
 const DEFAULT_ROW_HEIGHT = 37;
 const NO_COMPONENT = { offsetHeight: 0 };
+const NO_PARENT = {
+  parentElement: { scrollWidth: 0, clientWidth: 0 }
+};
 
 /**
  * We add 1 to the itemCount to account for the header 'row'
@@ -34,12 +38,15 @@ const ListComponent = ({
   // hooks
   const listRef = useRef(null);
   const tableRef = useRef(null);
+  const resizeRef = useRef(null);
   const timeoutRef = useRef(null);
   const resetIndexRef = useRef(Infinity);
   const tableContext = useContext(TableContext);
+  const [useRowWidth, setUseRowWidth] = useState(true);
 
   // variables
-  const { uuid, expanded } = tableContext.state;
+  const { uuid, expanded, minColumnWidth, fixedWidth, remainingCols } = tableContext.state;
+  const pixelWidth = useCellResize(tableRef.current, remainingCols, fixedWidth, minColumnWidth);
 
   // functions
   const generateKeyFromRow = useCallback(
@@ -89,9 +96,39 @@ const ListComponent = ({
     [uuid, data, rowHeight, expanded, generateKeyFromRow]
   );
 
+  const onWindowResize = useCallback(() => {
+    if (resizeRef.current) {
+      window.clearTimeout(resizeRef.current);
+    }
+
+    resizeRef.current = window.setTimeout(() => {
+      const { parentElement } = tableRef.current || NO_PARENT;
+      setUseRowWidth(parentElement.scrollWidth <= parentElement.clientWidth);
+    }, 50);
+  }, [resizeRef, uuid, tableRef]);
+
+  // effects
   useLayoutEffect(() => {
     listRef.current.resetAfterIndex(0);
   }, [listRef]);
+
+  useEffect(() => {
+    if (!tableRef.current) {
+      return;
+    }
+
+    setUseRowWidth(tableRef.current.scrollWidth <= tableRef.current.clientWidth);
+  }, [tableRef]);
+
+  useEffect(() => {
+    window.addEventListener("resize", onWindowResize);
+    return () => {
+      if (resizeRef.current) {
+        window.clearTimeout(resizeRef.current);
+      }
+      window.removeEventListener("resize", onWindowResize);
+    };
+  }, [onWindowResize, resizeRef]);
 
   useEffect(() => {
     return () => {
@@ -121,11 +158,12 @@ const ListComponent = ({
         ...metaData,
         rows: data,
         rowHeight,
+        pixelWidth,
+        useRowWidth,
         generateKeyFromRow,
         clearSizeCache,
         calculateHeight,
-        subComponent,
-        tableRef
+        subComponent
       }}
     >
       {RowWrapper}

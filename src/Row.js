@@ -1,13 +1,5 @@
-import React, {
-  useRef,
-  useState,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useCallback
-} from "react";
+import React, { useRef, useContext, useLayoutEffect } from "react";
 import PropTypes from "prop-types";
-import { useCellResize } from "./useCellResize";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { TableContext } from "./TableContext";
@@ -21,8 +13,9 @@ const Row = ({
   row,
   index,
   style,
-  tableRef,
   rowHeight,
+  pixelWidth,
+  useRowWidth,
   subComponent,
   clearSizeCache,
   calculateHeight,
@@ -30,16 +23,11 @@ const Row = ({
 }) => {
   // hooks
   const rowRef = useRef(null);
-  const resizeRef = useRef(null);
   const tableContext = useContext(TableContext);
-  const [useRowWidth, setUseRowWidth] = useState(true);
 
   // variables
   const { dispatch } = tableContext;
-
-  // calculate pixel width for remaining cols
-  const { uuid, columns, expanded, minColumnWidth, fixedWidth, remainingCols } = tableContext.state;
-  const pixelWidth = useCellResize(tableRef.current, remainingCols, fixedWidth, minColumnWidth);
+  const { uuid, columns, expanded } = tableContext.state;
 
   // key
   const key = generateKeyFromRow(row, index);
@@ -53,16 +41,6 @@ const Row = ({
     dispatch({ type: "updateExpanded", key: generateKeyFromRow(row, index) });
     clearSizeCache(index);
   };
-  const onWindowResize = useCallback(() => {
-    if (resizeRef.current) {
-      window.clearTimeout(resizeRef.current);
-    }
-
-    resizeRef.current = window.setTimeout(() => {
-      const { parentElement } = tableRef.current || NO_PARENT;
-      setUseRowWidth(parentElement.scrollWidth <= parentElement.clientWidth);
-    }, 50);
-  }, [resizeRef, uuid, tableRef]);
 
   // cell renderer
   const cellRenderer = c => {
@@ -91,28 +69,10 @@ const Row = ({
     }
   }, [rowRef, calculateHeight, index, clearSizeCache]);
 
-  useEffect(() => {
-    window.addEventListener("resize", onWindowResize);
-    return () => {
-      if (resizeRef.current) {
-        window.clearTimeout(resizeRef.current);
-      }
-      window.removeEventListener("resize", onWindowResize);
-    };
-  }, [onWindowResize, resizeRef]);
-
-  useEffect(() => {
-    if (!tableRef.current) {
-      return;
-    }
-
-    setUseRowWidth(tableRef.current.scrollWidth <= tableRef.current.clientWidth);
-  }, [tableRef, pixelWidth]);
-
   return (
     <div
-      className="react-fluid-table-row"
       ref={rowRef}
+      className="react-fluid-table-row"
       data-row-uuid={rowUuid}
       style={{ ...style, width: useRowWidth ? style.width : undefined }}
     >
@@ -120,7 +80,8 @@ const Row = ({
         {columns.map(c => {
           const width = Math.max(c.width || pixelWidth, c.minWidth || 0);
           const style = {
-            width: width ? `${width}px` : undefined
+            width: width ? `${width}px` : undefined,
+            minWidth: width ? `${width}px` : undefined
           };
           return (
             <div className="cell" key={`${uuid}-${c.key}-${key}`} style={style}>

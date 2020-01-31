@@ -34,7 +34,7 @@
   padding: 8px;
   text-overflow: ellipsis;
   white-space: nowrap;
-  will-change: width, cursor;
+  will-change: width, min-width, cursor;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -86,7 +86,7 @@
   -ms-flex-align: center;
   align-items: center;
   padding: 8px;
-  will-change: width;
+  will-change: width, min-width;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
