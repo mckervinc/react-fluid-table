@@ -33,7 +33,8 @@ const ListComponent = ({
   rowHeight,
   data,
   metaData,
-  subComponent
+  subComponent,
+  defaultRowHeight
 }) => {
   // hooks
   const listRef = useRef(null);
@@ -47,6 +48,7 @@ const ListComponent = ({
   const [pixelWidth, setPixelWidth] = useState(0);
 
   // variables
+  const defaultSize = defaultRowHeight || DEFAULT_ROW_HEIGHT;
   const { uuid, expanded, minColumnWidth, fixedWidth, remainingCols } = tableContext.state;
 
   // functions
@@ -79,7 +81,7 @@ const ListComponent = ({
         const resetNumber = resetIndexRef.current;
         resetIndexRef.current = Infinity;
         listRef.current.resetAfterIndex(resetNumber);
-      }, 75);
+      }, 50);
     },
     [listRef, timeoutRef, resetIndexRef]
   );
@@ -91,7 +93,7 @@ const ListComponent = ({
       const row = typeof queryParam === "number" ? findRowByUuidAndKey(uuid, key) : queryParam;
 
       if (!row) {
-        return rowHeight || DEFAULT_ROW_HEIGHT;
+        return rowHeight || defaultSize;
       }
 
       const isExpanded = expanded[key];
@@ -100,11 +102,11 @@ const ListComponent = ({
 
       return (rowHeight || rowComponent.offsetHeight) + subComponent.offsetHeight;
     },
-    [uuid, data, rowHeight, expanded, generateKeyFromRow]
+    [uuid, data, rowHeight, expanded, defaultSize, generateKeyFromRow]
   );
 
   const pixelWidthHelper = useCallback(() => {
-    const [val] = calculateColumnWidth(tableRef.current, remainingCols, fixedWidth, true);
+    const [val] = calculateColumnWidth(tableRef.current, remainingCols, fixedWidth);
     const width = Math.max(val, minColumnWidth);
     if (width !== pixelWidth) {
       setPixelWidth(width);
@@ -177,6 +179,7 @@ const ListComponent = ({
 
   return (
     <VariableSizeList
+      useIsScrolling
       className={`react-fluid-table ${className || ""}`}
       ref={listRef}
       innerRef={tableRef}
@@ -267,6 +270,7 @@ Table.propTypes = {
   minColumnWidth: PropTypes.number,
   tableHeight: PropTypes.number,
   tableWidth: PropTypes.number,
+  defaultRowHeight: PropTypes.number,
   subComponent: PropTypes.elementType,
   metaData: PropTypes.object,
   columns: PropTypes.array,

@@ -73,6 +73,7 @@ const App = () => {
       rowCount={data.length}
       itemKey={row => row.id}
       subComponent={SubComponent}
+      defaultRowHeight={35}
     />
   );
 };

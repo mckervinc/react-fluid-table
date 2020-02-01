@@ -17,17 +17,11 @@ const scrollWidth = scrollbarSize();
 
 const scrollbarVisible = el => Boolean(el) && el.scrollHeight > el.clientHeight;
 
-export const calculateColumnWidth = (
-  element,
-  numColumns,
-  fixedColumnWidths = 0,
-  subtractScrollbar = false
-) => {
+export const calculateColumnWidth = (element, numColumns, fixedColumnWidths) => {
   if (!element) return [0, 0];
   const n = Math.max(numColumns, 1);
   const parent = element.parentElement;
-  const totalWidth =
-    element.offsetWidth - (subtractScrollbar && scrollbarVisible(parent) ? scrollWidth : 0);
+  const totalWidth = element.offsetWidth - (scrollbarVisible(parent) ? scrollWidth : 0);
   const freeSpace = Math.max(totalWidth - fixedColumnWidths, 0);
   const baseWidth = Math.floor(freeSpace / n);
   const remaining = Math.floor(freeSpace % n);
@@ -41,25 +35,18 @@ export const calculateColumnWidth = (
  * @param {number} numColumns - number of columns to calculate width for
  * @param {number} usedSpace - total size in pixels of defined widths
  * @param {number} minColumnWidth - the min column width of each column
- * @param {boolean} subtractScrollbar - whether or not to subtract the scrollbar width when finding column width
  */
-export const useCellResize = (
-  el,
-  numColumns,
-  usedSpace,
-  minColumnWidth = 0,
-  subtractScrollbar = true
-) => {
+export const useCellResize = (el, numColumns, usedSpace, minColumnWidth = 0) => {
   const timeoutRef = useRef(null);
   const [pixelWidth, setPixelWidth] = useState(0);
 
   const updatePixelWidth = useCallback(() => {
-    const [val] = calculateColumnWidth(el, numColumns, usedSpace, subtractScrollbar);
+    const [val] = calculateColumnWidth(el, numColumns, usedSpace);
     const width = Math.max(val, minColumnWidth);
     if (pixelWidth !== width) {
       setPixelWidth(width);
     }
-  }, [el, pixelWidth, numColumns, usedSpace, minColumnWidth, subtractScrollbar]);
+  }, [el, pixelWidth, numColumns, usedSpace, minColumnWidth]);
 
   const resize = useCallback(() => {
     if (timeoutRef.current) {

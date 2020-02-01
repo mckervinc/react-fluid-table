@@ -11,6 +11,7 @@ const Row = ({
   rowHeight,
   pixelWidth,
   useRowWidth,
+  isScrolling,
   subComponent,
   clearSizeCache,
   calculateHeight,
@@ -60,7 +61,7 @@ const Row = ({
   }, [isExpanded, index, clearSizeCache, expandedCalledRef]);
 
   useLayoutEffect(() => {
-    if (rowRef.current && !expandedCalledRef.current) {
+    if (rowRef.current && !expandedCalledRef.current && !isScrolling) {
       const element = rowRef.current;
       const height = element.clientHeight;
       const correctHeight = calculateHeight(rowRef.current, index);
@@ -70,7 +71,7 @@ const Row = ({
     }
 
     expandedCalledRef.current = false;
-  }, [rowRef, index, isExpanded, clearSizeCache, calculateHeight, expandedCalledRef]);
+  }, [rowRef, index, isExpanded, isScrolling, clearSizeCache, calculateHeight, expandedCalledRef]);
 
   return (
     <div
