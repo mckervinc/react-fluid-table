@@ -268,7 +268,7 @@ Table.propTypes = {
   id: PropTypes.string,
   headerHeight: PropTypes.number,
   minColumnWidth: PropTypes.number,
-  tableHeight: PropTypes.number,
+  tableHeight: PropTypes.number.isRequired,
   tableWidth: PropTypes.number,
   defaultRowHeight: PropTypes.number,
   subComponent: PropTypes.elementType,
