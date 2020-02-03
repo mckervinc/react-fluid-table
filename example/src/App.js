@@ -5,6 +5,9 @@ import styled from "styled-components";
 
 import { Table } from "react-fluid-table";
 
+const StyledTable = styled(Table)`
+`;
+
 const TextStyle = styled.div`
   font-family: Helvetica;
   font-size: 14px;
@@ -41,39 +44,38 @@ const columns = [
   },
   {
     key: "firstName",
-    name: "First",
+    header: "First",
     width: 120,
     cell: row => <TextStyle>{row.firstName}</TextStyle>
   },
   {
     key: "lastName",
-    name: "Last",
+    header: "Last",
     width: 120,
     cell: row => <TextStyle>{row.lastName}</TextStyle>
   },
   {
     key: "email",
-    name: "Email",
+    header: "Email",
     width: 250,
     cell: row => <TextStyle>{row.email}</TextStyle>
   },
   {
     key: "streetAddress",
-    name: "Street",
+    header: "Street",
     cell: () => <input />
   }
 ];
 
 const App = () => {
   return (
-    <Table
+    <StyledTable
       data={data}
       columns={columns}
       tableHeight={400}
-      rowCount={data.length}
       itemKey={row => row.id}
       subComponent={SubComponent}
-      defaultRowHeight={35}
+      rowHeight={35}
     />
   );
 };
