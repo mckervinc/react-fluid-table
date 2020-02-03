@@ -48,9 +48,15 @@ const ColumnCell = React.memo(({ column, pixelWidth }) => {
     }
   };
 
+  const header = !column.header ? null : typeof column.header === "string" ? (
+    <div className="header-cell-text">{column.header}</div>
+  ) : (
+    column.header(onClick)
+  );
+
   return (
     <div className="header-cell" onClick={onClick} style={style}>
-      <div className="header-cell-text">{column.name}</div>
+      {header}
       {column.key !== col ? null : (
         <span className="header-cell-arrow">{dir === "ASC" ? "▲" : "▼"}</span>
       )}
@@ -83,7 +89,7 @@ const Header = forwardRef(({ children, ...rest }, ref) => {
 
   return (
     <div id={id} ref={ref} data-uuid={uuid} className="react-fluid-table-container" {...rest}>
-      <div className="sticky-header">
+      <div className="sticky-header" data-header-uuid={`${uuid}-header`}>
         <div className="row-wrapper" style={{ width }}>
           <HeaderRow pixelWidth={pixelWidth} />
         </div>
