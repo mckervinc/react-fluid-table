@@ -12,10 +12,11 @@ import PropTypes from "prop-types";
 import Header from "./Header";
 import RowWrapper from "./RowWrapper";
 import { TableContextProvider, TableContext } from "./TableContext";
-import { randomString, findRowByUuidAndKey } from "./util";
+import { randomString, findHeaderByUuid, findRowByUuidAndKey } from "./util";
 import { calculateColumnWidth } from "./useCellResize";
 
 const DEFAULT_ROW_HEIGHT = 37;
+const DEFAULT_HEADER_HEIGHT = 32;
 const NO_COMPONENT = { offsetHeight: 0 };
 const NO_PARENT = {
   parentElement: { scrollWidth: 0, clientWidth: 0 }
@@ -24,18 +25,7 @@ const NO_PARENT = {
 /**
  * We add 1 to the itemCount to account for the header 'row'
  */
-const ListComponent = ({
-  className,
-  height,
-  width,
-  rowCount,
-  itemKey,
-  rowHeight,
-  data,
-  metaData,
-  subComponent,
-  defaultRowHeight
-}) => {
+const ListComponent = ({ className, height, width, itemKey, rowHeight, data, subComponent }) => {
   // hooks
   const listRef = useRef(null);
   const tableRef = useRef(null);
@@ -48,7 +38,7 @@ const ListComponent = ({
   const [pixelWidth, setPixelWidth] = useState(0);
 
   // variables
-  const defaultSize = defaultRowHeight || DEFAULT_ROW_HEIGHT;
+  const defaultSize = rowHeight || DEFAULT_ROW_HEIGHT;
   const { uuid, expanded, minColumnWidth, fixedWidth, remainingCols } = tableContext.state;
 
   // functions
@@ -93,14 +83,14 @@ const ListComponent = ({
       const row = typeof queryParam === "number" ? findRowByUuidAndKey(uuid, key) : queryParam;
 
       if (!row) {
-        return rowHeight || defaultSize;
+        return defaultSize;
       }
 
       const isExpanded = expanded[key];
       const rowComponent = row.children[0] || NO_COMPONENT;
       const subComponent = isExpanded ? row.children[1] : NO_COMPONENT;
 
-      return (rowHeight || rowComponent.offsetHeight) + subComponent.offsetHeight;
+      return rowComponent.offsetHeight + subComponent.offsetHeight;
     },
     [uuid, data, rowHeight, expanded, defaultSize, generateKeyFromRow]
   );
@@ -192,10 +182,16 @@ const ListComponent = ({
         const row = data.rows[dataIndex];
         return generateKeyFromRow(row, index);
       }}
-      itemCount={rowCount + 1}
-      itemSize={index => (!index ? 32 : calculateHeight(index - 1))}
+      itemCount={data.length + 1}
+      itemSize={index => {
+        if (!index) {
+          const header = findHeaderByUuid(uuid);
+          return header ? header.children[0].offsetHeight : DEFAULT_HEADER_HEIGHT;
+        }
+
+        return calculateHeight(index - 1);
+      }}
       itemData={{
-        ...metaData,
         rows: data,
         rowHeight,
         pixelWidth,
@@ -256,23 +252,19 @@ ListComponent.propTypes = {
   className: PropTypes.string,
   height: PropTypes.number,
   width: PropTypes.number,
-  rowCount: PropTypes.number,
   itemKey: PropTypes.func,
   rowHeight: PropTypes.number,
   data: PropTypes.array,
-  metaData: PropTypes.object,
   subComponent: PropTypes.elementType
 };
 
 Table.propTypes = {
   id: PropTypes.string,
-  headerHeight: PropTypes.number,
   minColumnWidth: PropTypes.number,
   tableHeight: PropTypes.number.isRequired,
   tableWidth: PropTypes.number,
-  defaultRowHeight: PropTypes.number,
+  rowHeight: PropTypes.number,
   subComponent: PropTypes.elementType,
-  metaData: PropTypes.object,
   columns: PropTypes.array,
   onSort: PropTypes.func,
   sortColumn: PropTypes.string,
@@ -280,9 +272,7 @@ Table.propTypes = {
 };
 
 Table.defaultProps = {
-  headerHeight: 32,
   minColumnWidth: 80,
-  metaData: {},
   rowStyles: {}
 };
 
