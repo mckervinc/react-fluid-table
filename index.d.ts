@@ -8,7 +8,7 @@ declare module 'react-fluid-table' {
 
   export interface ColumnProps {
     key: string;
-    name: string;
+    header: string;
     width?: number;
     expander?: boolean;
     cell?: function;
@@ -28,7 +28,6 @@ declare module 'react-fluid-table' {
     tableWidth?: number;
     minColumnWidth?: number;
     rowHeight?: number;
-    defaultRowHeight: number;
   }
 
   declare const Table: React.FC<TableProps>;
