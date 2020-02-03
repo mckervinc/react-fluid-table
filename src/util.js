@@ -18,7 +18,8 @@ export const randomString = (num = 5) =>
     .toString(36)
     .substr(2, num);
 
-export const findTableByUuid = uuid => document.querySelector(`[data-uuid='${uuid}']`);
+export const findHeaderByUuid = uuid =>
+  document.querySelector(`[data-header-uuid='${uuid}-header']`);
 
 export const findRowByUuidAndKey = (uuid, key) =>
   document.querySelector(`[data-row-uuid='${uuid}-${key}']`);
