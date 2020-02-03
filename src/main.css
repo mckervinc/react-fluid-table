@@ -12,8 +12,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 32px;
-  z-index: 2;
+  z-index: 1;
 }
 
 .row-wrapper {
@@ -21,7 +20,6 @@
 }
 
 .react-fluid-table-header {
-  height: 32px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
