@@ -123,6 +123,7 @@ const ListComponent = ({ className, height, width, itemKey, rowHeight, data, sub
   }, [pixelWidthRef, pixelWidthHelper]);
 
   // effects
+  /* initializers */
   useLayoutEffect(() => {
     listRef.current.resetAfterIndex(0);
   }, [listRef]);
@@ -134,11 +135,12 @@ const ListComponent = ({ className, height, width, itemKey, rowHeight, data, sub
   }, [pixelWidth, pixelWidthHelper]);
 
   useEffect(() => {
-    if (!tableRef.current) {
+    if (tableRef.current) {
       setUseRowWidth(tableRef.current.scrollWidth <= tableRef.current.clientWidth);
     }
-  }, [tableRef]);
+  }, [tableRef, useRowWidth]);
 
+  /* listeners */
   useEffect(() => {
     window.addEventListener("resize", shouldUseRowWidth);
     return () => {
@@ -159,6 +161,7 @@ const ListComponent = ({ className, height, width, itemKey, rowHeight, data, sub
     };
   }, [calculatePixelWidth, pixelWidthRef]);
 
+  /* cleanup */
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
