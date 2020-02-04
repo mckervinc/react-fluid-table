@@ -1,8 +1,9 @@
 import React, { useRef, useContext, useCallback, useEffect, useLayoutEffect } from "react";
 import PropTypes from "prop-types";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { TableContext } from "./TableContext";
+
+import Plus from "./svg/plus-circle.svg";
+import Minus from "./svg/minus-circle.svg";
 
 const Row = ({
   row,
@@ -44,13 +45,14 @@ const Row = ({
   // cell renderer
   const cellRenderer = c => {
     if (c.expander) {
-      return (
-        <FontAwesomeIcon
-          className="expander"
-          icon={isExpanded ? faMinusCircle : faPlusCircle}
-          onClick={onExpanderClick}
-        />
-      );
+      let Logo = c.expander;
+      if (typeof c.expander === "boolean") {
+        Logo = isExpanded ? Minus : Plus;
+        return <Logo className="expander" onClick={onExpanderClick} />;
+      }
+
+      // assume the expander is a component
+      return <Logo isExpanded={isExpanded} onClick={onExpanderClick} />;
     }
 
     return !c.cell ? row[c.key] || null : c.cell(row, index, clearSizeCache);
