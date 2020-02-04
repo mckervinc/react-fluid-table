@@ -264,7 +264,7 @@ ListComponent.propTypes = {
 Table.propTypes = {
   id: PropTypes.string,
   minColumnWidth: PropTypes.number,
-  tableHeight: PropTypes.number.isRequired,
+  tableHeight: PropTypes.number,
   tableWidth: PropTypes.number,
   rowHeight: PropTypes.number,
   subComponent: PropTypes.elementType,

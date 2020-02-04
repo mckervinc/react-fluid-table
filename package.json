@@ -16,7 +16,7 @@
   "scripts": {
     "test": "cross-env CI=1 react-scripts test --env=jsdom",
     "test:watch": "react-scripts test --env=jsdom",
-    "build": "rollup -c --environment BUILD:production",
+    "build": "rm -rf dist ||: && rollup -c --environment BUILD:production",
     "start": "rollup -c -w --environment BUILD:development",
     "prepare": "yarn run build",
     "predeploy": "cd example && yarn install && yarn run build",
@@ -65,6 +65,7 @@
     "react-scripts": "^3.0.1",
     "react-test-renderer": "^16.12.0",
     "rollup": "^1.1.2",
+    "rollup-plugin-analyzer": "^3.2.2",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-bundle-size": "^1.0.3",
     "rollup-plugin-commonjs": "^9.2.0",

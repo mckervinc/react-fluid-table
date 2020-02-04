@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Icon, Menu, Segment, Sidebar } from "semantic-ui-react";
 
 import Title from "./Title";
+import Props from "./Props";
 import { Example1 } from "./examples/01-base";
 import { Example2 } from "./examples/02-sort";
 
@@ -51,6 +52,7 @@ const App = () => (
             </Switch>
           </Content>
         </Segment>
+        <Props />
       </Page>
     </Application>
   </Router>

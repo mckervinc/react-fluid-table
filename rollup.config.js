@@ -5,6 +5,7 @@ import resolve from "rollup-plugin-node-resolve";
 import url from "rollup-plugin-url";
 import postcss from "rollup-plugin-postcss";
 import bundleSize from "rollup-plugin-bundle-size";
+import analyze from 'rollup-plugin-analyzer'
 import { terser } from "rollup-plugin-terser";
 
 import pkg from "./package.json";
@@ -34,7 +35,8 @@ const config = {
     }),
     resolve(),
     commonjs(),
-    bundleSize()
+    bundleSize(),
+    analyze({ summaryOnly: true })
   ]
 };
 
