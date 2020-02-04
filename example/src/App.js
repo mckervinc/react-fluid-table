@@ -9,6 +9,7 @@ import Title from "./Title";
 import Props from "./Props";
 import { Example1 } from "./examples/01-base";
 import { Example2 } from "./examples/02-sort";
+import { Example3 } from "./examples/03-sub";
 
 const Application = styled(Sidebar.Pushable)`
   border: none;
@@ -34,8 +35,10 @@ const App = () => (
           Home
         </Menu.Item>
         <Menu.Item as={Link} to="/sort">
-          <Icon name="home" />
           Sortable Table
+        </Menu.Item>
+        <Menu.Item as={Link} to="/sub">
+          Table w/Subcomponent
         </Menu.Item>
       </Sidebar>
       <Page>
@@ -48,6 +51,9 @@ const App = () => (
               </Route>
               <Route exact path="/sort">
                 <Example2 />
+              </Route>
+              <Route exact path="/sub">
+                <Example3 />
               </Route>
             </Switch>
           </Content>

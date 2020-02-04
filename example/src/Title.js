@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { Header } from "semantic-ui-react";
 import { Name as BaseName } from "./examples/01-base";
 import { Name as SortName } from "./examples/02-sort";
+import { Name as SubName } from "./examples/03-sub";
 
 const Container = styled.div`
   background-color: #fff;
@@ -18,6 +19,8 @@ const getTitle = path => {
   switch (path) {
     case "sort":
       return SortName;
+    case "sub":
+      return SubName;
     default:
       return BaseName;
   }

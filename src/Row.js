@@ -11,10 +11,10 @@ const Row = ({
   pixelWidth,
   useRowWidth,
   isScrolling,
-  subComponent,
   clearSizeCache,
   calculateHeight,
-  generateKeyFromRow
+  generateKeyFromRow,
+  subComponent: SubComponent
 }) => {
   // hooks
   const rowRef = useRef(null);
@@ -31,6 +31,9 @@ const Row = ({
 
   // expanded
   const isExpanded = Boolean(expanded[key]);
+
+  // sub component props
+  const subProps = { row, index, isExpanded, clearSizeCache };
 
   // function(s)
   const onExpanderClick = () => {
@@ -66,7 +69,7 @@ const Row = ({
   }, [rowRef, index, calculateHeight, clearSizeCache]);
 
   const onResize = useCallback(() => {
-    setTimeout(resetHeight, 0)
+    setTimeout(resetHeight, 0);
   }, [resetHeight]);
 
   // effects
@@ -112,9 +115,9 @@ const Row = ({
           );
         })}
       </div>
-      {!subComponent ? null : (
+      {!SubComponent ? null : (
         <div className={isExpanded ? undefined : "hidden"}>
-          {subComponent({ row, index, isExpanded, clearSizeCache })}
+          <SubComponent {...subProps} />
         </div>
       )}
     </div>
