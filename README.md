@@ -49,17 +49,40 @@ const Example = () => {
       data={data}
       columns={columns}
       tableHeight={400}
-      rowCount={data.length}
-      itemKey={row => row.id}
     />
   );
 };
 ```
 
+## Development
+
+To get a development environment working, run the following:
+
+**Installation**
+
+```bash
+$ yarn install
+$ yarn link
+$ cd example
+$ yarn install react-fluid-table
+```
+
+**Usage**
+
+```bash
+# in one terminal window/tab
+$ yarn start
+# in a separate terminal window/tab
+$ cd example
+$ yarn start
+```
+
 ## License
 
-MIT © [Mckervin Ceme &lt;mckervinc@live.com&gt;](https://github.com/Mckervin Ceme &lt;mckervinc@live.com&gt;)
+MIT © [Mckervin Ceme &lt;mckervinc@live.com&gt;](https://github.com/mckervinc)
 
 ---
 
 This application was created using [create-react-hook](https://github.com/hermanya/create-react-hook).
+
+This application features some icons From [Font Awesome](https://fontawesome.com/license/free).
