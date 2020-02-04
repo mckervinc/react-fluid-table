@@ -196,7 +196,6 @@ const ListComponent = ({ className, height, width, itemKey, rowHeight, data, sub
       }}
       itemData={{
         rows: data,
-        rowHeight,
         pixelWidth,
         useRowWidth,
         subComponent,

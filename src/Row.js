@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useLayoutEffect } from "react";
+import React, { useRef, useContext, useCallback, useEffect, useLayoutEffect } from "react";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
@@ -8,7 +8,6 @@ const Row = ({
   row,
   index,
   style,
-  rowHeight,
   pixelWidth,
   useRowWidth,
   isScrolling,
@@ -54,6 +53,23 @@ const Row = ({
     return !c.cell ? row[c.key] || null : c.cell(row, index, clearSizeCache);
   };
 
+  const resetHeight = useCallback(() => {
+    if (!rowRef.current) {
+      return;
+    }
+
+    const height = rowRef.current.clientHeight;
+    const correctHeight = calculateHeight(rowRef.current, index);
+    if (height !== correctHeight) {
+      clearSizeCache(index);
+    }
+  }, [rowRef, index, calculateHeight, clearSizeCache]);
+
+  const onResize = useCallback(() => {
+    setTimeout(resetHeight, 0)
+  }, [resetHeight]);
+
+  // effects
   useLayoutEffect(() => {
     if (expandedCalledRef.current) {
       clearSizeCache(index, true);
@@ -62,16 +78,18 @@ const Row = ({
 
   useLayoutEffect(() => {
     if (rowRef.current && !expandedCalledRef.current && !isScrolling) {
-      const element = rowRef.current;
-      const height = element.clientHeight;
-      const correctHeight = calculateHeight(rowRef.current, index);
-      if (height !== correctHeight) {
-        clearSizeCache(index);
-      }
+      resetHeight();
     }
 
     expandedCalledRef.current = false;
-  }, [rowRef, index, isExpanded, isScrolling, clearSizeCache, calculateHeight, expandedCalledRef]);
+  }, [rowRef, isExpanded, isScrolling, expandedCalledRef, resetHeight]);
+
+  useEffect(() => {
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+    };
+  }, [onResize]);
 
   return (
     <div
@@ -80,7 +98,7 @@ const Row = ({
       data-row-uuid={rowUuid}
       style={{ ...style, width: useRowWidth ? style.width : undefined }}
     >
-      <div className="row-container" style={{ height: rowHeight ? `${rowHeight}px` : undefined }}>
+      <div className="row-container">
         {columns.map(c => {
           const width = Math.max(c.width || pixelWidth, c.minWidth || 0);
           const style = {
@@ -105,7 +123,6 @@ const Row = ({
 
 Row.propTypes = {
   row: PropTypes.object,
-  rowHeight: PropTypes.number,
   index: PropTypes.number,
   style: PropTypes.object,
   subComponent: PropTypes.elementType,
