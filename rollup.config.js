@@ -5,10 +5,11 @@ import resolve from "rollup-plugin-node-resolve";
 import url from "rollup-plugin-url";
 import postcss from "rollup-plugin-postcss";
 import bundleSize from "rollup-plugin-bundle-size";
+import { terser } from "rollup-plugin-terser";
 
 import pkg from "./package.json";
 
-export default {
+const config = {
   input: "src/index.js",
   output: [
     {
@@ -36,3 +37,9 @@ export default {
     bundleSize()
   ]
 };
+
+if (process.env.BUILD === "production") {
+  config.plugins.push(terser());
+}
+
+export default config;
