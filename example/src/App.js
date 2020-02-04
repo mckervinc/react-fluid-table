@@ -18,10 +18,6 @@ const Application = styled(Sidebar.Pushable)`
 const Page = styled(Sidebar.Pusher)`
   width: calc(100% - 260px);
   height: 100%;
-
-  &&& {
-    overflow: auto;
-  };
 `;
 
 const Content = styled.div`
@@ -40,7 +36,7 @@ const Wrapper = ({ children }) => (
 const App = () => (
   <Router>
     <Application>
-      <Sidebar vertical visible inverted as={Menu} animation="push">
+      <Sidebar vertical visible inverted as={Menu}>
         <Menu.Item as={Link} to="/">
           <Icon name="home" />
           Home

@@ -6,6 +6,8 @@ import { Icon, Divider, Header } from "semantic-ui-react";
 const Container = styled.div`
   padding: 1em;
   background-color: white;
+  height: 100%;
+  overflow: auto;
 `;
 
 const Table = styled(BaseTable)`
@@ -111,7 +113,7 @@ const data = [
   },
   {
     prop: "sortDirection",
-    type: "string | \"ASC\" | \"DESC\" ",
+    type: 'string | "ASC" | "DESC" ',
     description: "The direction of the sorted column (can be controlled)"
   },
   {
@@ -129,9 +131,13 @@ const data = [
 const Props = () => (
   <Container>
     <Table data={data} columns={columns} tableHeight={500} />
-    <Divider section/>
-    <Header dividing color="red">Required Props</Header>
-    <Header size="small"><code>data</code></Header>
+    <Divider section />
+    <Header dividing color="red">
+      Required Props
+    </Header>
+    <Header size="small">
+      <code>data</code>
+    </Header>
   </Container>
 );
 
