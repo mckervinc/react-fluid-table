@@ -9,9 +9,13 @@ const NO_REF = {
 };
 
 const ColumnCell = React.memo(({ column, pixelWidth }) => {
+  // hooks
   const tableContext = useContext(TableContext);
-  const { sortColumn: col, sortDirection: dir, onSort } = tableContext.state;
+
+  // variables
+  const { sortColumn: col, sortDirection, onSort } = tableContext.state;
   const { dispatch } = tableContext;
+  const dir = sortDirection ? sortDirection.toUpperCase() : null;
   const width = Math.max(column.width || pixelWidth, column.minWidth || 0);
 
   const style = {
@@ -20,6 +24,7 @@ const ColumnCell = React.memo(({ column, pixelWidth }) => {
     minWidth: width ? `${width}px` : undefined
   };
 
+  // function(s)
   const onClick = () => {
     // change the state of the sorted column
     if (!column.sortable) return;
