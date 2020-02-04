@@ -1,82 +1,58 @@
+import "semantic-ui-css/semantic.min.css";
+
 import React from "react";
-import _ from "lodash";
-import faker from "faker";
 import styled from "styled-components";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Icon, Menu, Segment, Sidebar } from "semantic-ui-react";
 
-import { Table } from "react-fluid-table";
+import Title from "./Title";
+import { Example1 } from "./examples/01-base";
+import { Example2 } from "./examples/02-sort";
 
-const StyledTable = styled(Table)`
+const Application = styled(Sidebar.Pushable)`
+  border: none;
 `;
 
-const TextStyle = styled.div`
-  font-family: Helvetica;
-  font-size: 14px;
-  font-weight: 300;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: #000;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+const Page = styled(Sidebar.Pusher)`
+  width: calc(100% - 260px);
 `;
 
-const SubStyle = styled.div`
-  height: 76px;
-  background-color: green;
+const Content = styled.div`
+  background: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px #bbb;
 `;
 
-const SubComponent = () => <SubStyle>SubComponent content</SubStyle>;
-
-const data = _.range(1, 3100).map(i => ({
-  id: i,
-  firstName: faker.name.firstName(),
-  lastName: faker.name.lastName(),
-  email: faker.internet.email()
-}));
-
-const columns = [
-  {
-    key: "",
-    width: 50,
-    expander: true
-  },
-  {
-    key: "firstName",
-    header: "First",
-    width: 120,
-    cell: row => <TextStyle>{row.firstName}</TextStyle>
-  },
-  {
-    key: "lastName",
-    header: "Last",
-    width: 120,
-    cell: row => <TextStyle>{row.lastName}</TextStyle>
-  },
-  {
-    key: "email",
-    header: "Email",
-    width: 250,
-    cell: row => <TextStyle>{row.email}</TextStyle>
-  },
-  {
-    key: "streetAddress",
-    header: "Street",
-    cell: () => <input />
-  }
-];
-
-const App = () => {
-  return (
-    <StyledTable
-      data={data}
-      columns={columns}
-      tableHeight={400}
-      itemKey={row => row.id}
-      subComponent={SubComponent}
-      rowHeight={35}
-    />
-  );
-};
+const App = () => (
+  <Router>
+    <Application>
+      <Sidebar vertical visible inverted as={Menu} animation="push">
+        <Menu.Item as={Link} to="/">
+          <Icon name="home" />
+          Home
+        </Menu.Item>
+        <Menu.Item as={Link} to="/sort">
+          <Icon name="home" />
+          Sortable Table
+        </Menu.Item>
+      </Sidebar>
+      <Page>
+        <Title />
+        <Segment basic>
+          <Content>
+            <Switch>
+              <Route exact path="/">
+                <Example1 />
+              </Route>
+              <Route exact path="/sort">
+                <Example2 />
+              </Route>
+            </Switch>
+          </Content>
+        </Segment>
+      </Page>
+    </Application>
+  </Router>
+);
 export default App;
