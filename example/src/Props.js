@@ -1,28 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 import { Table as BaseTable } from "react-fluid-table";
-import { Icon } from "semantic-ui-react";
-
-const Wrapper = styled.div`
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-`;
+import { Icon, Divider, Header } from "semantic-ui-react";
 
 const Container = styled.div`
-  position: relative;
-  background-color: #fff;
-  height: 250px;
   padding: 1em;
-  -webkit-box-shadow: 0px -4px 5px 0px rgba(176, 176, 176, 0.75);
-  -moz-box-shadow: 0px -4px 5px 0px rgba(176, 176, 176, 0.75);
-  box-shadow: 0px -4px 5px 0px rgba(176, 176, 176, 0.75);
+  background-color: white;
 `;
 
 const Table = styled(BaseTable)`
   border-bottom: none;
   border-right: none;
   border-left: none;
+  background-color: transparent;
 
   .react-fluid-table-header {
     background-color: #f3c9ef;
@@ -42,7 +32,7 @@ const columns = [
   {
     key: "prop",
     header: "Prop",
-    width: 120,
+    width: 140,
     cell: row => <code>{row.prop}</code>
   },
   {
@@ -66,7 +56,7 @@ const columns = [
     key: "default",
     header: "Default",
     width: 100,
-  cell: row => row.default ? <code>{row.default}</code> : null
+    cell: row => (row.default ? <code>{row.default}</code> : null)
   },
   {
     key: "description",
@@ -107,15 +97,42 @@ const data = [
     type: "number",
     description: "The default height of the row. Rows will have this height while scrolling",
     default: 37
+  },
+  {
+    prop: "minColumnWidth",
+    type: "number",
+    description: "The default column width for the entire table",
+    default: 80
+  },
+  {
+    prop: "sortColumn",
+    type: "string",
+    description: "The column that is sorted by default (can be controlled)"
+  },
+  {
+    prop: "sortDirection",
+    type: "string | \"ASC\" | \"DESC\" ",
+    description: "The direction of the sorted column (can be controlled)"
+  },
+  {
+    prop: "onSort",
+    type: "function",
+    description: "The callback function when a sortable column is clicked"
+  },
+  {
+    prop: "subComponent",
+    type: "Element",
+    description: "The element that is rendered on a table with row expansion"
   }
 ];
 
 const Props = () => (
-  <Wrapper>
-    <Container>
-      <Table data={data} columns={columns} />
-    </Container>
-  </Wrapper>
+  <Container>
+    <Table data={data} columns={columns} tableHeight={500} />
+    <Divider section/>
+    <Header dividing color="red">Required Props</Header>
+    <Header size="small"><code>data</code></Header>
+  </Container>
 );
 
 export default Props;

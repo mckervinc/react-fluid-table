@@ -29,15 +29,16 @@ const getTitle = path => {
 const Title = () => {
   const [title, setTitle] = useState(BaseName);
   const location = useLocation();
+  const path = location.pathname.slice(1).toLowerCase();
 
   useEffect(() => {
-    const newTitle = getTitle(location.pathname.slice(1));
+    const newTitle = getTitle(path);
     if (title !== newTitle) {
       setTitle(newTitle);
     }
-  }, [title, location]);
+  }, [title, path]);
 
-  return (
+  return path === "props" ? null : (
     <Container>
       <Header size="huge">{title}</Header>
     </Container>

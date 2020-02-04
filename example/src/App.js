@@ -17,6 +17,11 @@ const Application = styled(Sidebar.Pushable)`
 
 const Page = styled(Sidebar.Pusher)`
   width: calc(100% - 260px);
+  height: 100%;
+
+  &&& {
+    overflow: auto;
+  };
 `;
 
 const Content = styled.div`
@@ -25,6 +30,12 @@ const Content = styled.div`
   margin-bottom: 10px;
   box-shadow: 0 2px 8px #bbb;
 `;
+
+const Wrapper = ({ children }) => (
+  <Segment basic>
+    <Content>{children}</Content>
+  </Segment>
+);
 
 const App = () => (
   <Router>
@@ -40,25 +51,32 @@ const App = () => (
         <Menu.Item as={Link} to="/sub">
           Table w/Subcomponent
         </Menu.Item>
+        <Menu.Item as={Link} to="/props">
+          Table Props
+        </Menu.Item>
       </Sidebar>
       <Page>
         <Title />
-        <Segment basic>
-          <Content>
-            <Switch>
-              <Route exact path="/">
-                <Example1 />
-              </Route>
-              <Route exact path="/sort">
-                <Example2 />
-              </Route>
-              <Route exact path="/sub">
-                <Example3 />
-              </Route>
-            </Switch>
-          </Content>
-        </Segment>
-        <Props />
+        <Switch>
+          <Route exact path="/">
+            <Wrapper>
+              <Example1 />
+            </Wrapper>
+          </Route>
+          <Route exact path="/sort">
+            <Wrapper>
+              <Example2 />
+            </Wrapper>
+          </Route>
+          <Route exact path="/sub">
+            <Wrapper>
+              <Example3 />
+            </Wrapper>
+          </Route>
+          <Route exact path="/props">
+            <Props />
+          </Route>
+        </Switch>
       </Page>
     </Application>
   </Router>
