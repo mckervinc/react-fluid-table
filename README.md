@@ -85,4 +85,4 @@ MIT © [Mckervin Ceme &lt;mckervinc@live.com&gt;](https://github.com/mckervinc)
 
 This application was created using [create-react-hook](https://github.com/hermanya/create-react-hook).
 
-This application features some icons From [Font Awesome](https://fontawesome.com/license/free).
+This application features some icons from [Font Awesome](https://fontawesome.com/license/free).
