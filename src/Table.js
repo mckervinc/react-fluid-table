@@ -262,6 +262,17 @@ ListComponent.propTypes = {
 
 Table.propTypes = {
   id: PropTypes.string,
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  columns: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string,
+      header: PropTypes.node,
+      width: PropTypes.number,
+      minWidth: PropTypes.number,
+      cell: PropTypes.oneOfType([PropTypes.elementType, PropTypes.func]),
+      expander: PropTypes.oneOfType([PropTypes.bool, PropTypes.elementType, PropTypes.func])
+    })
+  ).isRequired,
   minColumnWidth: PropTypes.number,
   tableHeight: PropTypes.number,
   tableWidth: PropTypes.number,
