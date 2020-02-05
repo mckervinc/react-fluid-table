@@ -9,10 +9,12 @@ SyntaxHighlighter.registerLanguage("jsx", jsx);
 
 const Container = styled.div`
   position: relative;
+  font-size: 0.85714286em;
 `;
 
 const Highligher = styled(SyntaxHighlighter)`
-  height: 330px;
+  margin-bottom: 0 !important;
+  border-radius: 0 !important;
 `;
 
 const Group = styled(Menu).attrs(() => ({
