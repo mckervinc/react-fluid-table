@@ -32,9 +32,7 @@ const Table = styled(BaseTable)`
 `;
 
 const Item = styled(List.Item)`
-  &&& {
-    padding-bottom: 10px;
-  }
+  width: 100%;
 `;
 
 const columns = [
@@ -103,7 +101,7 @@ const data = [
   {
     prop: "className",
     type: "string",
-    description: "optional className"
+    description: "additional classNames"
   },
   {
     prop: "tableHeight",
@@ -141,7 +139,14 @@ const data = [
     prop: "onSort",
     type: "function",
     expandedType: () => <code>function(col: string, dir: string) => void</code>,
-    description: "The callback function when a sortable column is clicked"
+    description: "The callback function when a sortable column is clicked",
+    content: () => (
+      <div>
+        The arguments <InlineCode>col</InlineCode> and <InlineCode>dir</InlineCode> are the clicked
+        column and the new sortDirection. These values are <code>null</code> after a descending
+        column is clicked.
+      </div>
+    )
   },
   {
     prop: "subComponent",
@@ -155,6 +160,15 @@ const optional = data.filter(i => !i.required);
 
 const Props = () => (
   <Container>
+    <Header size="large">
+      <Icon name="react" color="blue" />
+      <Header.Content>
+        <code>{"<Table>"}</code> Props
+        <Header.Subheader>
+          All the props for the <code>{"<Table>"}</code> component
+        </Header.Subheader>
+      </Header.Content>
+    </Header>
     <Table data={data} columns={columns} tableHeight={500} />
     <Divider section />
     <Header dividing color="red">

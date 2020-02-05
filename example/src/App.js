@@ -7,7 +7,8 @@ import { Icon, Menu, Segment, Sidebar } from "semantic-ui-react";
 
 import Title from "./Title";
 import Props from "./Props";
-import { Example1 } from "./examples/01-base";
+import { Snippet } from "./shared/Snippet";
+import { Example1, Source as Example1Code } from "./examples/01-base";
 import { Example2 } from "./examples/02-sort";
 import { Example3 } from "./examples/03-sub";
 
@@ -58,6 +59,7 @@ const App = () => (
             <Wrapper>
               <Example1 />
             </Wrapper>
+            <Snippet code={Example1Code}/>
           </Route>
           <Route exact path="/sort">
             <Wrapper>
