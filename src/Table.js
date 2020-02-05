@@ -12,18 +12,17 @@ import PropTypes from "prop-types";
 import Header from "./Header";
 import RowWrapper from "./RowWrapper";
 import { TableContextProvider, TableContext } from "./TableContext";
-import { randomString, findHeaderByUuid, findRowByUuidAndKey } from "./util";
 import { calculateColumnWidth } from "./useCellResize";
+import { randomString, findHeaderByUuid, findRowByUuidAndKey } from "./util";
 
 const DEFAULT_ROW_HEIGHT = 37;
 const DEFAULT_HEADER_HEIGHT = 32;
-const NO_COMPONENT = { offsetHeight: 0 };
 const NO_PARENT = {
   parentElement: { scrollWidth: 0, clientWidth: 0 }
 };
 
 /**
- * We add 1 to the itemCount to account for the header 'row'
+ * The main table component
  */
 const ListComponent = ({ className, height, width, itemKey, rowHeight, data, subComponent }) => {
   // hooks
@@ -39,7 +38,7 @@ const ListComponent = ({ className, height, width, itemKey, rowHeight, data, sub
 
   // variables
   const defaultSize = rowHeight || DEFAULT_ROW_HEIGHT;
-  const { uuid, expanded, minColumnWidth, fixedWidth, remainingCols } = tableContext.state;
+  const { uuid, minColumnWidth, fixedWidth, remainingCols } = tableContext.state;
 
   // functions
   const generateKeyFromRow = useCallback(
@@ -83,16 +82,19 @@ const ListComponent = ({ className, height, width, itemKey, rowHeight, data, sub
       const row = typeof queryParam === "number" ? findRowByUuidAndKey(uuid, key) : queryParam;
 
       if (!row) {
-        return defaultSize;
+        if (!listRef.current) {
+          return defaultSize;
+        }
+
+        const cachedSize = listRef.current._instanceProps.itemMetadataMap[dataIndex + 1] || {
+          size: defaultSize
+        };
+        return cachedSize.size || defaultSize;
       }
 
-      const isExpanded = expanded[key];
-      const rowComponent = row.children[0] || NO_COMPONENT;
-      const subComponent = isExpanded ? row.children[1] : NO_COMPONENT;
-
-      return rowComponent.offsetHeight + subComponent.offsetHeight;
+      return [...row.children].reduce((pv, c) => pv + c.offsetHeight, 0);
     },
-    [uuid, data, rowHeight, expanded, defaultSize, generateKeyFromRow]
+    [uuid, data, listRef, defaultSize, generateKeyFromRow]
   );
 
   const pixelWidthHelper = useCallback(() => {
@@ -124,21 +126,18 @@ const ListComponent = ({ className, height, width, itemKey, rowHeight, data, sub
 
   // effects
   /* initializers */
+  // calculate cache after first render
   useLayoutEffect(() => {
     listRef.current.resetAfterIndex(0);
-  }, [listRef]);
+  }, []);
 
-  useLayoutEffect(() => {
-    if (tableRef.current) {
-      pixelWidthHelper();
-    }
-  }, [pixelWidth, pixelWidthHelper]);
+  // initialize pixel width
+  useLayoutEffect(pixelWidthHelper, []);
 
+  // initialize whether or not to use row Width (useful for bottom border)
   useEffect(() => {
-    if (tableRef.current) {
-      setUseRowWidth(tableRef.current.scrollWidth <= tableRef.current.clientWidth);
-    }
-  }, [tableRef, useRowWidth]);
+    setUseRowWidth(tableRef.current.scrollWidth <= tableRef.current.clientWidth);
+  }, []);
 
   /* listeners */
   useEffect(() => {
