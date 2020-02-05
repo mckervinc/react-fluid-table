@@ -139,6 +139,13 @@ const ListComponent = ({ className, height, width, itemKey, rowHeight, data, sub
     setUseRowWidth(tableRef.current.scrollWidth <= tableRef.current.clientWidth);
   }, []);
 
+  // trigger window resize. fixes issue in FF
+  useEffect(() => {
+    if (!window.document.documentMode) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  }, []);
+
   /* listeners */
   useEffect(() => {
     window.addEventListener("resize", shouldUseRowWidth);
