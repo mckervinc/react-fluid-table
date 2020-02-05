@@ -36,9 +36,9 @@ const SubComponentStyle = styled.div`
   background-color: lightblue;
 `;
 
-const SubComponent = ({ row }) => <SubComponentStyle>{`Row ${row.id} is expanded`}</SubComponentStyle>
-
-const Name = "Table with Subcomponent";
+const SubComponent = ({ row }) => (
+  <SubComponentStyle>{`Row ${row.id} is expanded`}</SubComponentStyle>
+);
 
 const Example3 = () => (
   <Table
@@ -50,4 +50,30 @@ const Example3 = () => (
   />
 );
 
-export { Name, Example3 };
+const Source = `
+const data = [/* ... */];
+
+const columns = [
+  { key: "", width: 40, expander: true },
+  { key: "id", header: "ID", width: 50 },
+  { key: "firstName", header: "First", width: 120 },
+  { key: "lastName", header: "Last", width: 120 },
+  { key: "email", header: "Email", width: 250 }
+];
+
+const SubComponent = ({ row }) => (
+  <SubComponentStyle>{\`Row \${row.id} is expanded\`}</SubComponentStyle>
+);
+
+const Example = () => (
+  <Table
+    data={data}
+    columns={columns}
+    subComponent={SubComponent}
+    rowHeight={35}
+    tableHeight={400}
+  />
+);
+`.trim();
+
+export { Example3, Source };
