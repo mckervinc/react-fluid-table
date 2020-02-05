@@ -9,8 +9,8 @@ import Title from "./Title";
 import Props from "./Props";
 import { Snippet } from "./shared/Snippet";
 import { Example1, Source as Example1Code } from "./examples/01-base";
-import { Example2 } from "./examples/02-sort";
-import { Example3 } from "./examples/03-sub";
+import { Example2, Source as Example2Code } from "./examples/02-sort";
+import { Example3, Source as Example3Code } from "./examples/03-sub";
 
 const Application = styled(Sidebar.Pushable)`
   border: none;
@@ -19,6 +19,9 @@ const Application = styled(Sidebar.Pushable)`
 const Page = styled(Sidebar.Pusher)`
   width: calc(100% - 260px);
   height: 100%;
+  &&& {
+    overflow-y: auto;
+  }
 `;
 
 const Content = styled.div`
@@ -53,23 +56,27 @@ const App = () => (
         </Menu.Item>
       </Sidebar>
       <Page>
-        <Title />
         <Switch>
           <Route exact path="/">
+            <Title title="Basic Table" />
             <Wrapper>
               <Example1 />
             </Wrapper>
-            <Snippet code={Example1Code}/>
+            <Snippet code={Example1Code} />
           </Route>
           <Route exact path="/sort">
+            <Title title="Sortable Table" />
             <Wrapper>
               <Example2 />
             </Wrapper>
+            <Snippet code={Example2Code} />
           </Route>
           <Route exact path="/sub">
+            <Title title="Table with Subcomponent" />
             <Wrapper>
               <Example3 />
             </Wrapper>
+            <Snippet code={Example3Code} />
           </Route>
           <Route exact path="/props">
             <Props />
