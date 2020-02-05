@@ -1,7 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import { Table as BaseTable } from "react-fluid-table";
-import { Icon, Divider, Header } from "semantic-ui-react";
+import { Icon, Divider, Header, List } from "semantic-ui-react";
+import { InlineCode } from "./shared/styles";
+import ColumnPropsTable from "./tables/ColumnProps";
 
 const Container = styled.div`
   padding: 1em;
@@ -11,13 +13,8 @@ const Container = styled.div`
 `;
 
 const Table = styled(BaseTable)`
-  border-bottom: none;
-  border-right: none;
-  border-left: none;
-  background-color: transparent;
-
   .react-fluid-table-header {
-    background-color: #f3c9ef;
+    background-color: #282a36;
   }
 
   .cell,
@@ -27,6 +24,16 @@ const Table = styled(BaseTable)`
     :last-child {
       border-right: none;
     }
+  }
+
+  .header-cell-text {
+    color: #ff79c5;
+  }
+`;
+
+const Item = styled(List.Item)`
+  &&& {
+    padding-bottom: 10px;
   }
 `;
 
@@ -62,22 +69,36 @@ const columns = [
   },
   {
     key: "description",
-    header: "Description"
+    header: "Description",
+    cell: row => row.description
   }
 ];
 
 const data = [
   {
     prop: "data",
-    type: "any[]",
+    type: "object[]",
     required: true,
-    description: "The array of items that are going to be displayed."
+    description: "The array of items that are going to be displayed.",
+    content: () => (
+      <p>
+        This is an array of objects that you want to display in a table. The items in this list must
+        be defined and cannot be <InlineCode>null</InlineCode>, <InlineCode>undefined</InlineCode>,
+        or any other primitives or classes.
+      </p>
+    )
   },
   {
     prop: "columns",
-    type: "any[]",
+    type: "object[]",
     required: true,
-    description: "The list of columns"
+    description: "The list of columns",
+    content: () => (
+      <>
+        <p>Each column object must satisfy the conditions layed out in the table below.</p>
+        <ColumnPropsTable />
+      </>
+    )
   },
   {
     prop: "className",
@@ -119,6 +140,7 @@ const data = [
   {
     prop: "onSort",
     type: "function",
+    expandedType: () => <code>function(col: string, dir: string) => void</code>,
     description: "The callback function when a sortable column is clicked"
   },
   {
@@ -128,6 +150,9 @@ const data = [
   }
 ];
 
+const required = data.filter(i => i.required);
+const optional = data.filter(i => !i.required);
+
 const Props = () => (
   <Container>
     <Table data={data} columns={columns} tableHeight={500} />
@@ -135,9 +160,35 @@ const Props = () => (
     <Header dividing color="red">
       Required Props
     </Header>
-    <Header size="small">
-      <code>data</code>
+    <List divided>
+      {required.map(d => (
+        <Item key={d.prop}>
+          <List.Header>
+            <code>{d.prop}</code>: <code>{d.type}</code>
+          </List.Header>
+          {!d.content ? null : typeof d.content === "string" ? d.content : d.content()}
+        </Item>
+      ))}
+    </List>
+    <Header dividing size="small" color="grey">
+      Optional Props
     </Header>
+    <List divided>
+      {optional.map(d => (
+        <Item key={d.prop}>
+          <List.Header>
+            <code>{d.prop}</code>: {d.expandedType ? d.expandedType() : <code>{d.type}</code>}
+          </List.Header>
+          {!d.content ? (
+            <p>{d.description}</p>
+          ) : typeof d.content === "string" ? (
+            d.content
+          ) : (
+            d.content()
+          )}
+        </Item>
+      ))}
+    </List>
   </Container>
 );
 
