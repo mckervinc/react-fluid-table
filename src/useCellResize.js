@@ -36,7 +36,7 @@ export const calculateColumnWidth = (element, numColumns, fixedColumnWidths) => 
  * @param {number} usedSpace - total size in pixels of defined widths
  * @param {number} minColumnWidth - the min column width of each column
  */
-export const useCellResize = (el, numColumns, usedSpace, minColumnWidth = 0) => {
+export const useCellResize = (el, numColumns, usedSpace, minColumnWidth) => {
   const timeoutRef = useRef(null);
   const [pixelWidth, setPixelWidth] = useState(0);
 
