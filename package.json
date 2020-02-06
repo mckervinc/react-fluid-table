@@ -5,10 +5,12 @@
   "author": "Mckervin Ceme <mckervinc@live.com>",
   "license": "MIT",
   "repository": "https://github.com/mckervinc/react-fluid-table.git",
+  "homepage": "https://mckervinc.github.io/react-fluid-table",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
   "types": "index.d.ts",
+  "keywords": ["react", "reactjs", "table", "window", "fluid", "virtualized", "list", "scrolling"],
   "engines": {
     "node": ">=8",
     "npm": ">=5"
