@@ -37,13 +37,30 @@ const Wrapper = ({ children }) => (
   </Segment>
 );
 
+const Banner = styled.code`
+  color: #50f97a;
+  white-space: pre;
+  padding: 0 0.2em;
+  border-radius: 0.28571429rem;
+  font-size: 1.3em;
+`;
+
+const GitHub = styled(Icon).attrs(() => ({
+  name: "github alternate"
+}))`
+  float: none !important;
+  margin: 0 0.5em 0 0 !important;
+`;
+
 const App = () => (
   <Router>
     <Application>
       <Sidebar vertical visible inverted as={Menu}>
+        <Menu.Item>
+          <Banner>react-fluid-table</Banner>
+        </Menu.Item>
         <Menu.Item as={Link} to="/">
-          <Icon name="home" />
-          Home
+          Basic Table
         </Menu.Item>
         <Menu.Item as={Link} to="/sort">
           Sortable Table
@@ -53,6 +70,10 @@ const App = () => (
         </Menu.Item>
         <Menu.Item as={Link} to="/props">
           Table Props
+        </Menu.Item>
+        <Menu.Item as="a" href="https://github.com/mckervinc/react-fluid-table#readme">
+          <GitHub />
+          GitHub
         </Menu.Item>
       </Sidebar>
       <Page>

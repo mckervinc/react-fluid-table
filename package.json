@@ -2,7 +2,7 @@
   "name": "react-fluid-table",
   "version": "0.2.4",
   "description": "A React table inspired by react-window",
-  "author": "Mckervin Ceme &lt;mckervinc@live.com&gt;",
+  "author": "Mckervin Ceme <mckervinc@live.com>",
   "license": "MIT",
   "repository": "https://github.com/mckervinc/react-fluid-table.git",
   "main": "dist/index.js",
