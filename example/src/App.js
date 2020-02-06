@@ -2,7 +2,7 @@ import "semantic-ui-css/semantic.min.css";
 
 import React from "react";
 import styled from "styled-components";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { HashRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Icon, Menu, Segment, Sidebar } from "semantic-ui-react";
 
 import Title from "./Title";
