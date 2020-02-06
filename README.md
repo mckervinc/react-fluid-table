@@ -2,7 +2,7 @@
 
 > A React table inspired by react-window
 
-[![NPM](https://img.shields.io/npm/v/react-fluid-table.svg)](https://www.npmjs.com/package/react-fluid-table) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![NPM](https://img.shields.io/npm/v/react-fluid-table?style=flat-square)](https://www.npmjs.com/package/react-fluid-table) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg?style=flat-square)](https://standardjs.com)
 
 ## Install
 
