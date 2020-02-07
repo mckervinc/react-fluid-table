@@ -1,28 +1,9 @@
 import { useRef, useState, useCallback, useEffect, useLayoutEffect } from "react";
 
-const scrollbarSize = () => {
-  const scrollDiv = document.createElement("div");
-  scrollDiv.style.position = "absolute";
-  scrollDiv.style.top = "-9999px";
-  scrollDiv.style.width = "50px";
-  scrollDiv.style.height = "50px";
-  scrollDiv.style.overflow = "scroll";
-  document.body.appendChild(scrollDiv);
-  const size = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-  document.body.removeChild(scrollDiv);
-  return size;
-};
-
-const scrollWidth = scrollbarSize();
-
-const scrollbarVisible = el => Boolean(el) && el.scrollHeight > el.clientHeight;
-
 export const calculateColumnWidth = (element, numColumns, fixedColumnWidths) => {
   if (!element) return [0, 0];
   const n = Math.max(numColumns, 1);
-  const parent = element.parentElement;
-  const totalWidth = element.offsetWidth - (scrollbarVisible(parent) ? scrollWidth : 0);
-  const freeSpace = Math.max(totalWidth - fixedColumnWidths, 0);
+  const freeSpace = Math.max(element.offsetWidth - fixedColumnWidths, 0);
   const baseWidth = Math.floor(freeSpace / n);
   const remaining = Math.floor(freeSpace % n);
 
