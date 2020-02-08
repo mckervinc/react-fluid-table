@@ -24,6 +24,7 @@ yarn-error.log*
 
 # misc
 rollup.config.js
+.babelrc
 .DS_Store
 .env
 .env.local
