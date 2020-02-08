@@ -31,7 +31,6 @@ const ListComponent = ({ className, height, width, itemKey, rowHeight, data, sub
   const resizeRef = useRef(null);
   const timeoutRef = useRef(null);
   const pixelWidthRef = useRef(null);
-  const resetIndexRef = useRef(Infinity);
   const tableContext = useContext(TableContext);
   const [useRowWidth, setUseRowWidth] = useState(true);
   const [pixelWidth, setPixelWidth] = useState(0);
@@ -65,14 +64,12 @@ const ListComponent = ({ className, height, width, itemKey, rowHeight, data, sub
         return;
       }
 
-      resetIndexRef.current = Math.min(index, resetIndexRef.current);
       timeoutRef.current = window.setTimeout(() => {
-        const resetNumber = resetIndexRef.current;
-        resetIndexRef.current = Infinity;
-        listRef.current.resetAfterIndex(resetNumber);
+        const resetIndex = parseInt(tableRef.current.children[1].children[0].dataset.index) + 1;
+        listRef.current.resetAfterIndex(resetIndex);
       }, 50);
     },
-    [listRef, timeoutRef, resetIndexRef]
+    [listRef, tableRef, timeoutRef]
   );
 
   const calculateHeight = useCallback(
@@ -178,7 +175,6 @@ const ListComponent = ({ className, height, width, itemKey, rowHeight, data, sub
 
   return (
     <VariableSizeList
-      useIsScrolling
       className={`react-fluid-table ${className || ""}`}
       ref={listRef}
       innerRef={tableRef}

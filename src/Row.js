@@ -100,6 +100,7 @@ const Row = ({
     <div
       ref={rowRef}
       className="react-fluid-table-row"
+      data-index={index}
       data-row-uuid={rowUuid}
       style={{ ...style, width: useRowWidth ? style.width : undefined }}
     >
