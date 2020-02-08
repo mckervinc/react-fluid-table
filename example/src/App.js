@@ -71,7 +71,7 @@ const App = () => (
         <Menu.Item as={Link} to="/props">
           Table Props
         </Menu.Item>
-        <Menu.Item as="a" href="https://github.com/mckervinc/react-fluid-table#readme">
+        <Menu.Item as="a" href="https://github.com/mckervinc/react-fluid-table">
           <GitHub />
           GitHub
         </Menu.Item>
