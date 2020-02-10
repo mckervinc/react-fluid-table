@@ -11,6 +11,7 @@ import { Snippet } from "./shared/Snippet";
 import { Example1, Source as Example1Code } from "./examples/01-base";
 import { Example2, Source as Example2Code } from "./examples/02-sort";
 import { Example3, Source as Example3Code } from "./examples/03-sub";
+import { Example4, Source as Example4Code } from "./examples/04-custom";
 
 const Application = styled(Sidebar.Pushable)`
   border: none;
@@ -68,6 +69,9 @@ const App = () => (
         <Menu.Item as={Link} to="/sub">
           Table w/Subcomponent
         </Menu.Item>
+        <Menu.Item as={Link} to="/custom">
+          Cell Renderer
+        </Menu.Item>
         <Menu.Item as={Link} to="/props">
           Table Props
         </Menu.Item>
@@ -98,6 +102,13 @@ const App = () => (
               <Example3 />
             </Wrapper>
             <Snippet code={Example3Code} />
+          </Route>
+          <Route exact path="/custom">
+            <Title title="Cell Renderer" />
+            <Wrapper>
+              <Example4 />
+            </Wrapper>
+            <Snippet code={Example4Code} />
           </Route>
           <Route exact path="/props">
             <Props />
