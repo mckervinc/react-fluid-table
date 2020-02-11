@@ -40,10 +40,8 @@
   box-sizing: border-box;
 }
 
-.header-cell-text,
-.header-cell-arrow {
+.header-cell-text {
   font-family: Helvetica;
-  font-size: 14px;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;
@@ -56,7 +54,19 @@
 }
 
 .header-cell-arrow {
-  padding-left: 4px;
+  width: 0;
+  height: 0;
+  margin: 1px 0 0 4px;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+}
+
+.header-cell-arrow.asc {
+  border-bottom: 10px solid #7d7d7d;
+}
+
+.header-cell-arrow.desc {
+  border-top: 10px solid #7d7d7d;
 }
 
 .react-fluid-table-row {
