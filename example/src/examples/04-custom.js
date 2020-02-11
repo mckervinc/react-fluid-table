@@ -21,9 +21,14 @@ const EmailBox = styled(Input)`
   width: 100%;
 `;
 
-const Email = ({ email }) => {
-  return <EmailBox defaultValue={email} />;
-};
+const Email = ({ email }) => <EmailBox defaultValue={email} />;
+
+const ProfPic = styled(Image)`
+  &&& {
+    width: 100%;
+    height: 134px;
+  }
+`;
 
 const countries = [
   { name: "Afghanistan", countryCode: "af" },
@@ -284,7 +289,7 @@ const columns = [
     key: "avatar",
     header: "Profile Photo",
     width: 150,
-    cell: row => <Image size="small" src={row.avatar} />
+    cell: row => <ProfPic size="small" src={row.avatar} />
   },
   {
     key: "email",
@@ -331,7 +336,7 @@ const columns = [
     key: "avatar",
     header: "Profile Photo",
     width: 150,
-    cell: row => <Image size="small" src={row.avatar} />
+    cell: row => <ProfPic size="small" src={row.avatar} />
   },
   {
     key: "email",
