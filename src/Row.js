@@ -28,7 +28,7 @@ const Row = ({
 
   // key
   const key = generateKeyFromRow(row, index);
-  const rowUuid = `${uuid}-${key}`;
+  const rowKey = `${uuid}-${key}`;
 
   // expanded
   const isExpanded = Boolean(expanded[key]);
@@ -101,7 +101,7 @@ const Row = ({
       ref={rowRef}
       className="react-fluid-table-row"
       data-index={index}
-      data-row-uuid={rowUuid}
+      data-row-key={rowKey}
       style={{ ...style, width: useRowWidth ? style.width : undefined }}
     >
       <div className="row-container">
