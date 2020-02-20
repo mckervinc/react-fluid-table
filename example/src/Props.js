@@ -116,7 +116,7 @@ const data = [
   {
     prop: "rowHeight",
     type: "number",
-    description: "The default height of the row. Rows will have this height while scrolling",
+    description: "This is a fixed height of each row. Subcomponents will not be affected by this value",
     default: 37
   },
   {

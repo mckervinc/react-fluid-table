@@ -68,11 +68,7 @@ const Example = () => {
   const [data, setData] = useState(_.orderBy(testData, ['firstName'], ['asc']));
 
   const onSort = (col, dir) => {
-    if (!col || !dir) {
-      setData(testData);
-    } else {
-      setData(_.orderBy(data, [col], [dir.toLowerCase()]));
-    }
+    setData(!col || !dir ? testData : _.orderBy(data, [col], [dir.toLowerCase()]));
   };
 
   return (
