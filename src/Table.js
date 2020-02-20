@@ -89,9 +89,10 @@ const ListComponent = ({ className, height, width, itemKey, rowHeight, data, sub
         return cachedSize.size || defaultSize;
       }
 
-      return [...row.children].reduce((pv, c) => pv + c.offsetHeight, 0);
+      const arr = rowHeight ? [...row.children].slice(1) : [...row.children];
+      return (rowHeight || 0) + arr.reduce((pv, c) => pv + c.offsetHeight, 0);
     },
-    [uuid, data, listRef, defaultSize, generateKeyFromRow]
+    [uuid, data, listRef, rowHeight, defaultSize, generateKeyFromRow]
   );
 
   const pixelWidthHelper = useCallback(() => {
@@ -198,6 +199,7 @@ const ListComponent = ({ className, height, width, itemKey, rowHeight, data, sub
       }}
       itemData={{
         rows: data,
+        rowHeight,
         pixelWidth,
         useRowWidth,
         subComponent,

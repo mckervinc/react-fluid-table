@@ -9,6 +9,7 @@ const Row = ({
   row,
   index,
   style,
+  rowHeight,
   pixelWidth,
   useRowWidth,
   clearSizeCache,
@@ -103,10 +104,10 @@ const Row = ({
       style={{
         ...style,
         width: useRowWidth ? style.width : undefined,
-        height: !rowRef.current ? undefined : style.height
+        height: rowRef.current || rowHeight ? style.height : undefined
       }}
     >
-      <div className="row-container">
+      <div className="row-container" style={{height: rowHeight || undefined}}>
         {columns.map(c => {
           const width = Math.max(c.width || pixelWidth, c.minWidth || 0);
           const style = {
