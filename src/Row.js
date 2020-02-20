@@ -11,7 +11,6 @@ const Row = ({
   style,
   pixelWidth,
   useRowWidth,
-  isScrolling,
   clearSizeCache,
   calculateHeight,
   generateKeyFromRow,
@@ -23,6 +22,7 @@ const Row = ({
   const tableContext = useContext(TableContext);
 
   // variables
+  const { height } = style;
   const { dispatch } = tableContext;
   const { uuid, columns, expanded } = tableContext.state;
 
@@ -63,12 +63,10 @@ const Row = ({
       return;
     }
 
-    const height = rowRef.current.clientHeight;
-    const correctHeight = calculateHeight(rowRef.current, index);
-    if (height !== correctHeight) {
+    if (height !== calculateHeight(rowRef.current, index)) {
       clearSizeCache(index);
     }
-  }, [rowRef, index, calculateHeight, clearSizeCache]);
+  }, [rowRef, index, height, calculateHeight, clearSizeCache]);
 
   const onResize = useCallback(() => {
     setTimeout(resetHeight, 0);
@@ -82,12 +80,12 @@ const Row = ({
   }, [isExpanded, index, clearSizeCache, expandedCalledRef]);
 
   useLayoutEffect(() => {
-    if (rowRef.current && !expandedCalledRef.current && !isScrolling) {
+    if (!expandedCalledRef.current) {
       resetHeight();
     }
 
     expandedCalledRef.current = false;
-  }, [rowRef, isExpanded, isScrolling, expandedCalledRef, resetHeight]);
+  }, [isExpanded, expandedCalledRef, resetHeight]);
 
   useEffect(() => {
     window.addEventListener("resize", onResize);
@@ -102,7 +100,11 @@ const Row = ({
       className="react-fluid-table-row"
       data-index={index}
       data-row-key={rowKey}
-      style={{ ...style, width: useRowWidth ? style.width : undefined }}
+      style={{
+        ...style,
+        width: useRowWidth ? style.width : undefined,
+        height: !rowRef.current ? undefined : style.height
+      }}
     >
       <div className="row-container">
         {columns.map(c => {
