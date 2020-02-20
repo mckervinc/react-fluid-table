@@ -107,7 +107,7 @@ const Row = ({
         height: rowRef.current || rowHeight ? style.height : undefined
       }}
     >
-      <div className="row-container" style={{height: rowHeight || undefined}}>
+      <div className="row-container" style={{ height: rowHeight || undefined }}>
         {columns.map(c => {
           const width = Math.max(c.width || pixelWidth, c.minWidth || 0);
           const style = {
