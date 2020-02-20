@@ -19,6 +19,7 @@ const Row = ({
 }) => {
   // hooks
   const rowRef = useRef(null);
+  const resizeRef = useRef(null);
   const expandedCalledRef = useRef(false);
   const tableContext = useContext(TableContext);
 
@@ -70,8 +71,12 @@ const Row = ({
   }, [rowRef, index, height, calculateHeight, clearSizeCache]);
 
   const onResize = useCallback(() => {
-    setTimeout(resetHeight, 0);
-  }, [resetHeight]);
+    if (resizeRef.current) {
+      window.clearTimeout(resizeRef.current)
+    }
+
+    resizeRef.current = setTimeout(resetHeight, 65);
+  }, [resetHeight, resizeRef]);
 
   // effects
   useLayoutEffect(() => {
@@ -91,9 +96,12 @@ const Row = ({
   useEffect(() => {
     window.addEventListener("resize", onResize);
     return () => {
+      if (resizeRef.current) {
+        window.clearTimeout(resizeRef.current)
+      }
       window.removeEventListener("resize", onResize);
     };
-  }, [onResize]);
+  }, [onResize, resizeRef]);
 
   return (
     <div
