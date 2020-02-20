@@ -25,7 +25,7 @@ const columns = [
   }
 ];
 
-const Example1 = () => <Table data={testData} columns={columns} tableHeight={400} rowHeight={35} />;
+const Example1 = () => <Table data={testData} columns={columns} tableHeight={400} />;
 
 const Source = `
 const data = _.range(3000).map(i => ({
@@ -47,7 +47,6 @@ const Example = () => (
     data={data}
     columns={columns}
     tableHeight={400}
-    rowHeight={35}
   />
 );
 `.trim()
