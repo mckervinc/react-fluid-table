@@ -1,13 +1,22 @@
 import { useRef, useState, useCallback, useEffect, useLayoutEffect } from "react";
 
-export const calculateColumnWidth = (element: HTMLElement, numColumns: number, fixedColumnWidths: number) : number => {
+export const calculateColumnWidth = (
+  element: HTMLElement,
+  numColumns: number,
+  fixedColumnWidths: number
+): number => {
   if (!element) return 0;
   const n = Math.max(numColumns, 1);
   const freeSpace = Math.max(element.offsetWidth - fixedColumnWidths, 0);
   return Math.floor(freeSpace / n);
 };
 
-export const useCellResize = (el: HTMLElement, numColumns: number, usedSpace: number, minColumnWidth: number) : number => {
+export const useCellResize = (
+  el: HTMLElement,
+  numColumns: number,
+  usedSpace: number,
+  minColumnWidth: number
+): number => {
   const timeoutRef = useRef(0);
   const [pixelWidth, setPixelWidth] = useState(0);
 
