@@ -13,7 +13,12 @@ import RowWrapper from "./RowWrapper";
 import { TableContextProvider, TableContext } from "./TableContext";
 import { calculateColumnWidth } from "./useCellResize";
 import { randomString, findHeaderByUuid, findRowByUuidAndKey } from "./util";
-import { Text, ListProps, TableProps } from "../index";
+import { Text, ListProps, TableProps, Generic } from "../index";
+
+interface Data {
+  rows: Generic[];
+  [key: string]: any
+}
 
 const DEFAULT_HEADER_HEIGHT = 32;
 const NO_PARENT = {
@@ -192,7 +197,7 @@ const ListComponent = ({
       innerElementType={Header}
       height={height}
       width={width}
-      itemKey={(index: number, data: any): Text => {
+      itemKey={(index: number, data: Data): Text => {
         if (!index) return `${uuid}-header`;
         const dataIndex = index - 1;
         const row = data.rows[dataIndex];
