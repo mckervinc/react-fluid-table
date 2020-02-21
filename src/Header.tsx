@@ -1,14 +1,23 @@
 import React, { forwardRef, useContext } from "react";
-import PropTypes from "prop-types";
 import { useCellResize } from "./useCellResize";
 import { TableContext } from "./TableContext";
+import { ColumnProps } from "../index";
+
+interface HeaderRowProps {
+  pixelWidth: number;
+}
+
+interface ColumnCellProps {
+  pixelWidth: number;
+  column: ColumnProps;
+}
 
 const NO_REF = {
   scrollWidth: 0,
   clientWidth: 0
 };
 
-const ColumnCell = React.memo(({ column, pixelWidth }) => {
+const ColumnCell = React.memo(({ column, pixelWidth }: ColumnCellProps) => {
   // hooks
   const tableContext = useContext(TableContext);
 
@@ -32,8 +41,8 @@ const ColumnCell = React.memo(({ column, pixelWidth }) => {
     // sorting the same column
     const oldCol = col;
     const oldDir = dir;
-    let newDir = "ASC";
-    let newCol = column.key;
+    let newDir: string | null = "ASC";
+    let newCol: string | null = column.key;
 
     if (oldCol === newCol) {
       newDir = !oldDir ? "ASC" : oldDir === "ASC" ? "DESC" : null;
@@ -62,26 +71,28 @@ const ColumnCell = React.memo(({ column, pixelWidth }) => {
   return (
     <div className="header-cell" onClick={onClick} style={style}>
       {header}
-      {column.key !== col ? null : <div className={`header-cell-arrow ${dir.toLowerCase()}`}></div>}
+      {column.key !== col ? null : (
+        <div className={`header-cell-arrow ${(dir || "").toLowerCase()}`}></div>
+      )}
     </div>
   );
 });
 
-const HeaderRow = React.memo(({ pixelWidth }) => {
+const HeaderRow = React.memo(({ pixelWidth }: HeaderRowProps) => {
   // hooks
   const tableContext = useContext(TableContext);
   const { columns } = tableContext.state;
 
   return (
     <div className="react-fluid-table-header">
-      {columns.map(c => (
+      {columns.map((c: ColumnProps) => (
         <ColumnCell key={c.key} column={c} pixelWidth={pixelWidth} />
       ))}
     </div>
   );
 });
 
-const Header = forwardRef(({ children, ...rest }, ref) => {
+const Header = forwardRef(({ children, ...rest }, ref: any) => {
   const tableContext = useContext(TableContext);
 
   // variables
@@ -103,14 +114,5 @@ const Header = forwardRef(({ children, ...rest }, ref) => {
 });
 
 Header.displayName = "Header";
-
-Header.propTypes = {
-  children: PropTypes.any
-};
-
-ColumnCell.propTypes = {
-  column: PropTypes.object,
-  pixelWidth: PropTypes.number
-};
 
 export default Header;
