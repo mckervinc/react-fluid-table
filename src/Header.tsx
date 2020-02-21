@@ -83,7 +83,7 @@ const HeaderRow = React.memo(({ pixelWidth }: HeaderRowProps) => {
 
   return (
     <div className="react-fluid-table-header">
-      {columns.map((c: any) => (
+      {columns.map((c: ColumnProps) => (
         <ColumnCell key={c.key} column={c} pixelWidth={pixelWidth} />
       ))}
     </div>

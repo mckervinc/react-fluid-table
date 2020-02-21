@@ -2,7 +2,10 @@ import React, { useRef, useContext, useCallback, useEffect, useLayoutEffect } fr
 import { TableContext } from "./TableContext";
 import { ColumnProps } from "../index";
 
+//@ts-ignore TS2307
 import Plus from "./svg/plus-circle.svg";
+
+//@ts-ignore TS2307
 import Minus from "./svg/minus-circle.svg";
 
 interface Generic {
@@ -65,7 +68,7 @@ const Row = ({
   // cell renderer
   const cellRenderer = (c: ColumnProps) => {
     if (c.expander) {
-      let Logo : any = c.expander;
+      let Logo: any = c.expander;
       if (typeof c.expander === "boolean") {
         Logo = isExpanded ? Minus : Plus;
         return <Logo className="expander" onClick={onExpanderClick} />;
