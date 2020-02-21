@@ -1,5 +1,4 @@
 import React, { useRef, useContext, useCallback, useEffect, useLayoutEffect } from "react";
-import PropTypes from "prop-types";
 import { TableContext } from "./TableContext";
 import { ColumnProps } from "../index";
 
@@ -155,16 +154,6 @@ const Row = ({
       )}
     </div>
   );
-};
-
-Row.propTypes = {
-  row: PropTypes.object,
-  index: PropTypes.number,
-  style: PropTypes.object,
-  subComponent: PropTypes.elementType,
-  generateKeyFromRow: PropTypes.func,
-  calculateHeight: PropTypes.func,
-  clearSizeCache: PropTypes.func
 };
 
 export default Row;

@@ -1,5 +1,4 @@
 import React, { createContext, useReducer } from "react";
-import PropTypes from "prop-types";
 
 interface ProviderProps {
   children: any;
@@ -49,11 +48,6 @@ const TableContextProvider = ({ children, initialState }: ProviderProps) => {
   });
 
   return <TableContext.Provider value={{ state, dispatch }}>{children}</TableContext.Provider>;
-};
-
-TableContextProvider.propTypes = {
-  children: PropTypes.any,
-  initialState: PropTypes.object
 };
 
 export { TableContext, TableContextProvider };

@@ -7,7 +7,6 @@ export const calculateColumnWidth = (element: HTMLElement, numColumns: number, f
   return Math.floor(freeSpace / n);
 };
 
-
 export const useCellResize = (el: HTMLElement, numColumns: number, usedSpace: number, minColumnWidth: number) : number => {
   const timeoutRef = useRef(0);
   const [pixelWidth, setPixelWidth] = useState(0);

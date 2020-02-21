@@ -16,6 +16,7 @@ node_modules
 build
 dist
 .rpt2_cache
+stats.html
 
 # logs
 npm-debug.log*

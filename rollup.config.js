@@ -7,6 +7,7 @@ import postcss from "rollup-plugin-postcss";
 import svgr from "@svgr/rollup";
 import bundleSize from "rollup-plugin-bundle-size";
 import analyze from "rollup-plugin-analyzer";
+import visualizer from "rollup-plugin-visualizer";
 import { terser } from "rollup-plugin-terser";
 
 import pkg from "./package.json";
@@ -48,6 +49,8 @@ const config = {
 
 if (process.env.BUILD === "production") {
   config.plugins.push(terser());
+} else {
+  config.plugins.push(visualizer());
 }
 
 export default config;

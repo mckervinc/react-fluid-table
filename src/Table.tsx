@@ -8,7 +8,6 @@ import React, {
 } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { VariableSizeList } from "react-window";
-import PropTypes from "prop-types";
 import Header from "./Header";
 import RowWrapper from "./RowWrapper";
 import { TableContextProvider, TableContext } from "./TableContext";
@@ -28,14 +27,14 @@ const NO_PARENT = {
  */
 const ListComponent = ({ height, width, ...rest }: ListProps) => {
   // hooks
-  const listRef = useRef<any>(null);
-  const tableRef = useRef<any>(null);
   const resizeRef = useRef(0);
   const timeoutRef = useRef(0);
   const pixelWidthRef = useRef(0);
+  const listRef = useRef<any>(null);
+  const tableRef = useRef<any>(null);
   const tableContext = useContext(TableContext);
-  const [useRowWidth, setUseRowWidth] = useState(true);
   const [pixelWidth, setPixelWidth] = useState(0);
+  const [useRowWidth, setUseRowWidth] = useState(true);
 
   // variables
   const { className, itemKey, rowHeight, estimatedRowHeight, data, subComponent } = rest;
@@ -257,37 +256,6 @@ const Table = ({
       )}
     </TableContextProvider>
   );
-};
-
-ListComponent.propTypes = {
-  height: PropTypes.number,
-  width: PropTypes.number
-};
-
-Table.propTypes = {
-  id: PropTypes.string,
-  className: PropTypes.string,
-  data: PropTypes.arrayOf(PropTypes.object).isRequired,
-  columns: PropTypes.arrayOf(
-    PropTypes.shape({
-      key: PropTypes.string,
-      header: PropTypes.node,
-      width: PropTypes.number,
-      minWidth: PropTypes.number,
-      cell: PropTypes.oneOfType([PropTypes.elementType, PropTypes.func]),
-      expander: PropTypes.oneOfType([PropTypes.bool, PropTypes.elementType, PropTypes.func])
-    })
-  ).isRequired,
-  minColumnWidth: PropTypes.number,
-  tableHeight: PropTypes.number,
-  tableWidth: PropTypes.number,
-  rowHeight: PropTypes.number,
-  estimatedRowHeight: PropTypes.number,
-  subComponent: PropTypes.elementType,
-  itemKey: PropTypes.func,
-  onSort: PropTypes.func,
-  sortColumn: PropTypes.string,
-  sortDirection: PropTypes.string
 };
 
 Table.defaultProps = {
