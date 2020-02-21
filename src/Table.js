@@ -104,7 +104,7 @@ const ListComponent = ({
   );
 
   const pixelWidthHelper = useCallback(() => {
-    const [val] = calculateColumnWidth(tableRef.current, remainingCols, fixedWidth);
+    const val = calculateColumnWidth(tableRef.current, remainingCols, fixedWidth);
     const width = Math.max(val, minColumnWidth);
     if (width !== pixelWidth) {
       setPixelWidth(width);

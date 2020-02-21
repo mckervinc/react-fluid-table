@@ -4,10 +4,7 @@ export const calculateColumnWidth = (element, numColumns, fixedColumnWidths) => 
   if (!element) return [0, 0];
   const n = Math.max(numColumns, 1);
   const freeSpace = Math.max(element.offsetWidth - fixedColumnWidths, 0);
-  const baseWidth = Math.floor(freeSpace / n);
-  const remaining = Math.floor(freeSpace % n);
-
-  return [baseWidth, remaining];
+  return Math.floor(freeSpace / n);
 };
 
 /**
@@ -22,7 +19,7 @@ export const useCellResize = (el, numColumns, usedSpace, minColumnWidth) => {
   const [pixelWidth, setPixelWidth] = useState(0);
 
   const updatePixelWidth = useCallback(() => {
-    const [val] = calculateColumnWidth(el, numColumns, usedSpace);
+    const val = calculateColumnWidth(el, numColumns, usedSpace);
     const width = Math.max(val, minColumnWidth);
     if (pixelWidth !== width) {
       setPixelWidth(width);
