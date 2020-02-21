@@ -1,22 +1,51 @@
 import React, { createContext, useReducer } from "react";
+import { ColumnProps } from "../index";
+
+type SortFunction = (x: string | null, y: string | null) => void;
+type DispatchFunction = (x: Action) => void;
 
 interface ProviderProps {
   children: any;
   initialState: any;
 }
 
-interface A {
-  state: any;
-  dispatch: Function;
+interface State {
+  expanded: any;
+  uuid: string;
+  minColumnWidth: number;
+  columns: ColumnProps[];
+  fixedWidth: number;
+  remainingCols: number;
+  sortColumn: string | null;
+  sortDirection: string | null;
+  id?: string;
+  onSort?: SortFunction;
 }
 
-const TableContext = createContext<A>({ state: {}, dispatch: () => {} });
+interface Action {
+  type: string;
+  [key: string]: any;
+}
+
+interface A {
+  state: State;
+  dispatch: DispatchFunction;
+}
 
 const baseState = {
-  expanded: {}
+  expanded: {},
+  columns: [],
+  uuid: "",
+  minColumnWidth: 80,
+  fixedWidth: 0,
+  remainingCols: 0,
+  sortColumn: null,
+  sortDirection: null
 };
 
-const findColumnWidthConstants = (columns: any[]) => {
+const TableContext = createContext<A>({ state: baseState, dispatch: () => {} });
+
+const findColumnWidthConstants = (columns: ColumnProps[]) => {
   return columns.reduce(
     (pv, c) => ({
       fixedWidth: pv.fixedWidth + (c.width || 0),
@@ -27,7 +56,7 @@ const findColumnWidthConstants = (columns: any[]) => {
 };
 
 const TableContextProvider = ({ children, initialState }: ProviderProps) => {
-  const reducer = (state: any, action: any) => {
+  const reducer = (state: State, action: Action) => {
     switch (action.type) {
       case "updateSortedColumn":
         return { ...state, sortColumn: action.col, sortDirection: action.dir };

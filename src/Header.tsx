@@ -71,7 +71,9 @@ const ColumnCell = React.memo(({ column, pixelWidth }: ColumnCellProps) => {
   return (
     <div className="header-cell" onClick={onClick} style={style}>
       {header}
-      {column.key !== col ? null : <div className={`header-cell-arrow ${dir.toLowerCase()}`}></div>}
+      {column.key !== col ? null : (
+        <div className={`header-cell-arrow ${(dir || "").toLowerCase()}`}></div>
+      )}
     </div>
   );
 });

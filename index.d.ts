@@ -4,24 +4,30 @@ declare module "*.svg" {
 }
 
 interface SortFn {
-  (col: string, dir: string) : void;
+  (col: string, dir: string): void;
 }
 
-interface ListPropsRest {
-  className: string;
-  itemKey: Function;
-  rowHeight: number;
-  estimatedRowHeight: number;
-  data: any;
-  subComponent: any;
+export type Text = string | number;
+
+type KeyFunction = (row: Generic) => Text;
+
+export interface Generic {
+  [key: string]: any;
 }
 
 export interface TableProps {
   // required props
-  data: object[];
+  data: Generic[];
   columns: ColumnProps[];
 
+  // default props
+  estimatedRowHeight: number;
+
   // optional props
+
+  /**
+   * The id of the table
+   */
   id?: string;
   className?: string;
   onSort?: SortFn;
@@ -46,5 +52,10 @@ export interface ColumnProps {
 export interface ListProps {
   height: number;
   width: number;
+  data: Generic[];
+  estimatedRowHeight: number;
+  className?: string;
+  rowHeight?: number;
+  itemKey?: KeyFunction;
   [key: string]: any;
 }

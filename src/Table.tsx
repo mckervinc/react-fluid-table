@@ -13,9 +13,7 @@ import RowWrapper from "./RowWrapper";
 import { TableContextProvider, TableContext } from "./TableContext";
 import { calculateColumnWidth } from "./useCellResize";
 import { randomString, findHeaderByUuid, findRowByUuidAndKey } from "./util";
-import { ListProps, TableProps } from "../index";
-
-type Text = string | number;
+import { Text, ListProps, TableProps } from "../index";
 
 const DEFAULT_HEADER_HEIGHT = 32;
 const NO_PARENT = {
@@ -25,7 +23,16 @@ const NO_PARENT = {
 /**
  * The main table component
  */
-const ListComponent = ({ height, width, ...rest }: ListProps) => {
+const ListComponent = ({
+  data,
+  width,
+  height,
+  itemKey,
+  rowHeight,
+  className,
+  subComponent,
+  estimatedRowHeight
+}: ListProps) => {
   // hooks
   const resizeRef = useRef(0);
   const timeoutRef = useRef(0);
@@ -37,7 +44,6 @@ const ListComponent = ({ height, width, ...rest }: ListProps) => {
   const [useRowWidth, setUseRowWidth] = useState(true);
 
   // variables
-  const { className, itemKey, rowHeight, estimatedRowHeight, data, subComponent } = rest;
   const defaultSize = rowHeight || estimatedRowHeight;
   const { uuid, minColumnWidth, fixedWidth, remainingCols } = tableContext.state;
 

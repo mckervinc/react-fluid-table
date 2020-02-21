@@ -1,16 +1,12 @@
 import React, { useRef, useContext, useCallback, useEffect, useLayoutEffect } from "react";
 import { TableContext } from "./TableContext";
-import { ColumnProps } from "../index";
+import { Generic, ColumnProps } from "../index";
 
 //@ts-ignore TS2307
 import Plus from "./svg/plus-circle.svg";
 
 //@ts-ignore TS2307
 import Minus from "./svg/minus-circle.svg";
-
-interface Generic {
-  [key: string]: any;
-}
 
 interface RowProps {
   row: Generic;
