@@ -1,6 +1,6 @@
 import React, { useRef, useContext, useCallback, useEffect, useLayoutEffect } from "react";
 import { TableContext } from "./TableContext";
-import { Generic, ColumnProps } from "../index";
+import { Generic, ColumnProps, SubComponentProps } from "../index";
 
 //@ts-ignore TS2307
 import Plus from "./svg/plus-circle.svg";
@@ -18,7 +18,7 @@ interface RowProps {
   clearSizeCache: Function;
   calculateHeight: Function;
   generateKeyFromRow: Function;
-  subComponent: any;
+  subComponent: React.ElementType<SubComponentProps>;
 }
 
 const Row = ({

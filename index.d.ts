@@ -27,6 +27,13 @@ export interface ColumnProps {
   cell?: Function;
 }
 
+export interface SubComponentProps {
+  row: Generic;
+  index: number;
+  isExpanded: boolean;
+  clearSizeCache: Function;
+}
+
 export interface ListProps {
   height: number;
   width: number;
@@ -35,6 +42,7 @@ export interface ListProps {
   className?: string;
   rowHeight?: number;
   itemKey?: KeyFunction;
+  subComponent?: React.ElementType<SubComponentProps>;
   [key: string]: any;
 }
 
@@ -95,6 +103,10 @@ export interface TableProps {
    * of the portion of the row that is NOT the subComponent.
    */
   rowHeight?: number;
+  /**
+   * When a column has `expander`, this component will be rendered under the row.
+   */
+  subComponent?: React.ElementType<SubComponentProps>;
 }
 
 export const Table: FC<TableProps>;
