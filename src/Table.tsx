@@ -143,9 +143,9 @@ const ListComponent = ({ height, width, ...rest }: ListProps) => {
 
   // trigger window resize. fixes issue in FF
   useEffect(() => {
-    // if (!(window.document as any).documentMode) {
-    window.dispatchEvent(new Event("resize"));
-    // }
+    if (!(window.document as any).documentMode) {
+      window.dispatchEvent(new Event("resize"));
+    }
   }, []);
 
   /* listeners */
@@ -245,8 +245,8 @@ const Table = ({
         sortDirection
       }}
     >
-      {disableHeight === true && disableWidth === true ? (
-        <ListComponent height={tableHeight || 100} width={tableWidth || 100} {...rest} />
+      {typeof tableHeight === "number" && typeof tableWidth === "number" ? (
+        <ListComponent height={tableHeight} width={tableWidth} {...rest} />
       ) : (
         <AutoSizer disableHeight={disableHeight} disableWidth={disableWidth}>
           {({ height, width }) => (
