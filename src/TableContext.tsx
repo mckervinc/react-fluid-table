@@ -1,13 +1,23 @@
 import React, { createContext, useReducer } from "react";
 import PropTypes from "prop-types";
 
-const TableContext = createContext();
+interface ProviderProps {
+  children: any;
+  initialState: any;
+}
+
+interface A {
+  state: any;
+  dispatch: Function;
+}
+
+const TableContext = createContext<A>({ state: {}, dispatch: () => {} });
 
 const baseState = {
   expanded: {}
 };
 
-const findColumnWidthConstants = columns => {
+const findColumnWidthConstants = (columns: any[]) => {
   return columns.reduce(
     (pv, c) => ({
       fixedWidth: pv.fixedWidth + (c.width || 0),
@@ -17,8 +27,8 @@ const findColumnWidthConstants = columns => {
   );
 };
 
-const TableContextProvider = ({ children, initialState }) => {
-  const reducer = (state, action) => {
+const TableContextProvider = ({ children, initialState }: ProviderProps) => {
+  const reducer = (state: any, action: any) => {
     switch (action.type) {
       case "updateSortedColumn":
         return { ...state, sortColumn: action.col, sortDirection: action.dir };

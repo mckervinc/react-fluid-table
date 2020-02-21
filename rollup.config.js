@@ -1,8 +1,8 @@
 import babel from "rollup-plugin-babel";
-import commonjs from "rollup-plugin-commonjs";
+import commonjs from "@rollup/plugin-commonjs";
 import external from "rollup-plugin-peer-deps-external";
-import resolve from "rollup-plugin-node-resolve";
-import url from "rollup-plugin-url";
+import resolve from "@rollup/plugin-node-resolve";
+import url from "@rollup/plugin-url";
 import postcss from "rollup-plugin-postcss";
 import svgr from "@svgr/rollup";
 import bundleSize from "rollup-plugin-bundle-size";
@@ -11,8 +11,12 @@ import { terser } from "rollup-plugin-terser";
 
 import pkg from "./package.json";
 
+const extensions = [
+  '.js', '.jsx', '.ts', '.tsx',
+];
+
 const config = {
-  input: "src/index.js",
+  input: "src/index.ts",
   output: [
     {
       file: pkg.main,
@@ -33,9 +37,9 @@ const config = {
     external(),
     url({ exclude: ["**/*.svg"] }),
     babel({
-      exclude: "node_modules/**"
+      extensions, exclude: "node_modules/**"
     }),
-    resolve(),
+    resolve({ extensions }),
     commonjs(),
     bundleSize(),
     analyze({ summaryOnly: true })

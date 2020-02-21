@@ -14,6 +14,9 @@ import RowWrapper from "./RowWrapper";
 import { TableContextProvider, TableContext } from "./TableContext";
 import { calculateColumnWidth } from "./useCellResize";
 import { randomString, findHeaderByUuid, findRowByUuidAndKey } from "./util";
+import { ListProps, TableProps } from "../index";
+
+type Text = string | number;
 
 const DEFAULT_HEADER_HEIGHT = 32;
 const NO_PARENT = {
@@ -23,27 +26,19 @@ const NO_PARENT = {
 /**
  * The main table component
  */
-const ListComponent = ({
-  className,
-  height,
-  width,
-  itemKey,
-  rowHeight,
-  estimatedRowHeight,
-  data,
-  subComponent
-}) => {
+const ListComponent = ({ height, width, ...rest }: ListProps) => {
   // hooks
-  const listRef = useRef(null);
-  const tableRef = useRef(null);
-  const resizeRef = useRef(null);
-  const timeoutRef = useRef(null);
-  const pixelWidthRef = useRef(null);
+  const listRef = useRef<any>(null);
+  const tableRef = useRef<any>(null);
+  const resizeRef = useRef(0);
+  const timeoutRef = useRef(0);
+  const pixelWidthRef = useRef(0);
   const tableContext = useContext(TableContext);
   const [useRowWidth, setUseRowWidth] = useState(true);
   const [pixelWidth, setPixelWidth] = useState(0);
 
   // variables
+  const { className, itemKey, rowHeight, estimatedRowHeight, data, subComponent } = rest;
   const defaultSize = rowHeight || estimatedRowHeight;
   const { uuid, minColumnWidth, fixedWidth, remainingCols } = tableContext.state;
 
@@ -73,7 +68,9 @@ const ListComponent = ({
       }
 
       timeoutRef.current = window.setTimeout(() => {
-        const resetIndex = parseInt(tableRef.current.children[1].children[0].dataset.index) + 1;
+        const resetIndex =
+          parseInt(tableRef.current ? tableRef.current.children[1].children[0].dataset.index : 0) +
+          1;
         listRef.current.resetAfterIndex(resetIndex);
       }, 50);
     },
@@ -147,9 +144,9 @@ const ListComponent = ({
 
   // trigger window resize. fixes issue in FF
   useEffect(() => {
-    if (!window.document.documentMode) {
-      window.dispatchEvent(new Event("resize"));
-    }
+    // if (!(window.document as any).documentMode) {
+    window.dispatchEvent(new Event("resize"));
+    // }
   }, []);
 
   /* listeners */
@@ -190,7 +187,7 @@ const ListComponent = ({
       innerElementType={Header}
       height={height}
       width={width}
-      itemKey={(index, data) => {
+      itemKey={(index: number, data: any): Text => {
         if (!index) return `${uuid}-header`;
         const dataIndex = index - 1;
         const row = data.rows[dataIndex];
@@ -200,7 +197,7 @@ const ListComponent = ({
       itemSize={index => {
         if (!index) {
           const header = findHeaderByUuid(uuid);
-          return header ? header.children[0].offsetHeight : DEFAULT_HEADER_HEIGHT;
+          return header ? (header.children[0] as HTMLElement).offsetHeight : DEFAULT_HEADER_HEIGHT;
         }
 
         return calculateHeight(index - 1);
@@ -231,7 +228,7 @@ const Table = ({
   tableHeight,
   tableWidth,
   ...rest
-}) => {
+}: TableProps) => {
   // TODO: do all prop validation here
   const disableHeight = tableHeight !== undefined;
   const disableWidth = tableWidth !== undefined;
@@ -250,7 +247,7 @@ const Table = ({
       }}
     >
       {disableHeight === true && disableWidth === true ? (
-        <ListComponent height={tableHeight} width={tableWidth} {...rest} />
+        <ListComponent height={tableHeight || 100} width={tableWidth || 100} {...rest} />
       ) : (
         <AutoSizer disableHeight={disableHeight} disableWidth={disableWidth}>
           {({ height, width }) => (
@@ -263,17 +260,13 @@ const Table = ({
 };
 
 ListComponent.propTypes = {
-  className: PropTypes.string,
   height: PropTypes.number,
-  width: PropTypes.number,
-  itemKey: PropTypes.func,
-  rowHeight: PropTypes.number,
-  data: PropTypes.array,
-  subComponent: PropTypes.elementType
+  width: PropTypes.number
 };
 
 Table.propTypes = {
   id: PropTypes.string,
+  className: PropTypes.string,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   columns: PropTypes.arrayOf(
     PropTypes.shape({
@@ -291,7 +284,7 @@ Table.propTypes = {
   rowHeight: PropTypes.number,
   estimatedRowHeight: PropTypes.number,
   subComponent: PropTypes.elementType,
-  columns: PropTypes.array,
+  itemKey: PropTypes.func,
   onSort: PropTypes.func,
   sortColumn: PropTypes.string,
   sortDirection: PropTypes.string

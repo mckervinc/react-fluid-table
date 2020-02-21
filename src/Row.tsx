@@ -1,9 +1,27 @@
 import React, { useRef, useContext, useCallback, useEffect, useLayoutEffect } from "react";
 import PropTypes from "prop-types";
 import { TableContext } from "./TableContext";
+import { ColumnProps } from "../index";
 
 import Plus from "./svg/plus-circle.svg";
 import Minus from "./svg/minus-circle.svg";
+
+interface Generic {
+  [key: string]: any;
+}
+
+interface RowProps {
+  row: Generic;
+  index: number;
+  style: Generic;
+  rowHeight: number;
+  pixelWidth: number;
+  useRowWidth: boolean;
+  clearSizeCache: Function;
+  calculateHeight: Function;
+  generateKeyFromRow: Function;
+  subComponent: any;
+}
 
 const Row = ({
   row,
@@ -16,10 +34,10 @@ const Row = ({
   calculateHeight,
   generateKeyFromRow,
   subComponent: SubComponent
-}) => {
+}: RowProps) => {
   // hooks
   const rowRef = useRef(null);
-  const resizeRef = useRef(null);
+  const resizeRef = useRef(0);
   const expandedCalledRef = useRef(false);
   const tableContext = useContext(TableContext);
 
@@ -46,9 +64,9 @@ const Row = ({
   };
 
   // cell renderer
-  const cellRenderer = c => {
+  const cellRenderer = (c: ColumnProps) => {
     if (c.expander) {
-      let Logo = c.expander;
+      let Logo : any = c.expander;
       if (typeof c.expander === "boolean") {
         Logo = isExpanded ? Minus : Plus;
         return <Logo className="expander" onClick={onExpanderClick} />;
@@ -73,10 +91,10 @@ const Row = ({
 
   const onResize = useCallback(() => {
     if (resizeRef.current) {
-      window.clearTimeout(resizeRef.current)
+      window.clearTimeout(resizeRef.current);
     }
 
-    resizeRef.current = setTimeout(resetHeight, 65);
+    resizeRef.current = window.setTimeout(resetHeight, 65);
   }, [resetHeight, resizeRef]);
 
   // effects
@@ -98,7 +116,7 @@ const Row = ({
     window.addEventListener("resize", onResize);
     return () => {
       if (resizeRef.current) {
-        window.clearTimeout(resizeRef.current)
+        window.clearTimeout(resizeRef.current);
       }
       window.removeEventListener("resize", onResize);
     };
@@ -117,7 +135,7 @@ const Row = ({
       }}
     >
       <div className="row-container" style={{ height: containerHeight }}>
-        {columns.map(c => {
+        {columns.map((c: ColumnProps) => {
           const width = Math.max(c.width || pixelWidth, c.minWidth || 0);
           const style = {
             width: width ? `${width}px` : undefined,

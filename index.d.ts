@@ -1,35 +1,50 @@
-import React from 'react';
+declare module "*.svg" {
+  const content: string;
+  export default content;
+}
 
-declare module 'react-fluid-table' {
+interface SortFn {
+  (col: string, dir: string) : void;
+}
 
-  interface SortFn {
-    (col: string, dir: string);
-  }
+interface ListPropsRest {
+  className: string;
+  itemKey: Function;
+  rowHeight: number;
+  estimatedRowHeight: number;
+  data: any;
+  subComponent: any;
+}
 
-  export interface ColumnProps {
-    key: string;
-    header: string;
-    width?: number;
-    expander?: boolean;
-    cell?: function;
-  }
+export interface TableProps {
+  // required props
+  data: object[];
+  columns: ColumnProps[];
 
-  export interface TableProps {
-    // required props
-    data: object[];
-    columns: ColumnProps[];
-    tableHeight: number;
+  // optional props
+  id?: string;
+  className?: string;
+  onSort?: SortFn;
+  sortColumn?: string;
+  sortDirection?: string;
+  tableHeight?: number;
+  tableWidth?: number;
+  minColumnWidth?: number;
+  rowHeight?: number;
+}
 
-    // optional props
-    id?: string;
-    onSort?: SortFn;
-    sortColumn?: string;
-    sortDirection?: string;
-    tableWidth?: number;
-    minColumnWidth?: number;
-    rowHeight?: number;
-  }
+export interface ColumnProps {
+  key: string;
+  header: string | Function;
+  width?: number;
+  minWidth?: number;
+  expander?: boolean;
+  sortable?: boolean;
+  cell?: Function;
+}
 
-  declare const Table: React.FC<TableProps>;
-  export default Table;
+export interface ListProps {
+  height: number;
+  width: number;
+  [key: string]: any;
 }
