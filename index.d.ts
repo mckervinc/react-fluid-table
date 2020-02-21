@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { FC } from "react";
 
 declare module "*.svg" {
   const content: string;
@@ -17,6 +17,27 @@ export interface Generic {
   [key: string]: any;
 }
 
+export interface ColumnProps {
+  key: string;
+  header: string | Function;
+  width?: number;
+  minWidth?: number;
+  expander?: boolean;
+  sortable?: boolean;
+  cell?: Function;
+}
+
+export interface ListProps {
+  height: number;
+  width: number;
+  data: Generic[];
+  estimatedRowHeight: number;
+  className?: string;
+  rowHeight?: number;
+  itemKey?: KeyFunction;
+  [key: string]: any;
+}
+
 export interface TableProps {
   // required props
   /**
@@ -29,6 +50,10 @@ export interface TableProps {
   columns: ColumnProps[];
 
   // default props
+  /**
+   * When scrolling through the table, this value is used to guess what the height of the
+   * row will be before it renders. If `rowHeight` is specified, this value is ignored.
+   */
   estimatedRowHeight: number;
 
   // optional props
@@ -66,31 +91,10 @@ export interface TableProps {
    */
   minColumnWidth?: number;
   /**
-   * The fixed height of each row in pixels. If a subComponent is specified, then this will be the fixed height
+   * The fixed height of each row in pixels. If `subComponent` is specified, then this will be the fixed height
    * of the portion of the row that is NOT the subComponent.
    */
   rowHeight?: number;
 }
 
-export interface ColumnProps {
-  key: string;
-  header: string | Function;
-  width?: number;
-  minWidth?: number;
-  expander?: boolean;
-  sortable?: boolean;
-  cell?: Function;
-}
-
-export interface ListProps {
-  height: number;
-  width: number;
-  data: Generic[];
-  estimatedRowHeight: number;
-  className?: string;
-  rowHeight?: number;
-  itemKey?: KeyFunction;
-  [key: string]: any;
-}
-
-export class Table extends Component<TableProps> {}
+export const Table: FC<TableProps>;
