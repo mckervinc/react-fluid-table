@@ -12,6 +12,7 @@ import { Example1, Source as Example1Code } from "./examples/01-base";
 import { Example2, Source as Example2Code } from "./examples/02-sort";
 import { Example3, Source as Example3Code } from "./examples/03-sub";
 import { Example4, Source as Example4Code } from "./examples/04-custom";
+import { Example5, Source as Example5Code } from "./examples/05-estimate";
 
 const Application = styled(Sidebar.Pushable)`
   border: none;
@@ -72,6 +73,9 @@ const App = () => (
         <Menu.Item as={Link} to="/custom">
           Cell Renderer
         </Menu.Item>
+        <Menu.Item as={Link} to="/estimate">
+          Estimated Row Size
+        </Menu.Item>
         <Menu.Item as={Link} to="/props">
           Table Props
         </Menu.Item>
@@ -109,6 +113,13 @@ const App = () => (
               <Example4 />
             </Wrapper>
             <Snippet code={Example4Code} />
+          </Route>
+          <Route exact path="/estimate">
+            <Title title="Estimated Row Size" />
+            <Wrapper>
+              <Example5 />
+            </Wrapper>
+            <Snippet code={Example5Code} />
           </Route>
           <Route exact path="/props">
             <Props />

@@ -39,7 +39,7 @@ const columns = [
   {
     key: "prop",
     header: "Prop",
-    width: 140,
+    width: 170,
     cell: row => <code>{row.prop}</code>
   },
   {
@@ -116,7 +116,12 @@ const data = [
   {
     prop: "rowHeight",
     type: "number",
-    description: "This is a fixed height of each row. Subcomponents will not be affected by this value",
+    description: "This is a fixed height of each row. Subcomponents will not be affected by this value"
+  },
+  {
+    prop: "estimatedRowHeight",
+    type: "number",
+    description: "The default height of the row. Rows will have this height while scrolling",
     default: 37
   },
   {

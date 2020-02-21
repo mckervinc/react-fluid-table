@@ -7,5 +7,7 @@ export const testData = _.range(3000).map(i => ({
   lastName: faker.name.lastName(),
   email: faker.internet.email(),
   avatar: faker.image.avatar(),
-  country: faker.address.countryCode().toLowerCase()
+  country: faker.address.countryCode().toLowerCase(),
+  words: faker.lorem.words(),
+  sentence: faker.lorem.sentences()
 }));

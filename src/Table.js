@@ -15,7 +15,6 @@ import { TableContextProvider, TableContext } from "./TableContext";
 import { calculateColumnWidth } from "./useCellResize";
 import { randomString, findHeaderByUuid, findRowByUuidAndKey } from "./util";
 
-const DEFAULT_ROW_HEIGHT = 37;
 const DEFAULT_HEADER_HEIGHT = 32;
 const NO_PARENT = {
   parentElement: { scrollWidth: 0, clientWidth: 0 }
@@ -24,7 +23,16 @@ const NO_PARENT = {
 /**
  * The main table component
  */
-const ListComponent = ({ className, height, width, itemKey, rowHeight, data, subComponent }) => {
+const ListComponent = ({
+  className,
+  height,
+  width,
+  itemKey,
+  rowHeight,
+  estimatedRowHeight,
+  data,
+  subComponent
+}) => {
   // hooks
   const listRef = useRef(null);
   const tableRef = useRef(null);
@@ -36,7 +44,7 @@ const ListComponent = ({ className, height, width, itemKey, rowHeight, data, sub
   const [pixelWidth, setPixelWidth] = useState(0);
 
   // variables
-  const defaultSize = rowHeight || DEFAULT_ROW_HEIGHT;
+  const defaultSize = rowHeight || estimatedRowHeight;
   const { uuid, minColumnWidth, fixedWidth, remainingCols } = tableContext.state;
 
   // functions
@@ -132,7 +140,7 @@ const ListComponent = ({ className, height, width, itemKey, rowHeight, data, sub
   // initialize pixel width
   useLayoutEffect(pixelWidthHelper, []);
 
-  // initialize whether or not to use row Width (useful for bottom border)
+  // initialize whether or not to use rowWidth (useful for bottom border)
   useEffect(() => {
     setUseRowWidth(tableRef.current.scrollWidth <= tableRef.current.clientWidth);
   }, []);
@@ -140,7 +148,7 @@ const ListComponent = ({ className, height, width, itemKey, rowHeight, data, sub
   // trigger window resize. fixes issue in FF
   useEffect(() => {
     if (!window.document.documentMode) {
-      window.dispatchEvent(new Event('resize'));
+      window.dispatchEvent(new Event("resize"));
     }
   }, []);
 
@@ -281,6 +289,7 @@ Table.propTypes = {
   tableHeight: PropTypes.number,
   tableWidth: PropTypes.number,
   rowHeight: PropTypes.number,
+  estimatedRowHeight: PropTypes.number,
   subComponent: PropTypes.elementType,
   columns: PropTypes.array,
   onSort: PropTypes.func,
@@ -290,11 +299,7 @@ Table.propTypes = {
 
 Table.defaultProps = {
   minColumnWidth: 80,
-  rowStyles: {}
-};
-
-ListComponent.defaultProps = {
-  height: 37
+  estimatedRowHeight: 37
 };
 
 export default Table;
