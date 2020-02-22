@@ -17,7 +17,7 @@ import { Text, ListProps, TableProps, Generic } from "../index";
 
 interface Data {
   rows: Generic[];
-  [key: string]: any
+  [key: string]: any;
 }
 
 const DEFAULT_HEADER_HEIGHT = 32;
@@ -139,11 +139,6 @@ const ListComponent = ({
 
   // effects
   /* initializers */
-  // calculate cache after first render
-  useLayoutEffect(() => {
-    listRef.current.resetAfterIndex(0);
-  }, []);
-
   // initialize pixel width
   useLayoutEffect(pixelWidthHelper, []);
 
@@ -154,9 +149,11 @@ const ListComponent = ({
 
   // trigger window resize. fixes issue in FF
   useEffect(() => {
-    if (!(window.document as any).documentMode) {
-      window.dispatchEvent(new Event("resize"));
-    }
+    setTimeout(() => {
+      if (!(window.document as any).documentMode) {
+        window.dispatchEvent(new Event("resize"));
+      }
+    }, 0);
   }, []);
 
   /* listeners */

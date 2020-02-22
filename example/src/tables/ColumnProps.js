@@ -28,19 +28,19 @@ const columns = [
     key: "prop",
     header: "Prop",
     width: 140,
-    cell: row => <code>{row.prop}</code>
+    cell: ({ row }) => <code>{row.prop}</code>
   },
   {
     key: "type",
     header: "Type",
     width: 220,
-    cell: row => <code>{row.type}</code>
+    cell: ({ row }) => <code>{row.type}</code>
   },
   {
     key: "required",
     header: "Required",
     width: 100,
-    cell: row => (
+    cell: ({ row }) => (
       <Icon
         name={`${row.required ? "check" : "times"} circle`}
         color={row.required ? "green" : "grey"}
@@ -50,7 +50,7 @@ const columns = [
   {
     key: "description",
     header: "Description",
-    cell: row => row.description
+    cell: ({ row }) => row.description
   }
 ];
 
@@ -99,7 +99,7 @@ const data = [
   },
   {
     prop: "cell",
-    type: "element | function(props) => element",
+    type: "function(row: object, index: number, clearSizeCache: function) => element",
     description: (
       <div>
         This is a custom cell renderer. If this is specified, the element here will be rendered for

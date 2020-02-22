@@ -1,4 +1,4 @@
-import { FC, ElementType } from "react";
+import { FC, ElementType, ReactNode } from "react";
 
 declare module "*.svg" {
   const content: string;
@@ -24,6 +24,12 @@ export interface ExpanderProps {
   onClick: Function;
 }
 
+export interface CellProps {
+  row: Generic;
+  index: number;
+  clearSizeCache: CacheFunction;
+}
+
 export interface ColumnProps {
   key: string;
   header: string | Function;
@@ -31,7 +37,7 @@ export interface ColumnProps {
   minWidth?: number;
   sortable?: boolean;
   expander?: boolean | ElementType<ExpanderProps>;
-  cell?: (row: Generic, index: number, clearSizeCache: CacheFunction) => ElementType;
+  cell?: ElementType<CellProps>;
 }
 
 export interface RowProps {
@@ -44,7 +50,7 @@ export interface RowProps {
   clearSizeCache: CacheFunction;
   calculateHeight: HeightFunction;
   generateKeyFromRow: GenKeyFunction;
-  subComponent: React.ElementType<SubComponentProps>;
+  subComponent: ElementType<SubComponentProps>;
 }
 
 export interface SubComponentProps {

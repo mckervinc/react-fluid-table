@@ -61,7 +61,12 @@ const Row = ({
       return <Logo isExpanded={isExpanded} onClick={onExpanderClick} />;
     }
 
-    return !c.cell ? row[c.key] || null : c.cell(row, index, clearSizeCache);
+    if (!c.cell) {
+      return row[c.key] || null;
+    }
+
+    const Cell = c.cell;
+    return <Cell row={row} index={index} clearSizeCache={clearSizeCache}/>;
   };
 
   const resetHeight = useCallback(() => {

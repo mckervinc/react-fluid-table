@@ -40,19 +40,19 @@ const columns = [
     key: "prop",
     header: "Prop",
     width: 170,
-    cell: row => <code>{row.prop}</code>
+    cell: ({ row }) => <code>{row.prop}</code>
   },
   {
     key: "type",
     header: "Type",
     width: 120,
-    cell: row => <code>{row.type}</code>
+    cell: ({ row }) => <code>{row.type}</code>
   },
   {
     key: "required",
     header: "Required",
     width: 100,
-    cell: row => (
+    cell: ({ row }) => (
       <Icon
         name={`${row.required ? "check" : "times"} circle`}
         color={row.required ? "green" : "grey"}
@@ -63,12 +63,12 @@ const columns = [
     key: "default",
     header: "Default",
     width: 100,
-    cell: row => (row.default ? <code>{row.default}</code> : null)
+    cell: ({ row }) => (row.default ? <code>{row.default}</code> : null)
   },
   {
     key: "description",
     header: "Description",
-    cell: row => row.description
+    cell: ({ row }) => row.description
   }
 ];
 
@@ -116,7 +116,8 @@ const data = [
   {
     prop: "rowHeight",
     type: "number",
-    description: "This is a fixed height of each row. Subcomponents will not be affected by this value"
+    description:
+      "This is a fixed height of each row. Subcomponents will not be affected by this value"
   },
   {
     prop: "estimatedRowHeight",

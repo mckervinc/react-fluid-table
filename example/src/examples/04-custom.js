@@ -289,29 +289,29 @@ const columns = [
     key: "avatar",
     header: "Profile Photo",
     width: 150,
-    cell: row => <ProfPic size="small" src={row.avatar} />
+    cell: ({ row }) => <ProfPic size="small" src={row.avatar} />
   },
   {
     key: "email",
     header: "Email",
-    cell: row => <Email email={row.email} />
+    cell: ({ row }) => <Email email={row.email} />
   },
   {
     key: "firstName",
     header: "First",
     width: 100,
-    cell: row => <TextStyle>{row.firstName}</TextStyle>
+    cell: ({ row }) => <TextStyle>{row.firstName}</TextStyle>
   },
   {
     key: "lastName",
     header: "Last",
     width: 100,
-    cell: row => <TextStyle>{row.lastName}</TextStyle>
+    cell: ({ row }) => <TextStyle>{row.lastName}</TextStyle>
   },
   {
     key: "country",
     header: "Country",
-    cell: row =>
+    cell: ({ row }) =>
       !countryMap[row.country] ? (
         `No flag for this country: ${row.country.toUpperCase()}`
       ) : (
@@ -336,29 +336,29 @@ const columns = [
     key: "avatar",
     header: "Profile Photo",
     width: 150,
-    cell: row => <ProfPic size="small" src={row.avatar} />
+    cell: ({ row }) => <ProfPic size="small" src={row.avatar} />
   },
   {
     key: "email",
     header: "Email",
-    cell: row => <Email email={row.email} />
+    cell: ({ row }) => <Email email={row.email} />
   },
   {
     key: "firstName",
     header: "First",
     width: 100,
-    cell: row => <TextStyle>{row.firstName}</TextStyle>
+    cell: ({ row }) => <TextStyle>{row.firstName}</TextStyle>
   },
   {
     key: "lastName",
     header: "Last",
     width: 100,
-    cell: row => <TextStyle>{row.lastName}</TextStyle>
+    cell: ({ row }) => <TextStyle>{row.lastName}</TextStyle>
   },
   {
     key: "country",
     header: "Country",
-    cell: row =>
+    cell: ({ row }) =>
       !countryMap[row.country] ? (
         \`No flag for this country: \${row.country.toUpperCase()}\`
       ) : (
