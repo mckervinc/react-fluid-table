@@ -17,6 +17,7 @@ build
 dist
 .rpt2_cache
 stats.html
+tsconfig.json
 
 # logs
 npm-debug.log*
