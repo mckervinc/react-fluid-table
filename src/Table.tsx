@@ -54,7 +54,7 @@ const ListComponent = ({
 
   // functions
   const generateKeyFromRow = useCallback(
-    (row, defaultValue) => {
+    (row: Generic, defaultValue: number): Text => {
       const generatedKey = itemKey ? itemKey(row) : undefined;
       return generatedKey !== undefined ? generatedKey : defaultValue;
     },

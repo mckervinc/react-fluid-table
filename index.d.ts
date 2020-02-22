@@ -1,20 +1,27 @@
-import { FC } from "react";
+import { FC, ElementType } from "react";
 
 declare module "*.svg" {
   const content: string;
   export default content;
 }
 
-interface SortFn {
-  (col: string, dir: string): void;
-}
-
 export type Text = string | number;
 
 type KeyFunction = (row: Generic) => Text;
+type CacheFunction = (dataIndex: number, forceUpdate?: boolean) => void;
+type HeightFunction = (
+  queryParam: number | HTMLElement | null,
+  optionalDataIndex?: number | null
+) => number;
+type GenKeyFunction = (row: Generic, defaultValue: number) => Text;
 
 export interface Generic {
   [key: string]: any;
+}
+
+export interface ExpanderProps {
+  isExpanded: boolean;
+  onClick: Function;
 }
 
 export interface ColumnProps {
@@ -22,16 +29,29 @@ export interface ColumnProps {
   header: string | Function;
   width?: number;
   minWidth?: number;
-  expander?: boolean;
   sortable?: boolean;
-  cell?: Function;
+  expander?: boolean | ElementType<ExpanderProps>;
+  cell?: (row: Generic, index: number, clearSizeCache: CacheFunction) => ElementType;
+}
+
+export interface RowProps {
+  row: Generic;
+  index: number;
+  style: Generic;
+  rowHeight: number;
+  pixelWidth: number;
+  useRowWidth: boolean;
+  clearSizeCache: CacheFunction;
+  calculateHeight: HeightFunction;
+  generateKeyFromRow: GenKeyFunction;
+  subComponent: React.ElementType<SubComponentProps>;
 }
 
 export interface SubComponentProps {
   row: Generic;
   index: number;
   isExpanded: boolean;
-  clearSizeCache: Function;
+  clearSizeCache: CacheFunction;
 }
 
 export interface ListProps {
@@ -42,7 +62,7 @@ export interface ListProps {
   className?: string;
   rowHeight?: number;
   itemKey?: KeyFunction;
-  subComponent?: React.ElementType<SubComponentProps>;
+  subComponent?: ElementType<SubComponentProps>;
   [key: string]: any;
 }
 
@@ -77,7 +97,7 @@ export interface TableProps {
   /**
    * Function that is called when a header cell is sorted.
    */
-  onSort?: SortFn;
+  onSort?: (col: string | null, dir: string | null) => void;
   /**
    * The column that is sorted by default.
    */
@@ -106,7 +126,7 @@ export interface TableProps {
   /**
    * When a column has `expander`, this component will be rendered under the row.
    */
-  subComponent?: React.ElementType<SubComponentProps>;
+  subComponent?: ElementType<SubComponentProps>;
 }
 
 export const Table: FC<TableProps>;

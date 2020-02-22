@@ -1,25 +1,12 @@
 import React, { useRef, useContext, useCallback, useEffect, useLayoutEffect } from "react";
 import { TableContext } from "./TableContext";
-import { Generic, ColumnProps, SubComponentProps } from "../index";
+import { RowProps, ColumnProps } from "../index";
 
 //@ts-ignore TS2307
 import Plus from "./svg/plus-circle.svg";
 
 //@ts-ignore TS2307
 import Minus from "./svg/minus-circle.svg";
-
-interface RowProps {
-  row: Generic;
-  index: number;
-  style: Generic;
-  rowHeight: number;
-  pixelWidth: number;
-  useRowWidth: boolean;
-  clearSizeCache: Function;
-  calculateHeight: Function;
-  generateKeyFromRow: Function;
-  subComponent: React.ElementType<SubComponentProps>;
-}
 
 const Row = ({
   row,

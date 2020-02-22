@@ -1,7 +1,7 @@
 import React, { createContext, useReducer } from "react";
-import { ColumnProps } from "../index";
+import { ColumnProps, Generic } from "../index";
 
-type SortFunction = (x: string | null, y: string | null) => void;
+type SortFunction = (col: string | null, dir: string | null) => void;
 type DispatchFunction = (x: Action) => void;
 
 interface ProviderProps {
@@ -10,7 +10,7 @@ interface ProviderProps {
 }
 
 interface State {
-  expanded: any;
+  expanded: Generic;
   uuid: string;
   minColumnWidth: number;
   columns: ColumnProps[];
