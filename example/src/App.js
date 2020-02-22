@@ -13,6 +13,7 @@ import { Example2, Source as Example2Code } from "./examples/02-sort";
 import { Example3, Source as Example3Code } from "./examples/03-sub";
 import { Example4, Source as Example4Code } from "./examples/04-custom";
 import { Example5, Source as Example5Code } from "./examples/05-estimate";
+import { Example6, Source as Example6Code } from "./examples/06-expanded";
 
 const Application = styled(Sidebar.Pushable)`
   border: none;
@@ -76,6 +77,9 @@ const App = () => (
         <Menu.Item as={Link} to="/estimate">
           Estimated Row Size
         </Menu.Item>
+        <Menu.Item as={Link} to="/expanded">
+          Expanded Row Height
+        </Menu.Item>
         <Menu.Item as={Link} to="/props">
           Table Props
         </Menu.Item>
@@ -120,6 +124,13 @@ const App = () => (
               <Example5 />
             </Wrapper>
             <Snippet code={Example5Code} />
+          </Route>
+          <Route exact path="/expanded">
+            <Title title="Expanded Row Height" />
+            <Wrapper>
+              <Example6 />
+            </Wrapper>
+            <Snippet code={Example6Code} />
           </Route>
           <Route exact path="/props">
             <Props />

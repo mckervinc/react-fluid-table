@@ -9,5 +9,9 @@ export const testData = _.range(3000).map(i => ({
   avatar: faker.image.avatar(),
   country: faker.address.countryCode().toLowerCase(),
   words: faker.lorem.words(),
-  sentence: faker.lorem.sentences()
+  sentence: faker.lorem.sentences(),
+  address: faker.address.streetAddress(),
+  city: faker.address.city(),
+  state: faker.address.stateAbbr(),
+  zipCode: faker.address.zipCode()
 }));
