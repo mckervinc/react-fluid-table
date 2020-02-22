@@ -84,6 +84,11 @@ const data = [
     description: "This sets the minimum pixel width of the column exactly"
   },
   {
+    prop: "maxWidth",
+    type: "number",
+    description: "This sets the maximum pixel width of the column exactly"
+  },
+  {
     prop: "expander",
     type: "boolean | element",
     description: (

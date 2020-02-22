@@ -35,6 +35,7 @@ export interface ColumnProps {
   header: string | Function;
   width?: number;
   minWidth?: number;
+  maxWidth?: number;
   sortable?: boolean;
   expander?: boolean | ElementType<ExpanderProps>;
   cell?: ElementType<CellProps>;
@@ -45,7 +46,7 @@ export interface RowProps {
   index: number;
   style: Generic;
   rowHeight: number;
-  pixelWidth: number;
+  pixelWidths: number[];
   useRowWidth: boolean;
   clearSizeCache: CacheFunction;
   calculateHeight: HeightFunction;

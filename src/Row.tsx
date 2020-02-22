@@ -13,7 +13,7 @@ const Row = ({
   index,
   style,
   rowHeight,
-  pixelWidth,
+  pixelWidths,
   useRowWidth,
   clearSizeCache,
   calculateHeight,
@@ -66,7 +66,7 @@ const Row = ({
     }
 
     const Cell = c.cell;
-    return <Cell row={row} index={index} clearSizeCache={clearSizeCache}/>;
+    return <Cell row={row} index={index} clearSizeCache={clearSizeCache} />;
   };
 
   const resetHeight = useCallback(() => {
@@ -125,8 +125,8 @@ const Row = ({
       }}
     >
       <div className="row-container" style={{ height: containerHeight }}>
-        {columns.map((c: ColumnProps) => {
-          const width = Math.max(c.width || pixelWidth, c.minWidth || 0);
+        {columns.map((c: ColumnProps, i: number) => {
+          const width = pixelWidths[i];
           const style = {
             width: width ? `${width}px` : undefined,
             minWidth: width ? `${width}px` : undefined

@@ -11,8 +11,8 @@ import { VariableSizeList } from "react-window";
 import Header from "./Header";
 import RowWrapper from "./RowWrapper";
 import { TableContextProvider, TableContext } from "./TableContext";
-import { calculateColumnWidth } from "./useCellResize";
-import { randomString, findHeaderByUuid, findRowByUuidAndKey } from "./util";
+import { calculateColumnWidths } from "./useCellResize";
+import { randomString, findHeaderByUuid, findRowByUuidAndKey, arraysMatch } from "./util";
 import { Text, ListProps, TableProps, Generic } from "../index";
 
 interface Data {
@@ -41,16 +41,16 @@ const ListComponent = ({
   // hooks
   const resizeRef = useRef(0);
   const timeoutRef = useRef(0);
-  const pixelWidthRef = useRef(0);
+  const pixelWidthsRef = useRef(0);
   const listRef = useRef<any>(null);
   const tableRef = useRef<any>(null);
   const tableContext = useContext(TableContext);
-  const [pixelWidth, setPixelWidth] = useState(0);
+  const [pixelWidths, setPixelWidths] = useState<number[]>([]);
   const [useRowWidth, setUseRowWidth] = useState(true);
 
   // variables
   const defaultSize = rowHeight || estimatedRowHeight;
-  const { uuid, minColumnWidth, fixedWidth, remainingCols } = tableContext.state;
+  const { uuid, columns, minColumnWidth, fixedWidth, remainingCols } = tableContext.state;
 
   // functions
   const generateKeyFromRow = useCallback(
@@ -110,13 +110,12 @@ const ListComponent = ({
     [uuid, data, listRef, rowHeight, defaultSize, generateKeyFromRow]
   );
 
-  const pixelWidthHelper = useCallback(() => {
-    const val = calculateColumnWidth(tableRef.current, remainingCols, fixedWidth);
-    const width = Math.max(val, minColumnWidth);
-    if (width !== pixelWidth) {
-      setPixelWidth(width);
+  const pixelWidthsHelper = useCallback(() => {
+    const widths = calculateColumnWidths(tableRef.current, remainingCols, fixedWidth, minColumnWidth, columns);
+    if (!arraysMatch(widths, pixelWidths)) {
+      setPixelWidths(widths);
     }
-  }, [tableRef, remainingCols, fixedWidth, minColumnWidth, pixelWidth]);
+  }, [tableRef, remainingCols, fixedWidth, minColumnWidth, pixelWidths]);
 
   const shouldUseRowWidth = useCallback(() => {
     if (resizeRef.current) {
@@ -129,18 +128,18 @@ const ListComponent = ({
     }, 50);
   }, [resizeRef, uuid, tableRef]);
 
-  const calculatePixelWidth = useCallback(() => {
-    if (pixelWidthRef.current) {
-      window.clearTimeout(pixelWidthRef.current);
+  const calculatepixelWidths = useCallback(() => {
+    if (pixelWidthsRef.current) {
+      window.clearTimeout(pixelWidthsRef.current);
     }
 
-    pixelWidthRef.current = window.setTimeout(pixelWidthHelper, 50);
-  }, [pixelWidthRef, pixelWidthHelper]);
+    pixelWidthsRef.current = window.setTimeout(pixelWidthsHelper, 50);
+  }, [pixelWidthsRef, pixelWidthsHelper]);
 
   // effects
   /* initializers */
   // initialize pixel width
-  useLayoutEffect(pixelWidthHelper, []);
+  useLayoutEffect(pixelWidthsHelper, []);
 
   // initialize whether or not to use rowWidth (useful for bottom border)
   useEffect(() => {
@@ -168,14 +167,14 @@ const ListComponent = ({
   }, [shouldUseRowWidth, resizeRef]);
 
   useEffect(() => {
-    window.addEventListener("resize", calculatePixelWidth);
+    window.addEventListener("resize", calculatepixelWidths);
     return () => {
-      if (pixelWidthRef.current) {
-        window.clearTimeout(pixelWidthRef.current);
+      if (pixelWidthsRef.current) {
+        window.clearTimeout(pixelWidthsRef.current);
       }
-      window.removeEventListener("resize", calculatePixelWidth);
+      window.removeEventListener("resize", calculatepixelWidths);
     };
-  }, [calculatePixelWidth, pixelWidthRef]);
+  }, [calculatepixelWidths, pixelWidthsRef]);
 
   /* cleanup */
   useEffect(() => {
@@ -212,7 +211,7 @@ const ListComponent = ({
       itemData={{
         rows: data,
         rowHeight,
-        pixelWidth,
+        pixelWidths,
         useRowWidth,
         subComponent,
         clearSizeCache,

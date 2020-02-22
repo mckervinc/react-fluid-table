@@ -1,16 +1,15 @@
-export const distribute = (rem: number, numColumns: number) => {
-  const n = Math.max(numColumns, 1);
-  const result = [...Array(n)].fill(0);
-  const inc = Math.ceil(rem / n);
-  let dec = rem;
-  let i = 0;
-  while (dec > 0 && i < n) {
-    result[i] += inc;
-    dec -= inc;
-    i++;
+export const arraysMatch = (arr1: any[], arr2: any[]) => {
+  if (arr1.length !== arr2.length) {
+    return false;
   }
 
-  return result.reverse();
+  for (var i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) {
+      return false;
+    }
+  }
+
+  return true;
 };
 
 export const randomString = (num = 5): string =>

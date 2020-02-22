@@ -4,11 +4,11 @@ import { TableContext } from "./TableContext";
 import { ColumnProps } from "../index";
 
 interface HeaderRowProps {
-  pixelWidth: number;
+  pixelWidths: number[];
 }
 
 interface ColumnCellProps {
-  pixelWidth: number;
+  width: number;
   column: ColumnProps;
 }
 
@@ -17,7 +17,7 @@ const NO_REF = {
   clientWidth: 0
 };
 
-const ColumnCell = React.memo(({ column, pixelWidth }: ColumnCellProps) => {
+const ColumnCell = React.memo(({ column, width }: ColumnCellProps) => {
   // hooks
   const tableContext = useContext(TableContext);
 
@@ -25,7 +25,6 @@ const ColumnCell = React.memo(({ column, pixelWidth }: ColumnCellProps) => {
   const { sortColumn: col, sortDirection, onSort } = tableContext.state;
   const { dispatch } = tableContext;
   const dir = sortDirection ? sortDirection.toUpperCase() : null;
-  const width = Math.max(column.width || pixelWidth, column.minWidth || 0);
 
   const style = {
     cursor: column.sortable ? "pointer" : undefined,
@@ -78,15 +77,15 @@ const ColumnCell = React.memo(({ column, pixelWidth }: ColumnCellProps) => {
   );
 });
 
-const HeaderRow = React.memo(({ pixelWidth }: HeaderRowProps) => {
+const HeaderRow = React.memo(({ pixelWidths }: HeaderRowProps) => {
   // hooks
   const tableContext = useContext(TableContext);
   const { columns } = tableContext.state;
 
   return (
     <div className="react-fluid-table-header">
-      {columns.map((c: ColumnProps) => (
-        <ColumnCell key={c.key} column={c} pixelWidth={pixelWidth} />
+      {columns.map((c: ColumnProps, i: number) => (
+        <ColumnCell key={c.key} column={c} width={pixelWidths[i]} />
       ))}
     </div>
   );
@@ -96,8 +95,14 @@ const Header = forwardRef(({ children, ...rest }, ref: any) => {
   const tableContext = useContext(TableContext);
 
   // variables
-  const { id, uuid, remainingCols, fixedWidth, minColumnWidth } = tableContext.state;
-  const pixelWidth = useCellResize(ref.current, remainingCols, fixedWidth, minColumnWidth);
+  const { id, uuid, columns, remainingCols, fixedWidth, minColumnWidth } = tableContext.state;
+  const pixelWidths = useCellResize(
+    ref.current,
+    remainingCols,
+    fixedWidth,
+    minColumnWidth,
+    columns
+  );
   const { scrollWidth, clientWidth } = ref.current || NO_REF;
   const width = scrollWidth <= clientWidth ? "100%" : undefined;
 
@@ -105,7 +110,7 @@ const Header = forwardRef(({ children, ...rest }, ref: any) => {
     <div id={id} ref={ref} data-table-key={uuid} className="react-fluid-table-container" {...rest}>
       <div className="sticky-header" data-header-key={`${uuid}-header`}>
         <div className="row-wrapper" style={{ width }}>
-          <HeaderRow pixelWidth={pixelWidth} />
+          <HeaderRow pixelWidths={pixelWidths} />
         </div>
       </div>
       <div className="row-wrapper">{children}</div>
