@@ -66,7 +66,8 @@ To get a development environment working, run the following:
 $ yarn install
 $ yarn link
 $ cd example
-$ yarn install react-fluid-table
+$ yarn install
+$ yarn link react-fluid-table
 ```
 
 **Usage**
