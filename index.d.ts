@@ -44,7 +44,10 @@ export interface ColumnProps {
 export interface RowProps {
   row: Generic;
   index: number;
-  style: Generic;
+  style: {
+    height: number;
+    [key: string]: any;
+  };
   rowHeight: number;
   pixelWidths: number[];
   useRowWidth: boolean;

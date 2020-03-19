@@ -55,21 +55,21 @@ const findColumnWidthConstants = (columns: ColumnProps[]) => {
   );
 };
 
-const TableContextProvider = ({ children, initialState }: ProviderProps) => {
-  const reducer = (state: State, action: Action) => {
-    switch (action.type) {
-      case "updateSortedColumn":
-        return { ...state, sortColumn: action.col, sortDirection: action.dir };
-      case "updateExpanded":
-        return {
-          ...state,
-          expanded: { ...state.expanded, [action.key]: !state.expanded[action.key] }
-        };
-      default:
-        return state;
-    }
-  };
+const reducer = (state: State, action: Action) => {
+  switch (action.type) {
+    case "updateSortedColumn":
+      return { ...state, sortColumn: action.col, sortDirection: action.dir };
+    case "updateExpanded":
+      return {
+        ...state,
+        expanded: { ...state.expanded, [action.key]: !state.expanded[action.key] }
+      };
+    default:
+      return state;
+  }
+};
 
+const TableContextProvider = ({ children, initialState }: ProviderProps) => {
   const [state, dispatch] = useReducer(reducer, {
     ...baseState,
     ...initialState,
