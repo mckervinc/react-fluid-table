@@ -32,12 +32,14 @@
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  padding: 8px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  -webkit-align-items: baseline;
+  -webkit-box-align: baseline;
+  -ms-flex-align: baseline;
+  align-items: baseline;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+  padding: 8px;
 }
 
 .header-cell-text {
@@ -51,12 +53,14 @@
   -ms-letter-spacing: normal;
   letter-spacing: normal;
   color: #7d7d7d;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .header-cell-arrow {
   width: 0;
   height: 0;
-  margin: 1px 0 0 4px;
+  margin-left: 4px;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
 }

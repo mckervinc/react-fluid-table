@@ -21,9 +21,9 @@ const Row = ({
   subComponent: SubComponent
 }: RowProps) => {
   // hooks
-  const rowRef = useRef(null);
   const resizeRef = useRef(0);
   const expandedCalledRef = useRef(false);
+  const rowRef = useRef<HTMLDivElement>(null);
   const tableContext = useContext(TableContext);
 
   // variables

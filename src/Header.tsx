@@ -61,20 +61,20 @@ const ColumnCell = React.memo(({ column, width }: ColumnCellProps) => {
     }
   };
 
-  const header = !column.header ? null : typeof column.header === "string" ? (
-    <div className="header-cell-text">{column.header}</div>
-  ) : (
-    column.header(onClick)
-  );
+  if (!column.header || typeof column.header === "string") {
+    return (
+      <div className="header-cell" onClick={onClick} style={style}>
+        {column.header ? <div className="header-cell-text">{column.header}</div> : null}
+        {column.key !== col ? null : (
+          <div className={`header-cell-arrow ${(dir || "").toLowerCase()}`}></div>
+        )}
+      </div>
+    );
+  }
 
-  return (
-    <div className="header-cell" onClick={onClick} style={style}>
-      {header}
-      {column.key !== col ? null : (
-        <div className={`header-cell-arrow ${(dir || "").toLowerCase()}`}></div>
-      )}
-    </div>
-  );
+  const HeaderCell = column.header;
+  const headerDir = column.key === col ? dir || null : null;
+  return <HeaderCell style={style} onClick={onClick} sortDirection={headerDir} />;
 });
 
 const HeaderRow = React.memo(({ pixelWidths }: HeaderRowProps) => {

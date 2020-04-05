@@ -30,9 +30,15 @@ export interface CellProps {
   clearSizeCache: CacheFunction;
 }
 
+export interface HeaderProps {
+  onClick: Function;
+  style: Generic;
+  sortDirection: string | null;
+}
+
 export interface ColumnProps {
   key: string;
-  header: string | Function;
+  header?: string | ElementType<HeaderProps>;
   width?: number;
   minWidth?: number;
   maxWidth?: number;
