@@ -3,7 +3,7 @@ import { ColumnProps } from "..";
 import { arraysMatch } from "./util";
 
 export const calculateColumnWidths = (
-  element: HTMLElement,
+  element: HTMLElement | null,
   numColumns: number,
   fixedColumnWidths: number,
   minColumnWidth: number,

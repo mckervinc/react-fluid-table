@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from "react";
+import React, { createContext, useReducer, useRef, useEffect } from "react";
 import { ColumnProps, Generic } from "../index";
 
 type SortFunction = (col: string | null, dir: string | null) => void;
@@ -64,17 +64,38 @@ const reducer = (state: State, action: Action) => {
         ...state,
         expanded: { ...state.expanded, [action.key]: !state.expanded[action.key] }
       };
+    case "refresh":
+      return {
+        ...state,
+        ...action.initialState
+      };
     default:
       return state;
   }
 };
 
 const TableContextProvider = ({ children, initialState }: ProviderProps) => {
+  const initialized = useRef(false);
   const [state, dispatch] = useReducer(reducer, {
     ...baseState,
     ...initialState,
     ...findColumnWidthConstants(initialState.columns)
   });
+
+  // if certain props change, update throughout package.
+  // allows the user to control props such as sortColumn,
+  // columns, etc.
+  useEffect(() => {
+    if (initialized.current) {
+      const refreshed = {
+        ...initialState,
+        ...findColumnWidthConstants(initialState.columns)
+      };
+
+      dispatch({ type: "refresh", initialState: refreshed });
+    }
+    initialized.current = true;
+  }, [initialState]);
 
   return <TableContext.Provider value={{ state, dispatch }}>{children}</TableContext.Provider>;
 };
