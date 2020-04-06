@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Table } from "react-fluid-table";
-import _ from "lodash";
+import React, { useEffect, useState } from "react";
 import faker from "faker";
-import { Grid, Form, Checkbox } from "semantic-ui-react";
+import _ from "lodash";
+import { Table } from "react-fluid-table";
+import { Checkbox, Form, Grid } from "semantic-ui-react";
 import styled from "styled-components";
 import { testData } from "../data";
 

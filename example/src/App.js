@@ -15,6 +15,7 @@ import { Example4, Source as Example4Code } from "./examples/04-custom";
 import { Example5, Source as Example5Code } from "./examples/05-estimate";
 import { Example6, Source as Example6Code } from "./examples/06-expanded";
 import { Example7, Source as Example7Code } from "./examples/07-controlled";
+import { Example8, Source as Example8Code } from "./examples/08-header";
 
 const Application = styled(Sidebar.Pushable)`
   border: none;
@@ -84,6 +85,9 @@ const App = () => (
         <Menu.Item as={Link} to="/controlled">
           Controlled Props
         </Menu.Item>
+        <Menu.Item as={Link} to="/header">
+          Custom Header
+        </Menu.Item>
         <Menu.Item as={Link} to="/props">
           Table Props
         </Menu.Item>
@@ -142,6 +146,13 @@ const App = () => (
               <Example7 />
             </Wrapper>
             <Snippet code={Example7Code} />
+          </Route>
+          <Route exact path="/header">
+            <Title title="Custom Header" />
+            <Wrapper>
+              <Example8 />
+            </Wrapper>
+            <Snippet code={Example8Code} />
           </Route>
           <Route exact path="/props">
             <Props />
