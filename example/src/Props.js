@@ -107,7 +107,8 @@ const data = [
   {
     prop: "tableHeight",
     type: "number",
-    description: "The height of the table in pixels"
+    description:
+      "The height of the table in pixels. If no height is specified, this will try to fill the height of the parent. If the parent node does not have a height specified, a height for the table will be calculated based on the default header height and the rowHeight, estimatedRowHeight, or the defaultRowHeight (37)."
   },
   {
     prop: "tableWidth",
