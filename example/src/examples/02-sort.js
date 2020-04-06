@@ -31,7 +31,7 @@ const columns = [
 ];
 
 const Example2 = () => {
-  const [data, setData] = useState(_.orderBy(testData, ['firstName'], ['asc']));
+  const [data, setData] = useState(_.orderBy(testData, ["firstName"], ["asc"]));
 
   const onSort = (col, dir) => {
     if (!col || !dir) {
@@ -83,6 +83,6 @@ const Example = () => {
     />
   );
 };
-`.trim();
+`;
 
 export { Example2, Source };

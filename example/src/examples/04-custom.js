@@ -378,6 +378,6 @@ const Example = () => (
     rowHeight={150}
   />
 );
-`.trim();
+`;
 
 export { Example4, Source };

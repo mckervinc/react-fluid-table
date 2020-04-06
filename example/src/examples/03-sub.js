@@ -74,6 +74,6 @@ const Example = () => (
     tableHeight={400}
   />
 );
-`.trim();
+`;
 
 export { Example3, Source };

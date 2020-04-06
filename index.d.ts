@@ -1,4 +1,4 @@
-import { FC, ElementType, ReactNode } from "react";
+import { FC, ElementType } from "react";
 
 declare module "*.svg" {
   const content: string;

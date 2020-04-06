@@ -44,6 +44,6 @@ const Example = () => (
     estimatedRowHeight={150}
   />
 );
-`.trim()
+`
 
 export { Example5, Source };

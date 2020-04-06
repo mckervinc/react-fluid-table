@@ -147,6 +147,6 @@ const Example = () => {
     />
   );
 };
-`.trim();
+`;
 
 export { Example8, Source };

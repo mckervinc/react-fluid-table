@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { Table } from "react-fluid-table";
-import { Icon } from "semantic-ui-react";
 import { InlineCode } from "../shared/styles";
 
 const StyledTable = styled(Table)`
@@ -33,19 +32,8 @@ const columns = [
   {
     key: "type",
     header: "Type",
-    width: 220,
+    width: 270,
     cell: ({ row }) => <code>{row.type}</code>
-  },
-  {
-    key: "required",
-    header: "Required",
-    width: 100,
-    cell: ({ row }) => (
-      <Icon
-        name={`${row.required ? "check" : "times"} circle`}
-        color={row.required ? "green" : "grey"}
-      />
-    )
   },
   {
     key: "description",
@@ -63,12 +51,11 @@ const data = [
   },
   {
     prop: "header",
-    type: "string | element",
+    type: "string | HeaderElement",
     description: (
       <div>
         This is the name of the header. By passing a string, the name of the header is displayed.
-        You can also provided a custom element to render the header any way you like, so long as it
-        takes an <InlineCode>onClick</InlineCode> function.
+        You can also provided a custom element to render the header any way you like. See below for details
       </div>
     )
   },
@@ -90,21 +77,19 @@ const data = [
   },
   {
     prop: "expander",
-    type: "boolean | element",
+    type: "boolean | ExpanderElement",
     description: (
       <div>
         If set to <InlineCode>true</InlineCode>, this will render a <code>div</code> with an icon
         that, open click, will expand/collapse the row. When a row is expanded, the{" "}
         <code>subComponent</code>, if provided as a prop on the table, will display for that
-        particular row. You can also provide an element to customize the expander icon. The element
-        must take in an <code>onClick</code> function. <InlineCode>isExpanded</InlineCode> is
-        provided as a prop as well.
+        particular row. You can also provide an element to customize the expander icon. See below for details
       </div>
     )
   },
   {
     prop: "cell",
-    type: "function(row: object, index: number, clearSizeCache: function) => element",
+    type: "CellElement",
     description: (
       <div>
         This is a custom cell renderer. If this is specified, the element here will be rendered for

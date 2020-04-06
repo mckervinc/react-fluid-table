@@ -1,19 +1,19 @@
 import React, {
-  useRef,
-  useContext,
-  useState,
   useCallback,
+  useContext,
   useEffect,
-  useLayoutEffect
+  useLayoutEffect,
+  useRef,
+  useState
 } from "react";
-import AutoSizer from "./AutoSizer";
 import { VariableSizeList } from "react-window";
+import { Generic, ListProps, TableProps, Text } from "../index";
+import AutoSizer from "./AutoSizer";
 import Header from "./Header";
 import RowWrapper from "./RowWrapper";
-import { TableContextProvider, TableContext } from "./TableContext";
+import { TableContext, TableContextProvider } from "./TableContext";
 import { calculateColumnWidths } from "./useCellResize";
-import { randomString, findHeaderByUuid, findRowByUuidAndKey, arraysMatch } from "./util";
-import { Text, ListProps, TableProps, Generic } from "../index";
+import { arraysMatch, findHeaderByUuid, findRowByUuidAndKey, randomString } from "./util";
 
 interface Data {
   rows: Generic[];
@@ -44,10 +44,10 @@ const ListComponent = ({
   const timeoutRef = useRef(0);
   const pixelWidthsRef = useRef(0);
   const listRef = useRef<any>(null);
-  const tableRef = useRef<any>(null);
+  const tableRef = useRef<HTMLDivElement>(null);
   const tableContext = useContext(TableContext);
-  const [pixelWidths, setPixelWidths] = useState<number[]>([]);
   const [useRowWidth, setUseRowWidth] = useState(true);
+  const [pixelWidths, setPixelWidths] = useState<number[]>([]);
 
   // variables
   const defaultSize = rowHeight || estimatedRowHeight;
@@ -79,9 +79,10 @@ const ListComponent = ({
       }
 
       timeoutRef.current = window.setTimeout(() => {
-        const resetIndex =
-          parseInt(tableRef.current ? tableRef.current.children[1].children[0].dataset.index : 0) +
-          1;
+        const node = tableRef.current
+          ? (tableRef.current.children[1].children[0] as HTMLElement)
+          : null;
+        const resetIndex = parseInt(node ? node.dataset.index || "0" : "0") + 1;
         listRef.current.resetAfterIndex(resetIndex);
       }, 50);
     },
@@ -131,7 +132,9 @@ const ListComponent = ({
 
     resizeRef.current = window.setTimeout(() => {
       const { parentElement } = tableRef.current || NO_PARENT;
-      setUseRowWidth(parentElement.scrollWidth <= parentElement.clientWidth);
+      if (parentElement) {
+        setUseRowWidth(parentElement.scrollWidth <= parentElement.clientWidth);
+      }
     }, 50);
   }, [resizeRef, uuid, tableRef]);
 
@@ -150,7 +153,9 @@ const ListComponent = ({
 
   // initialize whether or not to use rowWidth (useful for bottom border)
   useEffect(() => {
-    setUseRowWidth(tableRef.current.scrollWidth <= tableRef.current.clientWidth);
+    if (tableRef.current) {
+      setUseRowWidth(tableRef.current.scrollWidth <= tableRef.current.clientWidth);
+    }
   }, []);
 
   // trigger window resize. fixes issue in FF

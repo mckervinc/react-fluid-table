@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { Table as BaseTable } from "react-fluid-table";
 import { Icon, Divider, Header, List } from "semantic-ui-react";
 import { InlineCode } from "./shared/styles";
-import ColumnPropsTable from "./tables/ColumnProps";
+import ColumnPropsTable from "./props/ColumnProps";
+import { Snippet } from "./shared/Snippet";
 
 const Container = styled.div`
   padding: 1em;
@@ -164,6 +165,72 @@ const data = [
 const required = data.filter(i => i.required);
 const optional = data.filter(i => !i.required);
 
+const headerSnippet = `
+const CustomHeader = ({ name, ...props}) => {
+  // props contains at least: style, onClick, sortDirection
+  return (
+    <div {...props}>{name}</div>
+  );
+}
+
+const columns = [{
+  key: "ID",
+  width: 100,
+  header: props => <CustomHeader name="ID" {...props} />
+}];
+
+const Example = () => <Table data={data} columns={columns} />;
+`;
+
+const cellSnippet = `
+const Contact = ({ row, index, clearSizeCache }) => {
+  const mounted = useRef(false);
+  const [showInfo, setShowInfo] = useState(false);
+
+  const label = \`\${showInfo ? "hide" : "show"} contact info\`;
+  const options = [
+    { key: "email", value: row.email },
+    { key: "address", value: row.address }
+  ];
+
+  const onChange = () => setShowInfo(!showInfo);
+
+  // after something that might cause the row height to change,
+  // you should call this function to get the new row height.
+  useLayoutEffect(() => {
+    if (mounted.current) {
+      clearSizeCache(index, true);
+    }
+    mounted.current = true;
+  }, [showInfo]);
+
+  return <Accordion label={label} options={options} onChange={onChange} />;
+};
+
+const columns = [{
+  key: "contact",
+  width: 100,
+  header: "Contact",
+  cell: Contact
+}];
+
+const Example = () => <Table data={data} columns={columns} />;
+`;
+
+const expanderSnippet = `
+const Expander = ({ isExpanded, onClick }) => {
+  const icon = \`chevron \${isExpanded ? "up" : "down"}\`;
+  return <Icon name={icon} onClick={onClick} />
+};
+
+const columns = [
+  { key: "", width: 40, expander: Expander },
+  { key: "firstName", width: 100, header: "First" }
+];
+
+const Example = () => <Table data={data} columns={columns} subComponent={SubComponent} />;
+`;
+
 const Props = () => (
   <Container>
     <Header size="large">
@@ -189,6 +256,53 @@ const Props = () => (
           {!d.content ? null : typeof d.content === "string" ? d.content : d.content()}
         </Item>
       ))}
+    </List>
+    <Header dividing size="small" color="grey">
+      HeaderElement, CellElement, and ExpanderElement
+    </Header>
+    <List divided>
+      <Item>
+        <List.Header>
+          <code>HeaderElement</code>:{" "}
+          <code>
+            {
+              "({ style: object, onClick: Function, sortDirection: string | null }) => React.Element"
+            }
+          </code>
+        </List.Header>
+        <List.Content>
+          The HeaderElement is an element that takes in props that contains a style, onclick, and
+          sortDirection. See below for an example:
+        </List.Content>
+        <Snippet copy={false} edit={false} code={headerSnippet} />
+      </Item>
+      <Item>
+        <List.Header>
+          <code>CellElement</code>:{" "}
+          <code>
+            {
+              "({ row: object, index: number, clearSizeCache: (index: number, forceUpdate?: boolean = false) => void }) => React.Element"
+            }
+          </code>
+        </List.Header>
+        <List.Content>
+          The CellElement is an element that takes in props that contains the row object itself, the
+          index in the data array, and a function to reset the rowHeight (if needed). See below for
+          an example:
+        </List.Content>
+        <Snippet copy={false} edit={false} code={cellSnippet} />
+      </Item>
+      <Item>
+        <List.Header>
+          <code>ExpanderElement</code>:{" "}
+          <code>{"({ isExpanded: boolean, onClick: () => void }) => React.Element"}</code>
+        </List.Header>
+        <List.Content>
+          The ExpandedElement is an element that takes in props that contains whether or not the row
+          is expanded, as well as a function to toggle the row expansion. See below for an example:
+        </List.Content>
+        <Snippet copy={false} edit={false} code={expanderSnippet} />
+      </Item>
     </List>
     <Header dividing size="small" color="grey">
       Optional Props

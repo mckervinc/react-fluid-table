@@ -43,6 +43,6 @@ const columns = [
 ];
 
 const Example = () => <Table data={data} columns={columns} />;
-`.trim()
+`;
 
 export { Example1, Source };

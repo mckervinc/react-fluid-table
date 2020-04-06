@@ -58,7 +58,7 @@ const Alert = styled(Popup).attrs(() => ({
   }
 `;
 
-const Snippet = ({ code }) => {
+const Snippet = ({ code, copy: showCopy, edit }) => {
   const ref = useRef(null);
   const [open, setOpen] = useState(false);
   const onOpen = () => {
@@ -76,27 +76,36 @@ const Snippet = ({ code }) => {
   return (
     <Container>
       <Group>
-        <Alert
-          trigger={
-            <MenuItem>
-              <Icon name="copy" />
-              Copy
-            </MenuItem>
-          }
-          open={open}
-          onOpen={onOpen}
-          onClose={() => setOpen(false)}
-        />
-        <MenuItem>
-          <Icon name="react" />
-          Edit
-        </MenuItem>
+        {!showCopy ? null : (
+          <Alert
+            trigger={
+              <MenuItem>
+                <Icon name="copy" />
+                Copy
+              </MenuItem>
+            }
+            open={open}
+            onOpen={onOpen}
+            onClose={() => setOpen(false)}
+          />
+        )}
+        {!edit ? null : (
+          <MenuItem>
+            <Icon name="react" />
+            Edit
+          </MenuItem>
+        )}
       </Group>
       <Highligher language="jsx" style={okaidia}>
-        {code}
+        {code.trim()}
       </Highligher>
     </Container>
   );
+};
+
+Snippet.defaultProps = {
+  copy: true,
+  edit: true
 };
 
 export { Snippet };

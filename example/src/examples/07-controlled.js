@@ -195,6 +195,6 @@ const Controlled = ({ data, columns: variableColumns }) => {
     />
   );
 };
-`.trim();
+`;
 
 export { Example7, Source };
