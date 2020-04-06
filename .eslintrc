@@ -20,6 +20,7 @@
   "rules": {
     // don't force es6 functions to include space before paren
     "space-before-function-paren": 0,
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "no-debugger": true
   }
 }

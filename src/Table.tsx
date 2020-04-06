@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useLayoutEffect
 } from "react";
-import AutoSizer from "react-virtualized-auto-sizer";
+import AutoSizer from "./AutoSizer";
 import { VariableSizeList } from "react-window";
 import Header from "./Header";
 import RowWrapper from "./RowWrapper";
@@ -20,6 +20,7 @@ interface Data {
   [key: string]: any;
 }
 
+const DEFAULT_ROW_HEIGHT = 37;
 const DEFAULT_HEADER_HEIGHT = 32;
 const NO_PARENT = {
   parentElement: { scrollWidth: 0, clientWidth: 0 }
@@ -111,7 +112,13 @@ const ListComponent = ({
   );
 
   const pixelWidthsHelper = useCallback(() => {
-    const widths = calculateColumnWidths(tableRef.current, remainingCols, fixedWidth, minColumnWidth, columns);
+    const widths = calculateColumnWidths(
+      tableRef.current,
+      remainingCols,
+      fixedWidth,
+      minColumnWidth,
+      columns
+    );
     if (!arraysMatch(widths, pixelWidths)) {
       setPixelWidths(widths);
     }
@@ -224,6 +231,11 @@ const ListComponent = ({
   );
 };
 
+const guessTableHeight = (rowHeight?: number, estimatedRowHeight?: number) => {
+  const height = rowHeight || estimatedRowHeight || DEFAULT_ROW_HEIGHT;
+  return height * 10 + DEFAULT_HEADER_HEIGHT;
+};
+
 const Table = ({
   id,
   columns,
@@ -238,6 +250,7 @@ const Table = ({
   // TODO: do all prop validation here
   const disableHeight = tableHeight !== undefined;
   const disableWidth = tableWidth !== undefined;
+  const { rowHeight, estimatedRowHeight } = rest;
   const [uuid] = useState(`${id || "data-table"}-${randomString()}`);
 
   return (
@@ -257,7 +270,11 @@ const Table = ({
       ) : (
         <AutoSizer disableHeight={disableHeight} disableWidth={disableWidth}>
           {({ height, width }) => (
-            <ListComponent height={tableHeight || height} width={tableWidth || width} {...rest} />
+            <ListComponent
+              width={tableWidth || width}
+              height={tableHeight || height || guessTableHeight(rowHeight, estimatedRowHeight)}
+              {...rest}
+            />
           )}
         </AutoSizer>
       )}
@@ -267,7 +284,7 @@ const Table = ({
 
 Table.defaultProps = {
   minColumnWidth: 80,
-  estimatedRowHeight: 37
+  estimatedRowHeight: DEFAULT_ROW_HEIGHT
 };
 
 export default Table;

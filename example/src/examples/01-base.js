@@ -25,7 +25,7 @@ const columns = [
   }
 ];
 
-const Example1 = () => <Table data={testData} columns={columns} tableHeight={400} />;
+const Example1 = () => <Table data={testData} columns={columns} />;
 
 const Source = `
 const data = _.range(3000).map(i => ({
@@ -42,13 +42,7 @@ const columns = [
   { key: "email", header: "Email", width: 250 }
 ];
 
-const Example = () => (
-  <Table
-    data={data}
-    columns={columns}
-    tableHeight={400}
-  />
-);
+const Example = () => <Table data={data} columns={columns} />;
 `.trim()
 
 export { Example1, Source };
