@@ -12,7 +12,7 @@ import AutoSizer from "./AutoSizer";
 import Header from "./Header";
 import RowWrapper from "./RowWrapper";
 import { TableContext, TableContextProvider } from "./TableContext";
-import { calculateColumnWidths } from "./useCellResize";
+import { calculateColumnWidths } from "./columnUtils";
 import { arraysMatch, findHeaderByUuid, findRowByUuidAndKey, randomString } from "./util";
 
 interface Data {

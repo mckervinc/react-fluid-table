@@ -1,7 +1,16 @@
-import React, { forwardRef, useContext } from "react";
-import { useCellResize } from "./useCellResize";
+import React, {
+  forwardRef,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useCallback
+} from "react";
+import { calculateColumnWidths } from "./columnUtils";
 import { TableContext } from "./TableContext";
 import { ColumnProps } from "../index";
+import { arraysMatch } from "./util";
 
 interface HeaderRowProps {
   pixelWidths: number[];
@@ -92,19 +101,52 @@ const HeaderRow = React.memo(({ pixelWidths }: HeaderRowProps) => {
 });
 
 const Header = forwardRef(({ children, ...rest }, ref: any) => {
+  // hooks
   const tableContext = useContext(TableContext);
+  const timeoutRef = useRef(0);
+  const [pixelWidths, setPixelWidths] = useState<number[]>([]);
 
   // variables
   const { id, uuid, columns, remainingCols, fixedWidth, minColumnWidth } = tableContext.state;
-  const pixelWidths = useCellResize(
-    ref.current,
-    remainingCols,
-    fixedWidth,
-    minColumnWidth,
-    columns
-  );
   const { scrollWidth, clientWidth } = ref.current || NO_REF;
   const width = scrollWidth <= clientWidth ? "100%" : undefined;
+
+  // functions
+  const updatepixelWidths = useCallback(() => {
+    const widths = calculateColumnWidths(
+      ref.current,
+      remainingCols,
+      fixedWidth,
+      minColumnWidth,
+      columns
+    );
+    if (!arraysMatch(widths, pixelWidths)) {
+      setPixelWidths(widths);
+    }
+  }, [pixelWidths, remainingCols, fixedWidth, minColumnWidth, columns]);
+
+  const onResize = useCallback(() => {
+    if (timeoutRef.current) {
+      window.clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = window.setTimeout(updatepixelWidths, 50);
+  }, [timeoutRef, updatepixelWidths]);
+
+  // effects
+  // initialize pixel widths
+  useLayoutEffect(() => updatepixelWidths(), []);
+
+  // on resize re-calculate pixel width
+  useEffect(() => {
+    window.addEventListener("resize", onResize);
+    return () => {
+      if (timeoutRef.current) {
+        window.clearTimeout(timeoutRef.current);
+      }
+      window.removeEventListener("resize", onResize);
+    };
+  }, [onResize, timeoutRef]);
 
   return (
     <div id={id} ref={ref} data-table-key={uuid} className="react-fluid-table-container" {...rest}>
