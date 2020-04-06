@@ -14,6 +14,7 @@ import { Example3, Source as Example3Code } from "./examples/03-sub";
 import { Example4, Source as Example4Code } from "./examples/04-custom";
 import { Example5, Source as Example5Code } from "./examples/05-estimate";
 import { Example6, Source as Example6Code } from "./examples/06-expanded";
+import { Example7, Source as Example7Code } from "./examples/07-controlled";
 
 const Application = styled(Sidebar.Pushable)`
   border: none;
@@ -80,6 +81,9 @@ const App = () => (
         <Menu.Item as={Link} to="/expanded">
           Expanded Row Height
         </Menu.Item>
+        <Menu.Item as={Link} to="/controlled">
+          Controlled Props
+        </Menu.Item>
         <Menu.Item as={Link} to="/props">
           Table Props
         </Menu.Item>
@@ -131,6 +135,13 @@ const App = () => (
               <Example6 />
             </Wrapper>
             <Snippet code={Example6Code} />
+          </Route>
+          <Route exact path="/controlled">
+            <Title title="Controlled Props" />
+            <Wrapper>
+              <Example7 />
+            </Wrapper>
+            <Snippet code={Example7Code} />
           </Route>
           <Route exact path="/props">
             <Props />

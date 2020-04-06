@@ -74,8 +74,33 @@ const reducer = (state: State, action: Action) => {
   }
 };
 
+const getChangedFields = (prevState: any, currState: any) => {
+  const changedFields = new Set<string>();
+  if (prevState.sortColumn !== currState.sortColumn) {
+    changedFields.add("sortColumn");
+  }
+
+  if (prevState.sortDirection !== currState.sortDirection) {
+    changedFields.add("sortDirection");
+  }
+
+  if (prevState.minColumnWidth !== currState.minColumnWidth) {
+    changedFields.add("minColumnWidth");
+  }
+
+  if (prevState.onSort !== currState.onSort) {
+    changedFields.add("onSort");
+  }
+
+  if (prevState.columns !== currState.columns) {
+    changedFields.add("columns");
+  }
+
+  return changedFields;
+};
+
 const TableContextProvider = ({ children, initialState }: ProviderProps) => {
-  const initialized = useRef(false);
+  const _stateOnMount = useRef(initialState);
   const [state, dispatch] = useReducer(reducer, {
     ...baseState,
     ...initialState,
@@ -86,16 +111,23 @@ const TableContextProvider = ({ children, initialState }: ProviderProps) => {
   // allows the user to control props such as sortColumn,
   // columns, etc.
   useEffect(() => {
-    if (initialized.current) {
-      const refreshed = {
-        ...initialState,
-        ...findColumnWidthConstants(initialState.columns)
-      };
+    const changedFields = getChangedFields(_stateOnMount.current, initialState);
+    if (changedFields.size) {
+      let refreshed: any = {};
+      changedFields.forEach(field => {
+        refreshed[field] = initialState[field];
+      });
 
+      if (refreshed.columns) {
+        refreshed = {
+          ...refreshed,
+          ...findColumnWidthConstants(refreshed.columns)
+        };
+      }
+      _stateOnMount.current = initialState;
       dispatch({ type: "refresh", initialState: refreshed });
     }
-    initialized.current = true;
-  }, [initialState]);
+  }, [_stateOnMount, initialState]);
 
   return <TableContext.Provider value={{ state, dispatch }}>{children}</TableContext.Provider>;
 };
