@@ -11,6 +11,12 @@ interface State {
   width: number | null;
 }
 
+/**
+ * This is a skinny AutoSizer based on react-virtualized-auto-sizer.
+ * This removes the `bailout` functionality in order to allow the Table
+ * to generate its own height. This also ignores a resize if the
+ * dimensions of the window did not actually change (one less render).
+ */
 const AutoSizer = ({ disableHeight, disableWidth, children }: AutoSizerProps) => {
   // hooks
   const ref = useRef<HTMLDivElement>(null);
