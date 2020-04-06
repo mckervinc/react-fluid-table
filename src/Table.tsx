@@ -123,7 +123,7 @@ const ListComponent = ({
     if (!arraysMatch(widths, pixelWidths)) {
       setPixelWidths(widths);
     }
-  }, [tableRef, remainingCols, fixedWidth, minColumnWidth, pixelWidths]);
+  }, [remainingCols, fixedWidth, minColumnWidth, pixelWidths, columns]);
 
   const shouldUseRowWidth = useCallback(() => {
     if (resizeRef.current) {
@@ -138,7 +138,7 @@ const ListComponent = ({
     }, 50);
   }, [resizeRef, uuid, tableRef]);
 
-  const calculatepixelWidths = useCallback(() => {
+  const calculatePixelWidths = useCallback(() => {
     if (pixelWidthsRef.current) {
       window.clearTimeout(pixelWidthsRef.current);
     }
@@ -158,13 +158,15 @@ const ListComponent = ({
     }
   }, []);
 
-  // trigger window resize. fixes issue in FF
+  // force clear the cache after mounting
   useEffect(() => {
+    clearSizeCache(0, true);
+
+    // figure out how to wait for scrollbar to appear
+    // before triggering resize. using 100ms heuristic
     setTimeout(() => {
-      if (!(window.document as any).documentMode) {
-        window.dispatchEvent(new Event("resize"));
-      }
-    }, 0);
+      window.dispatchEvent(new Event("resize"));
+    }, 100);
   }, []);
 
   /* listeners */
@@ -179,14 +181,14 @@ const ListComponent = ({
   }, [shouldUseRowWidth, resizeRef]);
 
   useEffect(() => {
-    window.addEventListener("resize", calculatepixelWidths);
+    window.addEventListener("resize", calculatePixelWidths);
     return () => {
       if (pixelWidthsRef.current) {
         window.clearTimeout(pixelWidthsRef.current);
       }
-      window.removeEventListener("resize", calculatepixelWidths);
+      window.removeEventListener("resize", calculatePixelWidths);
     };
-  }, [calculatepixelWidths, pixelWidthsRef]);
+  }, [calculatePixelWidths, pixelWidthsRef]);
 
   /* cleanup */
   useEffect(() => {
@@ -237,7 +239,7 @@ const ListComponent = ({
 };
 
 const guessTableHeight = (rowHeight?: number, estimatedRowHeight?: number) => {
-  const height = rowHeight || estimatedRowHeight || DEFAULT_ROW_HEIGHT;
+  const height = Math.max(rowHeight || estimatedRowHeight || DEFAULT_ROW_HEIGHT, 10);
   return height * 10 + DEFAULT_HEADER_HEIGHT;
 };
 

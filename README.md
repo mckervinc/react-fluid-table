@@ -45,15 +45,7 @@ const columns = [
   }
 ];
 
-const Example = () => {
-  return (
-    <Table
-      data={data}
-      columns={columns}
-      tableHeight={400}
-    />
-  );
-};
+const Example = () => <Table data={data} columns={columns} />;
 ```
 
 ## Development
