@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useRef, useEffect } from "react";
+import React, { createContext, useEffect, useReducer, useRef } from "react";
 import { ColumnProps, Generic } from "../index";
 
 type SortFunction = (col: string | null, dir: string | null) => void;

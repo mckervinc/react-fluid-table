@@ -1,19 +1,18 @@
-import React, { useRef, useContext, useCallback, useLayoutEffect } from "react";
+import React, { useCallback, useContext, useLayoutEffect, useRef } from "react";
+import { ColumnProps, RowProps } from "../index";
 import { TableContext } from "./TableContext";
-import { RowProps, ColumnProps } from "../index";
-
-//@ts-ignore TS2307
-import Plus from "./svg/plus-circle.svg";
 
 //@ts-ignore TS2307
 import Minus from "./svg/minus-circle.svg";
+
+//@ts-ignore TS2307
+import Plus from "./svg/plus-circle.svg";
 
 const Row = ({
   row,
   index,
   style,
   rowHeight,
-  pixelWidths,
   useRowWidth,
   clearSizeCache,
   calculateHeight,
@@ -28,7 +27,7 @@ const Row = ({
   // variables
   const { height } = style;
   const { dispatch } = tableContext;
-  const { uuid, columns, expanded } = tableContext.state;
+  const { uuid, columns, expanded, pixelWidths } = tableContext.state;
 
   // key
   const key = generateKeyFromRow(row, index);

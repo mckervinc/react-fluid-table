@@ -1,6 +1,6 @@
 import React, { forwardRef, useContext } from "react";
-import { TableContext } from "./TableContext";
 import { ColumnProps } from "../index";
+import { TableContext } from "./TableContext";
 
 interface ColumnCellProps {
   width: number;

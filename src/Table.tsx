@@ -7,7 +7,7 @@ import React, {
   useState
 } from "react";
 import { VariableSizeList } from "react-window";
-import { Generic, ListProps, TableProps, Text, ColumnProps } from "../index";
+import { ColumnProps, Generic, ListProps, TableProps, Text } from "../index";
 import AutoSizer from "./AutoSizer";
 import Header from "./Header";
 import RowWrapper from "./RowWrapper";
@@ -22,7 +22,7 @@ interface Data {
 // constants
 const DEFAULT_ROW_HEIGHT = 37;
 const DEFAULT_HEADER_HEIGHT = 32;
-const NO_PARENT = { scrollWidth: 0, clientWidth: 0 };
+const NO_NODE = { scrollWidth: 0, clientWidth: 0 };
 
 // functions
 const guessTableHeight = (rowHeight?: number, estimatedRowHeight?: number) => {
@@ -121,20 +121,15 @@ const ListComponent = ({
         return;
       }
 
-      if (timeoutRef.current) {
-        window.clearTimeout(timeoutRef.current);
-      }
-
+      window.clearTimeout(timeoutRef.current);
       if (forceUpdate) {
         listRef.current.resetAfterIndex(dataIndex + 1);
         return;
       }
 
       timeoutRef.current = window.setTimeout(() => {
-        const node = tableRef.current
-          ? (tableRef.current.children[1].children[0] as HTMLElement)
-          : null;
-        const resetIndex = parseInt(node ? node.dataset.index || "0" : "0") + 1;
+        const node = tableRef.current?.children[1].children[0] as HTMLElement;
+        const resetIndex = parseInt(node?.dataset.index || "0") + 1;
         listRef.current.resetAfterIndex(resetIndex);
       }, 50);
     },
@@ -178,7 +173,7 @@ const ListComponent = ({
   }, [dispatch, remainingCols, fixedWidth, minColumnWidth, pixelWidths, columns]);
 
   const shouldUseRowWidth = useCallback(() => {
-    const parentElement = tableRef.current?.parentElement || NO_PARENT;
+    const parentElement = tableRef.current?.parentElement || NO_NODE;
     setUseRowWidth(parentElement.scrollWidth <= parentElement.clientWidth);
   }, [tableRef]);
 
@@ -186,9 +181,8 @@ const ListComponent = ({
   /* initializers */
   // initialize whether or not to use rowWidth (useful for bottom border)
   useEffect(() => {
-    if (tableRef.current) {
-      setUseRowWidth(tableRef.current.scrollWidth <= tableRef.current.clientWidth);
-    }
+    const widths = tableRef.current || NO_NODE;
+    setUseRowWidth(widths.scrollWidth <= widths.clientWidth);
   }, []);
 
   // figure out how to wait for scrollbar to appear
@@ -242,7 +236,6 @@ const ListComponent = ({
       itemData={{
         rows: data,
         rowHeight,
-        pixelWidths,
         useRowWidth,
         subComponent,
         clearSizeCache,
