@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
-import useResize from "./useResize";
 
 interface AutoSizerProps {
   disableHeight?: boolean;
@@ -20,6 +19,7 @@ interface State {
  */
 const AutoSizer = ({ disableHeight, disableWidth, children }: AutoSizerProps) => {
   // hooks
+  const resizeRef = useRef(0);
   const ref = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState<State>({ height: null, width: null });
 
@@ -54,12 +54,23 @@ const AutoSizer = ({ disableHeight, disableWidth, children }: AutoSizerProps) =>
     setDimensions({ height: newHeight, width: newWidth });
   }, [height, width, disableHeight, disableWidth]);
 
+  const onResize = useCallback(() => {
+    window.clearTimeout(resizeRef.current);
+    resizeRef.current = window.setTimeout(calculateDimensions, 40);
+  }, [calculateDimensions]);
+
   // effects
   // on mount, calculate the dimensions
   useEffect(() => calculateDimensions(), []);
 
   // on resize, we have to re-calculate the dimensions
-  useResize(calculateDimensions, 40);
+  useEffect(() => {
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.clearTimeout(resizeRef.current);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [onResize, resizeRef]);
 
   return (
     <div ref={ref}>
