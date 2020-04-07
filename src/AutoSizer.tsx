@@ -20,6 +20,7 @@ interface State {
 const AutoSizer = ({ disableHeight, disableWidth, children }: AutoSizerProps) => {
   // hooks
   const ref = useRef<HTMLDivElement>(null);
+  const resizeRef = useRef(0);
   const prevSize = useRef({ width: window.innerWidth, height: window.innerHeight });
   const [dimensions, setDimensions] = useState<State>({ height: null, width: null });
 
@@ -27,49 +28,50 @@ const AutoSizer = ({ disableHeight, disableWidth, children }: AutoSizerProps) =>
   const { height, width } = dimensions;
 
   // functions
-  const calculateDimensions = useCallback(
-    (event?: UIEvent) => {
-      // base cases
-      if (!ref.current || !ref.current.parentElement) {
-        return;
-      }
+  const calculateDimensions = useCallback(() => {
+    // base cases
+    if (!ref.current || !ref.current.parentElement) {
+      return;
+    }
 
-      // if resize was triggered but the window dimensions did not
-      // change, return early
-      if (event) {
-        const { width: prevWidth, height: prevHeight } = prevSize.current;
-        if (prevWidth === window.innerWidth && prevHeight === window.innerHeight) {
-          return;
-        }
+    if (disableHeight && disableWidth) {
+      setDimensions({ height: 0, width: 0 });
+      return;
+    }
 
-        prevSize.current.width = window.innerWidth;
-        prevSize.current.height = window.innerHeight;
-      }
+    // get style
+    const parent = ref.current.parentElement;
+    const style = window.getComputedStyle(parent);
+    const paddingLeft = parseInt(style.paddingLeft, 10) || 0;
+    const paddingRight = parseInt(style.paddingRight, 10) || 0;
+    const paddingTop = parseInt(style.paddingTop, 10) || 0;
+    const paddingBottom = parseInt(style.paddingBottom, 10) || 0;
 
-      if (disableHeight && disableWidth) {
-        setDimensions({ height: 0, width: 0 });
-        return;
-      }
+    // find new dimensions
+    const newHeight = (parent.offsetHeight || 0) - paddingTop - paddingBottom;
+    const newWidth = (parent.offsetWidth || 0) - paddingLeft - paddingRight;
 
-      // get style
-      const parent = ref.current.parentElement;
-      const style = window.getComputedStyle(parent);
-      const paddingLeft = parseInt(style.paddingLeft, 10) || 0;
-      const paddingRight = parseInt(style.paddingRight, 10) || 0;
-      const paddingTop = parseInt(style.paddingTop, 10) || 0;
-      const paddingBottom = parseInt(style.paddingBottom, 10) || 0;
+    // update state
+    if (newHeight !== height || newWidth !== width) {
+      setDimensions({ height: newHeight, width: newWidth });
+    }
+  }, [height, width, disableHeight, disableWidth]);
 
-      // find new dimensions
-      const newHeight = (parent.offsetHeight || 0) - paddingTop - paddingBottom;
-      const newWidth = (parent.offsetWidth || 0) - paddingLeft - paddingRight;
+  const onResize = useCallback(() => {
+    if (resizeRef.current) {
+      window.clearTimeout(resizeRef.current);
+    }
 
-      // update state
-      if (newHeight !== height || newWidth !== width) {
-        setDimensions({ height: newHeight, width: newWidth });
-      }
-    },
-    [height, width, disableHeight, disableWidth]
-  );
+    // if the window dimensions did not change, return early
+    const { width: prevWidth, height: prevHeight } = prevSize.current;
+    if (prevWidth === window.innerWidth && prevHeight === window.innerHeight) {
+      return;
+    }
+
+    prevSize.current.width = window.innerWidth;
+    prevSize.current.height = window.innerHeight;
+    resizeRef.current = window.setTimeout(calculateDimensions, 50);
+  }, [resizeRef, prevSize, calculateDimensions]);
 
   // effects
   // on mount, calculate the dimensions
@@ -77,11 +79,14 @@ const AutoSizer = ({ disableHeight, disableWidth, children }: AutoSizerProps) =>
 
   // on resize, we have to re-calculate the dimensions
   useEffect(() => {
-    window.addEventListener("resize", calculateDimensions);
+    window.addEventListener("resize", onResize);
     return () => {
-      window.removeEventListener("resize", calculateDimensions);
+      if (resizeRef.current) {
+        window.clearTimeout(resizeRef.current);
+      }
+      window.removeEventListener("resize", onResize);
     };
-  }, [calculateDimensions]);
+  }, [onResize]);
 
   return (
     <div ref={ref}>
