@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
+import useResize from "./useResize";
 
 interface AutoSizerProps {
   disableHeight?: boolean;
@@ -20,8 +21,6 @@ interface State {
 const AutoSizer = ({ disableHeight, disableWidth, children }: AutoSizerProps) => {
   // hooks
   const ref = useRef<HTMLDivElement>(null);
-  const resizeRef = useRef(0);
-  const prevSize = useRef({ width: window.innerWidth, height: window.innerHeight });
   const [dimensions, setDimensions] = useState<State>({ height: null, width: null });
 
   // variables
@@ -52,41 +51,15 @@ const AutoSizer = ({ disableHeight, disableWidth, children }: AutoSizerProps) =>
     const newWidth = (parent.offsetWidth || 0) - paddingLeft - paddingRight;
 
     // update state
-    if (newHeight !== height || newWidth !== width) {
-      setDimensions({ height: newHeight, width: newWidth });
-    }
+    setDimensions({ height: newHeight, width: newWidth });
   }, [height, width, disableHeight, disableWidth]);
-
-  const onResize = useCallback(() => {
-    if (resizeRef.current) {
-      window.clearTimeout(resizeRef.current);
-    }
-
-    // if the window dimensions did not change, return early
-    const { width: prevWidth, height: prevHeight } = prevSize.current;
-    if (prevWidth === window.innerWidth && prevHeight === window.innerHeight) {
-      return;
-    }
-
-    prevSize.current.width = window.innerWidth;
-    prevSize.current.height = window.innerHeight;
-    resizeRef.current = window.setTimeout(calculateDimensions, 50);
-  }, [resizeRef, prevSize, calculateDimensions]);
 
   // effects
   // on mount, calculate the dimensions
   useEffect(() => calculateDimensions(), []);
 
   // on resize, we have to re-calculate the dimensions
-  useEffect(() => {
-    window.addEventListener("resize", onResize);
-    return () => {
-      if (resizeRef.current) {
-        window.clearTimeout(resizeRef.current);
-      }
-      window.removeEventListener("resize", onResize);
-    };
-  }, [onResize]);
+  useResize(calculateDimensions, 40);
 
   return (
     <div ref={ref}>

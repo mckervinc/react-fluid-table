@@ -1,16 +1,9 @@
-import React, {
-  forwardRef,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  useCallback
-} from "react";
+import React, { forwardRef, useContext, useLayoutEffect, useState, useCallback } from "react";
 import { calculateColumnWidths } from "./columnUtils";
 import { TableContext } from "./TableContext";
 import { ColumnProps } from "../index";
 import { arraysMatch } from "./util";
+import useResize from "./useResize";
 
 interface HeaderRowProps {
   pixelWidths: number[];
@@ -103,7 +96,6 @@ const HeaderRow = React.memo(({ pixelWidths }: HeaderRowProps) => {
 const Header = forwardRef(({ children, ...rest }, ref: any) => {
   // hooks
   const tableContext = useContext(TableContext);
-  const timeoutRef = useRef(0);
   const [pixelWidths, setPixelWidths] = useState<number[]>([]);
 
   // variables
@@ -125,28 +117,12 @@ const Header = forwardRef(({ children, ...rest }, ref: any) => {
     }
   }, [pixelWidths, remainingCols, fixedWidth, minColumnWidth, columns]);
 
-  const onResize = useCallback(() => {
-    if (timeoutRef.current) {
-      window.clearTimeout(timeoutRef.current);
-    }
-
-    timeoutRef.current = window.setTimeout(updatepixelWidths, 50);
-  }, [timeoutRef, updatepixelWidths]);
-
   // effects
   // initialize pixel widths
   useLayoutEffect(() => updatepixelWidths(), []);
 
   // on resize re-calculate pixel width
-  useEffect(() => {
-    window.addEventListener("resize", onResize);
-    return () => {
-      if (timeoutRef.current) {
-        window.clearTimeout(timeoutRef.current);
-      }
-      window.removeEventListener("resize", onResize);
-    };
-  }, [onResize, timeoutRef]);
+  useResize(updatepixelWidths, 50);
 
   return (
     <div id={id} ref={ref} data-table-key={uuid} className="react-fluid-table-container" {...rest}>

@@ -1,6 +1,7 @@
-import React, { useRef, useContext, useCallback, useEffect, useLayoutEffect } from "react";
+import React, { useRef, useContext, useCallback, useLayoutEffect } from "react";
 import { TableContext } from "./TableContext";
 import { RowProps, ColumnProps } from "../index";
+import useResize from "./useResize";
 
 //@ts-ignore TS2307
 import Plus from "./svg/plus-circle.svg";
@@ -21,7 +22,6 @@ const Row = ({
   subComponent: SubComponent
 }: RowProps) => {
   // hooks
-  const resizeRef = useRef(0);
   const expandedCalledRef = useRef(false);
   const rowRef = useRef<HTMLDivElement>(null);
   const tableContext = useContext(TableContext);
@@ -79,14 +79,6 @@ const Row = ({
     }
   }, [rowRef, index, height, calculateHeight, clearSizeCache]);
 
-  const onResize = useCallback(() => {
-    if (resizeRef.current) {
-      window.clearTimeout(resizeRef.current);
-    }
-
-    resizeRef.current = window.setTimeout(resetHeight, 65);
-  }, [resetHeight, resizeRef]);
-
   // effects
   useLayoutEffect(() => {
     if (expandedCalledRef.current) {
@@ -102,15 +94,8 @@ const Row = ({
     expandedCalledRef.current = false;
   }, [isExpanded, expandedCalledRef, resetHeight]);
 
-  useEffect(() => {
-    window.addEventListener("resize", onResize);
-    return () => {
-      if (resizeRef.current) {
-        window.clearTimeout(resizeRef.current);
-      }
-      window.removeEventListener("resize", onResize);
-    };
-  }, [onResize, resizeRef]);
+  // on resize check for height mismatch
+  useResize(resetHeight, 65);
 
   return (
     <div
