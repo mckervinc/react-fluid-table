@@ -43,6 +43,8 @@ const baseState = {
   sortDirection: null
 };
 
+const fields = ["sortColumn", "sortDirection", "minColumnWidth", "onSort", "columns"];
+
 const TableContext = createContext<A>({ state: baseState, dispatch: () => {} });
 
 const findColumnWidthConstants = (columns: ColumnProps[]) => {
@@ -76,25 +78,11 @@ const reducer = (state: State, action: Action) => {
 
 const getChangedFields = (prevState: any, currState: any) => {
   const changedFields = new Set<string>();
-  if (prevState.sortColumn !== currState.sortColumn) {
-    changedFields.add("sortColumn");
-  }
-
-  if (prevState.sortDirection !== currState.sortDirection) {
-    changedFields.add("sortDirection");
-  }
-
-  if (prevState.minColumnWidth !== currState.minColumnWidth) {
-    changedFields.add("minColumnWidth");
-  }
-
-  if (prevState.onSort !== currState.onSort) {
-    changedFields.add("onSort");
-  }
-
-  if (prevState.columns !== currState.columns) {
-    changedFields.add("columns");
-  }
+  fields.forEach(field => {
+    if (prevState[field] !== currState[field]) {
+      changedFields.add(field);
+    }
+  });
 
   return changedFields;
 };

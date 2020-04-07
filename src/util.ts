@@ -12,10 +12,7 @@ export const arraysMatch = (arr1: any[], arr2: any[]) => {
   return true;
 };
 
-export const randomString = (num = 5): string =>
-  Math.random()
-    .toString(36)
-    .substr(2, num);
+export const randomString = (num = 5): string => Math.random().toString(36).substr(2, num);
 
 export const findHeaderByUuid = (uuid: string): HTMLElement | null =>
   document.querySelector(`[data-header-key='${uuid}-header']`);

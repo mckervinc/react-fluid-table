@@ -22,9 +22,7 @@ interface Data {
 
 const DEFAULT_ROW_HEIGHT = 37;
 const DEFAULT_HEADER_HEIGHT = 32;
-const NO_PARENT = {
-  parentElement: { scrollWidth: 0, clientWidth: 0 }
-};
+const NO_PARENT = { scrollWidth: 0, clientWidth: 0 };
 
 /**
  * The main table component
@@ -131,12 +129,10 @@ const ListComponent = ({
     }
 
     resizeRef.current = window.setTimeout(() => {
-      const { parentElement } = tableRef.current || NO_PARENT;
-      if (parentElement) {
-        setUseRowWidth(parentElement.scrollWidth <= parentElement.clientWidth);
-      }
+      const parentElement = tableRef.current?.parentElement || NO_PARENT;
+      setUseRowWidth(parentElement.scrollWidth <= parentElement.clientWidth);
     }, 50);
-  }, [resizeRef, uuid, tableRef]);
+  }, [resizeRef, tableRef]);
 
   const calculatePixelWidths = useCallback(() => {
     if (pixelWidthsRef.current) {
