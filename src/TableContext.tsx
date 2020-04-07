@@ -10,6 +10,7 @@ interface ProviderProps {
 }
 
 interface State {
+  pixelWidths: number[];
   expanded: Generic;
   uuid: string;
   minColumnWidth: number;
@@ -35,6 +36,7 @@ interface A {
 const baseState = {
   expanded: {},
   columns: [],
+  pixelWidths: [],
   uuid: "",
   minColumnWidth: 80,
   fixedWidth: 0,
@@ -66,6 +68,8 @@ const reducer = (state: State, action: Action) => {
         ...state,
         expanded: { ...state.expanded, [action.key]: !state.expanded[action.key] }
       };
+    case "updatePixelWidths":
+      return { ...state, pixelWidths: action.widths };
     case "refresh":
       return {
         ...state,

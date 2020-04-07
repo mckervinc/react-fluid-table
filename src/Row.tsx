@@ -1,7 +1,6 @@
 import React, { useRef, useContext, useCallback, useLayoutEffect } from "react";
 import { TableContext } from "./TableContext";
 import { RowProps, ColumnProps } from "../index";
-import useResize from "./useResize";
 
 //@ts-ignore TS2307
 import Plus from "./svg/plus-circle.svg";
@@ -80,22 +79,21 @@ const Row = ({
   }, [rowRef, index, height, calculateHeight, clearSizeCache]);
 
   // effects
+  // on expansion, clear the cache
   useLayoutEffect(() => {
     if (expandedCalledRef.current) {
       clearSizeCache(index, true);
     }
   }, [isExpanded, index, clearSizeCache, expandedCalledRef]);
 
+  // every time isExpanded/pixelWidth changes, check the height
   useLayoutEffect(() => {
     if (!expandedCalledRef.current) {
       resetHeight();
     }
 
     expandedCalledRef.current = false;
-  }, [isExpanded, expandedCalledRef, resetHeight]);
-
-  // on resize check for height mismatch
-  useResize(resetHeight, 65);
+  }, [isExpanded, expandedCalledRef, resetHeight, pixelWidths]);
 
   return (
     <div

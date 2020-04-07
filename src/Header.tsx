@@ -1,13 +1,6 @@
-import React, { forwardRef, useContext, useLayoutEffect, useState, useCallback } from "react";
-import { calculateColumnWidths } from "./columnUtils";
+import React, { forwardRef, useContext } from "react";
 import { TableContext } from "./TableContext";
 import { ColumnProps } from "../index";
-import { arraysMatch } from "./util";
-import useResize from "./useResize";
-
-interface HeaderRowProps {
-  pixelWidths: number[];
-}
 
 interface ColumnCellProps {
   width: number;
@@ -79,56 +72,24 @@ const ColumnCell = React.memo(({ column, width }: ColumnCellProps) => {
   return <HeaderCell style={style} onClick={onClick} sortDirection={headerDir} />;
 });
 
-const HeaderRow = React.memo(({ pixelWidths }: HeaderRowProps) => {
-  // hooks
-  const tableContext = useContext(TableContext);
-  const { columns } = tableContext.state;
-
-  return (
-    <div className="react-fluid-table-header">
-      {columns.map((c: ColumnProps, i: number) => (
-        <ColumnCell key={c.key} column={c} width={pixelWidths[i]} />
-      ))}
-    </div>
-  );
-});
-
 const Header = forwardRef(({ children, ...rest }, ref: any) => {
   // hooks
   const tableContext = useContext(TableContext);
-  const [pixelWidths, setPixelWidths] = useState<number[]>([]);
 
   // variables
-  const { id, uuid, columns, remainingCols, fixedWidth, minColumnWidth } = tableContext.state;
+  const { id, uuid, columns, pixelWidths } = tableContext.state;
   const { scrollWidth, clientWidth } = ref.current || NO_REF;
   const width = scrollWidth <= clientWidth ? "100%" : undefined;
-
-  // functions
-  const updatepixelWidths = useCallback(() => {
-    const widths = calculateColumnWidths(
-      ref.current,
-      remainingCols,
-      fixedWidth,
-      minColumnWidth,
-      columns
-    );
-    if (!arraysMatch(widths, pixelWidths)) {
-      setPixelWidths(widths);
-    }
-  }, [pixelWidths, remainingCols, fixedWidth, minColumnWidth, columns]);
-
-  // effects
-  // initialize pixel widths
-  useLayoutEffect(() => updatepixelWidths(), []);
-
-  // on resize re-calculate pixel width
-  useResize(updatepixelWidths, 50);
 
   return (
     <div id={id} ref={ref} data-table-key={uuid} className="react-fluid-table-container" {...rest}>
       <div className="sticky-header" data-header-key={`${uuid}-header`}>
         <div className="row-wrapper" style={{ width }}>
-          <HeaderRow pixelWidths={pixelWidths} />
+          <div className="react-fluid-table-header">
+            {columns.map((c: ColumnProps, i: number) => (
+              <ColumnCell key={c.key} column={c} width={pixelWidths[i]} />
+            ))}
+          </div>
         </div>
       </div>
       <div className="row-wrapper">{children}</div>

@@ -7,23 +7,72 @@ import React, {
   useState
 } from "react";
 import { VariableSizeList } from "react-window";
-import { Generic, ListProps, TableProps, Text } from "../index";
+import { Generic, ListProps, TableProps, Text, ColumnProps } from "../index";
 import AutoSizer from "./AutoSizer";
 import Header from "./Header";
 import RowWrapper from "./RowWrapper";
 import { TableContext, TableContextProvider } from "./TableContext";
-import { calculateColumnWidths } from "./columnUtils";
 import { arraysMatch, findHeaderByUuid, findRowByUuidAndKey, randomString } from "./util";
-import useResize from "./useResize";
 
 interface Data {
   rows: Generic[];
   [key: string]: any;
 }
 
+// constants
 const DEFAULT_ROW_HEIGHT = 37;
 const DEFAULT_HEADER_HEIGHT = 32;
 const NO_PARENT = { scrollWidth: 0, clientWidth: 0 };
+
+// functions
+const guessTableHeight = (rowHeight?: number, estimatedRowHeight?: number) => {
+  const height = Math.max(rowHeight || estimatedRowHeight || DEFAULT_ROW_HEIGHT, 10);
+  return height * 10 + DEFAULT_HEADER_HEIGHT;
+};
+
+const calculateColumnWidths = (
+  element: HTMLElement | null,
+  numColumns: number,
+  fixedColumnWidths: number,
+  minColumnWidth: number,
+  columns: ColumnProps[]
+): number[] => {
+  if (!element) return columns.map(() => minColumnWidth);
+  const offsetWidth = element.offsetWidth;
+  let n = Math.max(numColumns, 1);
+  let usedSpace = fixedColumnWidths;
+  let freeSpace = Math.max(offsetWidth - usedSpace, 0);
+  let width = Math.max(minColumnWidth, Math.floor(freeSpace / n));
+
+  return columns.map((c: ColumnProps) => {
+    if (c.width) {
+      return c.width;
+    }
+
+    if (c.maxWidth) {
+      const diff = width - c.maxWidth;
+      if (diff > 0) {
+        n = Math.max(n - 1, 1);
+        usedSpace += c.maxWidth;
+        freeSpace = Math.max(offsetWidth - usedSpace, 0);
+        width = Math.max(minColumnWidth, Math.floor(freeSpace / n));
+        return c.maxWidth;
+      }
+    }
+
+    if (c.minWidth) {
+      const diff = c.minWidth - width;
+      if (diff > 0) {
+        n = Math.max(n - 1, 1);
+        usedSpace += c.minWidth;
+        freeSpace = Math.max(offsetWidth - usedSpace, 0);
+        width = Math.max(minColumnWidth, Math.floor(freeSpace / n));
+        return c.minWidth;
+      }
+    }
+    return width;
+  });
+};
 
 /**
  * The main table component
@@ -44,11 +93,18 @@ const ListComponent = ({
   const tableRef = useRef<HTMLDivElement>(null);
   const tableContext = useContext(TableContext);
   const [useRowWidth, setUseRowWidth] = useState(true);
-  const [pixelWidths, setPixelWidths] = useState<number[]>([]);
 
   // variables
+  const { dispatch } = tableContext;
   const defaultSize = rowHeight || estimatedRowHeight;
-  const { uuid, columns, minColumnWidth, fixedWidth, remainingCols } = tableContext.state;
+  const {
+    uuid,
+    columns,
+    minColumnWidth,
+    fixedWidth,
+    remainingCols,
+    pixelWidths
+  } = tableContext.state;
 
   // functions
   const generateKeyFromRow = useCallback(
@@ -108,7 +164,7 @@ const ListComponent = ({
     [uuid, data, listRef, rowHeight, defaultSize, generateKeyFromRow]
   );
 
-  const pixelWidthsHelper = useCallback(() => {
+  const updatePixelWidths = useCallback(() => {
     const widths = calculateColumnWidths(
       tableRef.current,
       remainingCols,
@@ -117,9 +173,9 @@ const ListComponent = ({
       columns
     );
     if (!arraysMatch(widths, pixelWidths)) {
-      setPixelWidths(widths);
+      dispatch({ type: "updatePixelWidths", widths });
     }
-  }, [remainingCols, fixedWidth, minColumnWidth, pixelWidths, columns]);
+  }, [dispatch, remainingCols, fixedWidth, minColumnWidth, pixelWidths, columns]);
 
   const shouldUseRowWidth = useCallback(() => {
     const parentElement = tableRef.current?.parentElement || NO_PARENT;
@@ -128,9 +184,6 @@ const ListComponent = ({
 
   // effects
   /* initializers */
-  // initialize pixel width
-  useLayoutEffect(pixelWidthsHelper, []);
-
   // initialize whether or not to use rowWidth (useful for bottom border)
   useEffect(() => {
     if (tableRef.current) {
@@ -138,20 +191,21 @@ const ListComponent = ({
     }
   }, []);
 
-  // force clear the cache after mounting
+  // figure out how to wait for scrollbar to appear
+  // before recalculating. using 100ms heuristic
   useEffect(() => {
-    clearSizeCache(0, true);
-
-    // figure out how to wait for scrollbar to appear
-    // before triggering resize. using 100ms heuristic
     setTimeout(() => {
-      window.dispatchEvent(new Event("resize"));
+      updatePixelWidths();
+      shouldUseRowWidth();
     }, 100);
   }, []);
 
-  /* listeners */
-  useResize(shouldUseRowWidth, 50);
-  useResize(pixelWidthsHelper, 50);
+  /* updates */
+  // update pixel widths every time the width changes
+  useLayoutEffect(updatePixelWidths, [width]);
+
+  // check if we should use the row width when width changes
+  useEffect(shouldUseRowWidth, [width]);
 
   /* cleanup */
   useEffect(() => {
@@ -170,13 +224,13 @@ const ListComponent = ({
       innerElementType={Header}
       height={height}
       width={width}
+      itemCount={data.length + 1}
       itemKey={(index: number, data: Data): Text => {
         if (!index) return `${uuid}-header`;
         const dataIndex = index - 1;
         const row = data.rows[dataIndex];
         return generateKeyFromRow(row, index);
       }}
-      itemCount={data.length + 1}
       itemSize={index => {
         if (!index) {
           const header = findHeaderByUuid(uuid);
@@ -199,11 +253,6 @@ const ListComponent = ({
       {RowWrapper}
     </VariableSizeList>
   );
-};
-
-const guessTableHeight = (rowHeight?: number, estimatedRowHeight?: number) => {
-  const height = Math.max(rowHeight || estimatedRowHeight || DEFAULT_ROW_HEIGHT, 10);
-  return height * 10 + DEFAULT_HEADER_HEIGHT;
 };
 
 const Table = ({
