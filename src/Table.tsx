@@ -89,6 +89,7 @@ const ListComponent = ({
 }: ListProps) => {
   // hooks
   const timeoutRef = useRef(0);
+  const prevRef = useRef(width);
   const listRef = useRef<any>(null);
   const tableRef = useRef<HTMLDivElement>(null);
   const tableContext = useContext(TableContext);
@@ -202,6 +203,57 @@ const ListComponent = ({
 
   // check if we should use the row width when width changes
   useEffect(shouldUseRowWidth, [width]);
+
+  // manually alter the height of each row if height is incorrect
+  // to help with flicker on resize
+  useLayoutEffect(() => {
+    if (prevRef.current !== width) {
+      setTimeout(() => {
+        if (!tableRef.current || !listRef.current) {
+          return;
+        }
+
+        // variables
+        let prevTop = 0;
+        let prevHeight = 0;
+        const cache = listRef.current._instanceProps.itemMetadataMap || {};
+        const elements = [...tableRef.current.children[1].children];
+
+        // manually change the `top` and `height` for visible rows
+        elements.forEach((e, i) => {
+          const node = e as HTMLDivElement;
+          const dataIndex = parseInt(node.dataset.index || "0");
+
+          // if the row is incorrect, update the tops going forward
+          const height = cache[dataIndex + 1].size;
+          const computed = calculateHeight(node, dataIndex);
+
+          // case 0: the first element, where the top is correct
+          if (i === 0) {
+            prevTop = parseInt(node.style.top);
+            prevHeight = computed;
+
+            if (height !== computed) {
+              node.style.height = `${computed}px`;
+            }
+            return;
+          }
+
+          // case 1: every other element
+          const newTop = prevTop + prevHeight;
+          node.style.top = `${newTop}px`;
+          if (height !== computed) {
+            node.style.height = `${computed}px`;
+          }
+
+          prevTop = newTop;
+          prevHeight = computed;
+        });
+      }, 0);
+    }
+
+    prevRef.current = width;
+  }, [width, tableRef, listRef, calculateHeight]);
 
   /* cleanup */
   useEffect(() => {
