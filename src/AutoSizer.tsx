@@ -6,11 +6,6 @@ interface AutoSizerProps {
   children: ({ height, width }: { height: number; width: number }) => React.ReactNode;
 }
 
-interface State {
-  height: number | null;
-  width: number | null;
-}
-
 /**
  * This is a skinny AutoSizer based on react-virtualized-auto-sizer.
  * This removes the `bailout` functionality in order to allow the Table
@@ -21,7 +16,7 @@ const AutoSizer = ({ disableHeight, disableWidth, children }: AutoSizerProps) =>
   // hooks
   const resizeRef = useRef(0);
   const ref = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState<State>({ height: null, width: null });
+  const [dimensions, setDimensions] = useState({ height: 0, width: 0 });
 
   // variables
   const { height, width } = dimensions;
@@ -33,18 +28,13 @@ const AutoSizer = ({ disableHeight, disableWidth, children }: AutoSizerProps) =>
       return;
     }
 
-    if (disableHeight && disableWidth) {
-      setDimensions({ height: 0, width: 0 });
-      return;
-    }
-
     // get style
     const parent = ref.current.parentElement;
     const style = window.getComputedStyle(parent);
-    const paddingLeft = parseInt(style.paddingLeft, 10) || 0;
-    const paddingRight = parseInt(style.paddingRight, 10) || 0;
-    const paddingTop = parseInt(style.paddingTop, 10) || 0;
-    const paddingBottom = parseInt(style.paddingBottom, 10) || 0;
+    const paddingLeft = parseInt(style.paddingLeft) || 0;
+    const paddingRight = parseInt(style.paddingRight) || 0;
+    const paddingTop = parseInt(style.paddingTop) || 0;
+    const paddingBottom = parseInt(style.paddingBottom) || 0;
 
     // find new dimensions
     const newHeight = (parent.offsetHeight || 0) - paddingTop - paddingBottom;
@@ -74,12 +64,12 @@ const AutoSizer = ({ disableHeight, disableWidth, children }: AutoSizerProps) =>
 
   return (
     <div ref={ref}>
-      {height === null || width == null
-        ? null
-        : children({
+      {height || width
+        ? children({
             height: disableHeight ? 0 : height,
             width: disableWidth ? 0 : width
-          })}
+          })
+        : null}
     </div>
   );
 };

@@ -100,11 +100,7 @@ const Row = ({
       className="react-fluid-table-row"
       data-index={index}
       data-row-key={rowKey}
-      style={{
-        ...style,
-        width: useRowWidth ? style.width : undefined,
-        height: rowRef.current || rowHeight ? style.height : undefined
-      }}
+      style={{ ...style, width: useRowWidth ? style.width : undefined }}
     >
       <div className="row-container" style={{ height: containerHeight }}>
         {columns.map((c: ColumnProps, i: number) => {

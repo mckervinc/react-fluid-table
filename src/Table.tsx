@@ -21,7 +21,7 @@ interface Data {
 
 // constants
 const DEFAULT_ROW_HEIGHT = 37;
-const DEFAULT_HEADER_HEIGHT = 32;
+const DEFAULT_HEADER_HEIGHT = 37;
 const NO_NODE = { scrollWidth: 0, clientWidth: 0 };
 
 // functions
@@ -96,7 +96,6 @@ const ListComponent = ({
 
   // variables
   const { dispatch } = tableContext;
-  const defaultSize = rowHeight || estimatedRowHeight;
   const {
     uuid,
     columns,
@@ -105,6 +104,7 @@ const ListComponent = ({
     remainingCols,
     pixelWidths
   } = tableContext.state;
+  const defaultSize = rowHeight || estimatedRowHeight;
 
   // functions
   const generateKeyFromRow = useCallback(
@@ -116,7 +116,7 @@ const ListComponent = ({
   );
 
   const clearSizeCache = useCallback(
-    (dataIndex, forceUpdate = false) => {
+    (dataIndex: number, forceUpdate = false) => {
       if (!listRef.current) {
         return;
       }
@@ -185,9 +185,11 @@ const ListComponent = ({
     setUseRowWidth(widths.scrollWidth <= widths.clientWidth);
   }, []);
 
-  // figure out how to wait for scrollbar to appear
-  // before recalculating. using 100ms heuristic
+  // force clear cache to update header size
   useEffect(() => {
+    clearSizeCache(-1, true);
+    // figure out how to wait for scrollbar to appear
+    // before recalculating. using 100ms heuristic
     setTimeout(() => {
       updatePixelWidths();
       shouldUseRowWidth();
