@@ -8,7 +8,7 @@ import Minus from "./svg/minus-circle.svg";
 //@ts-ignore TS2307
 import Plus from "./svg/plus-circle.svg";
 
-interface MemoizedCell {
+interface TableCellProps {
   row: Generic;
   index: number;
   width?: number;
@@ -18,13 +18,19 @@ interface MemoizedCell {
   onExpanderClick: Function;
 }
 
-const MemoizedCell = React.memo(
-  ({ row, index, width, column, isExpanded, clearSizeCache, onExpanderClick }: MemoizedCell) => {
-    // cell renderer
-    const cellRenderer = (c: ColumnProps) => {
-      if (c.expander) {
-        let Logo: any = c.expander;
-        if (typeof c.expander === "boolean") {
+const TableCell = React.memo(
+  ({ row, index, width, column, isExpanded, clearSizeCache, onExpanderClick }: TableCellProps) => {
+    // variables
+    const style = {
+      width: width ? `${width}px` : undefined,
+      minWidth: width ? `${width}px` : undefined
+    };
+
+    // functions
+    const cellRenderer = () => {
+      if (column.expander) {
+        let Logo: any = column.expander;
+        if (typeof column.expander === "boolean") {
           Logo = isExpanded ? Minus : Plus;
           return <Logo className="expander" onClick={onExpanderClick} />;
         }
@@ -33,22 +39,17 @@ const MemoizedCell = React.memo(
         return <Logo isExpanded={isExpanded} onClick={onExpanderClick} />;
       }
 
-      if (!c.cell) {
-        return row[c.key] || null;
+      if (!column.cell) {
+        return row[column.key] || null;
       }
 
-      const CustomCell = c.cell;
+      const CustomCell = column.cell;
       return <CustomCell row={row} index={index} clearSizeCache={clearSizeCache} />;
-    };
-
-    const style = {
-      width: width ? `${width}px` : undefined,
-      minWidth: width ? `${width}px` : undefined
     };
 
     return (
       <div className="cell" style={style}>
-        {cellRenderer(column)}
+        {cellRenderer()}
       </div>
     );
   }
@@ -126,7 +127,7 @@ const Row = ({
     >
       <div className="row-container" style={{ height: containerHeight }}>
         {columns.map((c: ColumnProps, i: number) => (
-          <MemoizedCell
+          <TableCell
             key={`${uuid}-${c.key}-${key}`}
             row={row}
             column={c}

@@ -12,7 +12,7 @@ const NO_REF = {
   clientWidth: 0
 };
 
-const ColumnCell = React.memo(({ column, width }: ColumnCellProps) => {
+const HeaderCell = React.memo(({ column, width }: ColumnCellProps) => {
   // hooks
   const tableContext = useContext(TableContext);
 
@@ -67,9 +67,9 @@ const ColumnCell = React.memo(({ column, width }: ColumnCellProps) => {
     );
   }
 
-  const HeaderCell = column.header;
+  const ColumnCell = column.header;
   const headerDir = column.key === col ? dir || null : null;
-  return <HeaderCell style={style} onClick={onClick} sortDirection={headerDir} />;
+  return <ColumnCell style={style} onClick={onClick} sortDirection={headerDir} />;
 });
 
 const Header = forwardRef(({ children, ...rest }, ref: any) => {
@@ -87,7 +87,7 @@ const Header = forwardRef(({ children, ...rest }, ref: any) => {
         <div className="row-wrapper" style={{ width }}>
           <div className="react-fluid-table-header">
             {columns.map((c: ColumnProps, i: number) => (
-              <ColumnCell key={c.key} column={c} width={pixelWidths[i]} />
+              <HeaderCell key={c.key} column={c} width={pixelWidths[i]} />
             ))}
           </div>
         </div>
