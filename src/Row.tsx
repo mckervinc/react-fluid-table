@@ -17,7 +17,8 @@ const Row = ({
   clearSizeCache,
   calculateHeight,
   generateKeyFromRow,
-  subComponent: SubComponent
+  subComponent: SubComponent,
+  customRowContainer: CustomRowContainer
 }: RowProps) => {
   // hooks
   const expandedCalledRef = useRef(false);
@@ -94,6 +95,14 @@ const Row = ({
     expandedCalledRef.current = false;
   }, [isExpanded, expandedCalledRef, resetHeight, pixelWidths]);
 
+  const DefaultRowContainer = props => (
+    <div {...props}> 
+      {props.children}
+    </div>
+  )
+
+  const RowContainer = CustomRowContainer ? CustomRowContainer : DefaultRowContainer;
+
   return (
     <div
       ref={rowRef}
@@ -102,7 +111,7 @@ const Row = ({
       data-row-key={rowKey}
       style={{ ...style, width: useRowWidth ? style.width : undefined }}
     >
-      <div className="row-container" style={{ height: containerHeight }}>
+      <RowContainer index={index} rowKey={rowKey} className="row-container" style={{ height: containerHeight }}>
         {columns.map((c: ColumnProps, i: number) => {
           const width = pixelWidths[i];
           const style = {
@@ -115,7 +124,7 @@ const Row = ({
             </div>
           );
         })}
-      </div>
+      </RowContainer>
       {!SubComponent ? null : (
         <div className={isExpanded ? undefined : "hidden"}>
           <SubComponent {...subProps} />

@@ -61,6 +61,7 @@ export interface RowProps {
   calculateHeight: HeightFunction;
   generateKeyFromRow: GenKeyFunction;
   subComponent: ElementType<SubComponentProps>;
+  customRowContainer: React.FC;
 }
 
 export interface SubComponentProps {
@@ -143,6 +144,7 @@ export interface TableProps {
    * When a column has `expander`, this component will be rendered under the row.
    */
   subComponent?: ElementType<SubComponentProps>;
+  customRowContainer: React.FC;
 }
 
 export const Table: FC<TableProps>;

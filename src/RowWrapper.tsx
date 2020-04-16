@@ -5,20 +5,18 @@ import Row from "./Row";
 interface Props {
   index: number;
   data: any;
-  CustomRow: React.FC;
+  customRowContainer: React.FC;
 }
 
-const RowWrapper = React.memo(({ data, index, CustomRow, ...rest }: Props) => {
+const RowWrapper = React.memo(({ data, index, customRowContainer, ...rest }: Props) => {
   const dataIndex = index - 1; // the header is at index 0
 
-  console.log(data, index);
+  console.log('updated once more', data, index, customRowContainer);
 
   const { rows, ...metaData } = data;
   const row = rows[dataIndex];
 
-  if (!row) return null;
-
-  return CustomRow ? <CustomRow row={row} index={dataIndex} {...rest} {...metaData} /> : <Row row={row} index={dataIndex} {...rest} {...metaData} />;
+  return !row ? null : <Row row={row} customRowContainer={customRowContainer} index={dataIndex} {...rest} {...metaData} />;
 }, areEqual);
 
 export default RowWrapper;

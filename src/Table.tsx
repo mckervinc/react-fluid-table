@@ -85,7 +85,8 @@ const ListComponent = ({
   rowHeight,
   className,
   subComponent,
-  estimatedRowHeight
+  estimatedRowHeight,
+  customRowContainer
 }: ListProps) => {
   // hooks
   const timeoutRef = useRef(0);
@@ -294,7 +295,8 @@ const ListComponent = ({
         subComponent,
         clearSizeCache,
         calculateHeight,
-        generateKeyFromRow
+        generateKeyFromRow,
+        customRowContainer
       }}
     >
       {RowWrapper}
@@ -311,6 +313,7 @@ const Table = ({
   sortDirection,
   tableHeight,
   tableWidth,
+  customRowContainer,
   ...rest
 }: TableProps) => {
   // TODO: do all prop validation here
@@ -332,13 +335,14 @@ const Table = ({
       }}
     >
       {typeof tableHeight === "number" && typeof tableWidth === "number" ? (
-        <ListComponent height={tableHeight} width={tableWidth} {...rest} />
+        <ListComponent height={tableHeight} width={tableWidth} customRowContainer={customRowContainer} {...rest} />
       ) : (
         <AutoSizer disableHeight={disableHeight} disableWidth={disableWidth}>
           {({ height, width }) => (
             <ListComponent
               width={tableWidth || width}
               height={tableHeight || height || guessTableHeight(rowHeight, estimatedRowHeight)}
+              customRowContainer={customRowContainer}
               {...rest}
             />
           )}
@@ -350,7 +354,8 @@ const Table = ({
 
 Table.defaultProps = {
   minColumnWidth: 80,
-  estimatedRowHeight: DEFAULT_ROW_HEIGHT
+  estimatedRowHeight: DEFAULT_ROW_HEIGHT,
+  customRowContainer: null
 };
 
 export default Table;
