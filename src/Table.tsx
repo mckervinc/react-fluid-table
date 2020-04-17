@@ -88,12 +88,14 @@ const ListComponent = ({
   estimatedRowHeight
 }: ListProps) => {
   // hooks
+  const renderRef = useRef(0);
   const timeoutRef = useRef(0);
   const prevRef = useRef(width);
   const listRef = useRef<any>(null);
   const tableRef = useRef<HTMLDivElement>(null);
   const tableContext = useContext(TableContext);
   const [useRowWidth, setUseRowWidth] = useState(true);
+  const [defaultSize, setDefaultSize] = useState(rowHeight || estimatedRowHeight);
 
   // variables
   const { dispatch } = tableContext;
@@ -105,7 +107,6 @@ const ListComponent = ({
     remainingCols,
     pixelWidths
   } = tableContext.state;
-  const defaultSize = rowHeight || estimatedRowHeight;
 
   // functions
   const generateKeyFromRow = useCallback(
@@ -286,6 +287,31 @@ const ListComponent = ({
         }
 
         return calculateHeight(index - 1);
+      }}
+      onItemsRendered={() => {
+        window.clearTimeout(renderRef.current);
+
+        // find average height of rows if no rowHeight provided
+        renderRef.current = window.setTimeout(() => {
+          if (rowHeight || !tableRef.current) {
+            return;
+          }
+
+          // manually change the `top` and `height` for visible rows
+          const elements = [...tableRef.current.children[1].children];
+          const total = elements.reduce((pv, e) => {
+            const node = e as HTMLDivElement;
+            const dataIndex = parseInt(node.dataset.index || "0");
+            return pv + calculateHeight(node, dataIndex);
+          }, 0);
+
+          if (elements.length) {
+            const size = Math.round(total / elements.length);
+            if (size) {
+              setDefaultSize(size);
+            }
+          }
+        }, 100);
       }}
       itemData={{
         rows: data,
