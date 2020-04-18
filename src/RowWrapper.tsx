@@ -11,8 +11,6 @@ interface Props {
 const RowWrapper = React.memo(({ data, index, customRowContainer, ...rest }: Props) => {
   const dataIndex = index - 1; // the header is at index 0
 
-  console.log('updated once more', data, index, customRowContainer);
-
   const { rows, ...metaData } = data;
   const row = rows[dataIndex];
 
