@@ -12,7 +12,7 @@ import { Example1, Source as Example1Code } from "./examples/01-base";
 import { Example2, Source as Example2Code } from "./examples/02-sort";
 import { Example3, Source as Example3Code } from "./examples/03-sub";
 import { Example4, Source as Example4Code } from "./examples/04-custom";
-import { Example5, Source as Example5Code } from "./examples/05-estimate";
+import { Example5, Source as Example5Code } from "./examples/05-variable";
 import { Example6, Source as Example6Code } from "./examples/06-expanded";
 import { Example7, Source as Example7Code } from "./examples/07-controlled";
 import { Example8, Source as Example8Code } from "./examples/08-header";
@@ -76,8 +76,8 @@ const App = () => (
         <Menu.Item as={Link} to="/custom">
           Cell Renderer
         </Menu.Item>
-        <Menu.Item as={Link} to="/estimate">
-          Estimated Row Size
+        <Menu.Item as={Link} to="/variable">
+          Variable Row Size
         </Menu.Item>
         <Menu.Item as={Link} to="/expanded">
           Expanded Row Height
@@ -126,8 +126,8 @@ const App = () => (
             </Wrapper>
             <Snippet code={Example4Code} />
           </Route>
-          <Route exact path="/estimate">
-            <Title title="Estimated Row Size" />
+          <Route exact path="/variable">
+            <Title title="Variable Row Size" />
             <Wrapper>
               <Example5 />
             </Wrapper>

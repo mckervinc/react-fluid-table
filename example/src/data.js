@@ -10,6 +10,7 @@ export const testData = _.range(3000).map(i => ({
   country: faker.address.countryCode().toLowerCase(),
   words: faker.lorem.words(),
   sentence: faker.lorem.sentences(),
+  lorem: faker.lorem.paragraph(Math.ceil(Math.random() * 5)),
   address: faker.address.streetAddress(),
   city: faker.address.city(),
   state: faker.address.stateAbbr(),
