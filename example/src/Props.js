@@ -108,7 +108,7 @@ const data = [
     prop: "tableHeight",
     type: "number",
     description:
-      "The height of the table in pixels. If no height is specified, this will try to fill the height of the parent. If the parent node does not have a height specified, a height for the table will be calculated based on the default header height and the rowHeight, estimatedRowHeight, or the defaultRowHeight (37)."
+      "The height of the table in pixels. If no height is specified, this will try to fill the height of the parent. If the parent node does not have a height specified, a height for the table will be calculated based on the default header height and the rowHeight or the defaultRowHeight (37)."
   },
   {
     prop: "tableWidth",
@@ -120,12 +120,6 @@ const data = [
     type: "number",
     description:
       "This is a fixed height of each row. Subcomponents will not be affected by this value"
-  },
-  {
-    prop: "estimatedRowHeight",
-    type: "number",
-    description: "The default height of the row. Rows will have this height while scrolling",
-    default: 37
   },
   {
     prop: "minColumnWidth",
