@@ -209,6 +209,7 @@ const ListComponent = ({
   // to help with flicker on resize
   useLayoutEffect(() => {
     if (prevRef.current !== width) {
+      treeRef.current.clearFromIndex(0);
       setTimeout(() => {
         if (!tableRef.current || !listRef.current) {
           return;

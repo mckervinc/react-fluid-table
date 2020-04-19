@@ -52,8 +52,13 @@ export default class NumberTree {
    * clear data from this index forward.
    */
   clearFromIndex = (index: number) => {
-    this.#data = this.#data.filter(leaf => leaf.index < index);
-    this.#indexedRows = new Set(this.#data.map(leaf => leaf.index));
+    if (index <= 0) {
+      this.#data = [];
+      this.#indexedRows = new Set<number>();
+    } else {
+      this.#data = this.#data.filter(leaf => leaf.index < index);
+      this.#indexedRows = new Set(this.#data.map(leaf => leaf.index));
+    }
   };
 
   private _insert = (l: number, m: number, r: number, data: LeafProps) => {
