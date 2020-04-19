@@ -74,7 +74,6 @@ export interface ListProps {
   height: number;
   width: number;
   data: Generic[];
-  estimatedRowHeight: number;
   className?: string;
   rowHeight?: number;
   itemKey?: KeyFunction;
@@ -93,15 +92,7 @@ export interface TableProps {
    */
   columns: ColumnProps[];
 
-  // default props
-  /**
-   * When scrolling through the table, this value is used to guess what the height of the
-   * row will be before it renders. If `rowHeight` is specified, this value is ignored.
-   */
-  estimatedRowHeight: number;
-
   // optional props
-
   /**
    * The id of the table
    */
@@ -131,7 +122,7 @@ export interface TableProps {
    */
   tableWidth?: number;
   /**
-   * Specify the minimum width of any column.
+   * Specify the minimum width of any column. Default: `80`
    */
   minColumnWidth?: number;
   /**

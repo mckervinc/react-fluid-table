@@ -26,8 +26,8 @@ const DEFAULT_HEADER_HEIGHT = 37;
 const NO_NODE = { scrollWidth: 0, clientWidth: 0 };
 
 // functions
-const guessTableHeight = (rowHeight?: number, estimatedRowHeight?: number) => {
-  const height = Math.max(rowHeight || estimatedRowHeight || DEFAULT_ROW_HEIGHT, 10);
+const guessTableHeight = (rowHeight?: number) => {
+  const height = Math.max(rowHeight || DEFAULT_ROW_HEIGHT, 10);
   return height * 10 + DEFAULT_HEADER_HEIGHT;
 };
 
@@ -85,8 +85,7 @@ const ListComponent = ({
   itemKey,
   rowHeight,
   className,
-  subComponent,
-  estimatedRowHeight
+  subComponent
 }: ListProps) => {
   // hooks
   const timeoutRef = useRef(0);
@@ -96,7 +95,7 @@ const ListComponent = ({
   const tableRef = useRef<HTMLDivElement>(null);
   const tableContext = useContext(TableContext);
   const [useRowWidth, setUseRowWidth] = useState(true);
-  const [defaultSize, setDefaultSize] = useState(rowHeight || estimatedRowHeight);
+  const [defaultSize, setDefaultSize] = useState(rowHeight || DEFAULT_ROW_HEIGHT);
 
   // variables
   const { dispatch } = tableContext;
@@ -331,7 +330,6 @@ const Table = ({
   // TODO: do all prop validation here
   const disableHeight = tableHeight !== undefined;
   const disableWidth = tableWidth !== undefined;
-  const { rowHeight, estimatedRowHeight } = rest;
   const [uuid] = useState(`${id || "data-table"}-${randomString()}`);
 
   return (
@@ -353,7 +351,7 @@ const Table = ({
           {({ height, width }) => (
             <ListComponent
               width={tableWidth || width}
-              height={tableHeight || height || guessTableHeight(rowHeight, estimatedRowHeight)}
+              height={tableHeight || height || guessTableHeight(rest.rowHeight)}
               {...rest}
             />
           )}
@@ -364,8 +362,7 @@ const Table = ({
 };
 
 Table.defaultProps = {
-  minColumnWidth: 80,
-  estimatedRowHeight: DEFAULT_ROW_HEIGHT
+  minColumnWidth: 80
 };
 
 export default Table;
