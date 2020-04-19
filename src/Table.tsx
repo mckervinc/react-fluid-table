@@ -10,6 +10,7 @@ import { VariableSizeList } from "react-window";
 import { ColumnProps, Generic, ListProps, TableProps, Text } from "../index";
 import AutoSizer from "./AutoSizer";
 import Header from "./Header";
+import NumberTree from "./NumberTree";
 import RowWrapper from "./RowWrapper";
 import { TableContext, TableContextProvider } from "./TableContext";
 import { arraysMatch, findHeaderByUuid, findRowByUuidAndKey, randomString } from "./util";
@@ -88,10 +89,10 @@ const ListComponent = ({
   estimatedRowHeight
 }: ListProps) => {
   // hooks
-  const renderRef = useRef(0);
   const timeoutRef = useRef(0);
   const prevRef = useRef(width);
   const listRef = useRef<any>(null);
+  const treeRef = useRef(new NumberTree());
   const tableRef = useRef<HTMLDivElement>(null);
   const tableContext = useContext(TableContext);
   const [useRowWidth, setUseRowWidth] = useState(true);
@@ -125,6 +126,7 @@ const ListComponent = ({
 
       window.clearTimeout(timeoutRef.current);
       if (forceUpdate) {
+        treeRef.current.clear();
         listRef.current.resetAfterIndex(dataIndex + 1);
         return;
       }
@@ -132,33 +134,27 @@ const ListComponent = ({
       timeoutRef.current = window.setTimeout(() => {
         const node = tableRef.current?.children[1].children[0] as HTMLElement;
         const resetIndex = parseInt(node?.dataset.index || "0") + 1;
+        treeRef.current.clear();
         listRef.current.resetAfterIndex(resetIndex);
       }, 50);
     },
-    [listRef, tableRef, timeoutRef]
+    [listRef, tableRef, timeoutRef, treeRef]
   );
 
   const calculateHeight = useCallback(
-    (queryParam, optionalDataIndex = null) => {
+    (queryParam: number | HTMLElement, optionalDataIndex = null) => {
       const dataIndex = typeof queryParam === "number" ? queryParam : optionalDataIndex;
       const key = generateKeyFromRow(data[dataIndex], dataIndex);
       const row = typeof queryParam === "number" ? findRowByUuidAndKey(uuid, key) : queryParam;
 
       if (!row) {
-        if (!listRef.current) {
-          return defaultSize;
-        }
-
-        const cachedSize = listRef.current._instanceProps.itemMetadataMap[dataIndex + 1] || {
-          size: defaultSize
-        };
-        return cachedSize.size || defaultSize;
+        return defaultSize;
       }
 
-      const arr = rowHeight ? [...row.children].slice(1) : [...row.children];
-      return (rowHeight || 0) + arr.reduce((pv, c) => pv + c.offsetHeight, 0);
+      const arr = [...row.children].slice(rowHeight ? 1 : 0);
+      return (rowHeight || 0) + arr.reduce((pv, c) => pv + (c as HTMLElement).offsetHeight, 0);
     },
-    [uuid, data, listRef, rowHeight, defaultSize, generateKeyFromRow]
+    [uuid, data, rowHeight, defaultSize, generateKeyFromRow]
   );
 
   const updatePixelWidths = useCallback(() => {
@@ -289,29 +285,22 @@ const ListComponent = ({
         return calculateHeight(index - 1);
       }}
       onItemsRendered={() => {
-        window.clearTimeout(renderRef.current);
+        // find median height of rows if no rowHeight provided
+        if (rowHeight || !tableRef.current) {
+          return;
+        }
 
-        // find average height of rows if no rowHeight provided
-        renderRef.current = window.setTimeout(() => {
-          if (rowHeight || !tableRef.current) {
-            return;
-          }
+        // add calculated height to tree
+        [...tableRef.current.children[1].children].forEach(e => {
+          const node = e as HTMLDivElement;
+          const dataIndex = parseInt(node.dataset.index || "0");
+          treeRef.current.insert({ index: dataIndex, height: calculateHeight(node, dataIndex) });
+        });
 
-          // manually change the `top` and `height` for visible rows
-          const elements = [...tableRef.current.children[1].children];
-          const total = elements.reduce((pv, e) => {
-            const node = e as HTMLDivElement;
-            const dataIndex = parseInt(node.dataset.index || "0");
-            return pv + calculateHeight(node, dataIndex);
-          }, 0);
-
-          if (elements.length) {
-            const size = Math.round(total / elements.length);
-            if (size) {
-              setDefaultSize(size);
-            }
-          }
-        }, 100);
+        const median = treeRef.current.getMedian();
+        if (median) {
+          setDefaultSize(median);
+        }
       }}
       itemData={{
         rows: data,
