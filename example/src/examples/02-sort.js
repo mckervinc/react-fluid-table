@@ -45,8 +45,9 @@ const Example2 = () => {
     <Table
       data={data}
       columns={columns}
-      tableHeight={400}
+      itemKey={row => row.id}
       rowHeight={35}
+      tableHeight={400}
       onSort={onSort}
       sortColumn="firstName"
       sortDirection="ASC"
@@ -75,8 +76,9 @@ const Example = () => {
     <Table
       data={data}
       columns={columns}
-      tableHeight={400}
+      itemKey={row => row.id}
       rowHeight={35}
+      tableHeight={400}
       onSort={onSort}
       sortColumn="firstName"
       sortDirection="ASC"
