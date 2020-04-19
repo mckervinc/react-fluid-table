@@ -90,6 +90,7 @@ const ListComponent = ({
   // hooks
   const timeoutRef = useRef(0);
   const prevRef = useRef(width);
+  const cacheRef = useRef<any>({});
   const listRef = useRef<any>(null);
   const treeRef = useRef(new NumberTree());
   const tableRef = useRef<HTMLDivElement>(null);
@@ -147,11 +148,15 @@ const ListComponent = ({
       const row = typeof queryParam === "number" ? findRowByUuidAndKey(uuid, key) : queryParam;
 
       if (!row) {
-        return defaultSize;
+        return cacheRef.current[dataIndex] || defaultSize;
       }
 
       const arr = [...row.children].slice(rowHeight ? 1 : 0);
-      return (rowHeight || 0) + arr.reduce((pv, c) => pv + (c as HTMLElement).offsetHeight, 0);
+      const res = (rowHeight || 0) + arr.reduce((pv, c) => pv + (c as HTMLElement).offsetHeight, 0);
+
+      // update the calculated height ref
+      cacheRef.current[dataIndex] = res;
+      return res;
     },
     [uuid, data, rowHeight, defaultSize, generateKeyFromRow]
   );
