@@ -25,6 +25,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # misc
+CHANGELOG.md
 rollup.config.js
 .babelrc
 .DS_Store
