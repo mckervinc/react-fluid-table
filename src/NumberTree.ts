@@ -4,11 +4,11 @@ interface LeafProps {
 }
 
 class Leaf {
+  index: number;
   height: number;
-  indices: number = 0;
   constructor(props: LeafProps) {
+    this.index = props.index;
     this.height = props.height;
-    this.indices++;
   }
 }
 
@@ -17,20 +17,24 @@ class Leaf {
  * of numbers without having to sort every time
  */
 export default class NumberTree {
-  #size = 0;
   #data: Leaf[] = [];
   #indexedRows = new Set<number>();
   constructor() {}
 
   getMedian = () => {
-    let sum = 0;
-    const m = this.#size / 2;
-    const leaf = this.#data.find(l => {
-      sum += l.indices;
-      return m <= sum;
-    });
+    if (!this.#data.length) {
+      return 0;
+    }
 
-    return !leaf ? 0 : leaf.height;
+    if (this.#data.length % 2 === 0) {
+      const l = this.#data[Math.floor(this.#data.length / 2)];
+      const r = this.#data[Math.ceil(this.#data.length / 2)];
+
+      return (l.height + r.height) / 2;
+    }
+
+    const m = Math.floor(this.#data.length / 2);
+    return this.#data[m].height;
   };
 
   // recursively binary insert
@@ -44,22 +48,18 @@ export default class NumberTree {
     this._insert(0, m, this.#data.length, leaf);
   };
 
-  clear = () => {
-    this.#size = 0;
-    this.#data = [];
-    this.#indexedRows = new Set<number>();
-  }
+  /**
+   * clear data from this index forward.
+   */
+  clearFromIndex = (index: number) => {
+    this.#data = this.#data.filter(leaf => leaf.index < index);
+    this.#indexedRows = new Set(this.#data.map(leaf => leaf.index));
+  };
 
   private _insert = (l: number, m: number, r: number, data: LeafProps) => {
     const leaf = this.#data[m];
-    if (!leaf) {
+    if (!leaf || leaf.height === data.height) {
       this._addLeafNode(m, data);
-      return;
-    }
-
-    if (leaf.height === data.height) {
-      leaf.indices++;
-      this._increment(data);
       return;
     }
 
@@ -84,11 +84,6 @@ export default class NumberTree {
 
   private _addLeafNode = (m: number, data: LeafProps) => {
     this.#data.splice(m, 0, new Leaf(data));
-    this._increment(data);
-  };
-
-  private _increment = (data: LeafProps) => {
     this.#indexedRows.add(data.index);
-    this.#size++;
-  }
+  };
 }

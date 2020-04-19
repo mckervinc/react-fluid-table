@@ -125,7 +125,7 @@ const ListComponent = ({
 
       window.clearTimeout(timeoutRef.current);
       if (forceUpdate) {
-        treeRef.current.clear();
+        treeRef.current.clearFromIndex(dataIndex);
         listRef.current.resetAfterIndex(dataIndex + 1);
         return;
       }
@@ -133,7 +133,7 @@ const ListComponent = ({
       timeoutRef.current = window.setTimeout(() => {
         const node = tableRef.current?.children[1].children[0] as HTMLElement;
         const resetIndex = parseInt(node?.dataset.index || "0") + 1;
-        treeRef.current.clear();
+        treeRef.current.clearFromIndex(resetIndex);
         listRef.current.resetAfterIndex(resetIndex);
       }, 50);
     },
