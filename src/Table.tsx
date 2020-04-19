@@ -303,7 +303,7 @@ const ListComponent = ({
         });
 
         const median = treeRef.current.getMedian();
-        if (median) {
+        if (median && defaultSize !== median) {
           setDefaultSize(median);
         }
       }}
