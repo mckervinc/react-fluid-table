@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.3.7
+*2020-04-19*
+
+### Bug Fixes
+* less `setState` calls when updating the default size.
+
 ## 0.3.6
 *2020-04-19*
 
