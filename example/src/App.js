@@ -18,6 +18,7 @@ import Title from "./Title";
 
 const Application = styled(Sidebar.Pushable)`
   border: none;
+  overflow: hidden;
 `;
 
 const Page = styled(Sidebar.Pusher)`
