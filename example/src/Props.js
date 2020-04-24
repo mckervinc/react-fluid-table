@@ -151,6 +151,28 @@ const data = [
     )
   },
   {
+    prop: "borders",
+    type: "boolean",
+    description: "Controls whether or not there is a bottom border for each row",
+    default: "true"
+  },
+  {
+    prop: "tableStyle",
+    type: "object",
+    description: "Add custom css styles to the outer table element"
+  },
+  {
+    prop: "headerStyle",
+    type: "object",
+    description: "Add custom css styles to the table header"
+  },
+  {
+    prop: "rowStyle",
+    type: "object | (index: number) => object",
+    description:
+      "Add custom css styles to each row element. One can also pass in a function that takes in the row number in order to provide custom styling for particular rows."
+  },
+  {
     prop: "subComponent",
     type: "Element",
     description: "The element that is rendered on a table with row expansion"

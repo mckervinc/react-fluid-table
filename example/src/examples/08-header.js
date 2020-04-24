@@ -5,35 +5,30 @@ import { Icon } from "semantic-ui-react";
 import { Table } from "react-fluid-table";
 import { testData } from "../data";
 
-// NOTE: className header-cell is NOT required
-const HeaderCell = styled.div.attrs(() => ({
-  className: "header-cell"
-}))`
-  background: ${props => (props.sortDirection ? "rgb(39, 40, 34)" : undefined)};
-`;
-
-// NOTE: className header-cell-text is NOT required
-const HeaderCellText = styled.div.attrs(() => ({
-  className: "header-cell-text"
-}))`
-  color: ${props => (props.isSorted ? "rgb(249, 38, 114)" : "black")};
-`;
-
 const Arrow = styled(Icon)`
   color: #50f97a;
   margin-left: 0.25rem !important;
 `;
 
-const CustomHeader = ({ name, ...rest }) => {
-  const { sortDirection } = rest;
+const HeaderCell = ({ name, sortDirection, style, onClick }) => {
   const icon = !sortDirection ? null : (
     <Arrow size="small" name={`chevron ${sortDirection === "ASC" ? "up" : "down"}`} />
   );
+
+  const cellStyle = {
+    background: !!sortDirection ? "rgb(39, 40, 34)" : undefined,
+    ...style
+  };
+
+  const textStyle = { color: !!sortDirection ? "rgb(249, 38, 114)" : "black" };
+
   return (
-    <HeaderCell {...rest}>
-      <HeaderCellText isSorted={Boolean(sortDirection)}>{name}</HeaderCellText>
+    <div className="header-cell" onClick={onClick} style={cellStyle}>
+      <div className="header-cell-text" style={textStyle}>
+        {name}
+      </div>
       {icon}
-    </HeaderCell>
+    </div>
   );
 };
 
@@ -44,7 +39,7 @@ const columns = [
   { key: "email", header: "Email", sortable: true, width: 250 }
 ].map(c => ({
   ...c,
-  header: props => <CustomHeader name={c.header} {...props} />
+  header: props => <HeaderCell name={c.header} {...props} />
 }));
 
 const Example8 = () => {
@@ -80,39 +75,28 @@ const Example8 = () => {
 };
 
 const Source = `
-const StyledTable = styled(Table)\`
-  .react-fluid-table-header {
-    background-color: #bceb82;
-  }
-\`;
-
-// className header-cell is NOT required
-const HeaderCell = styled.div.attrs(() => ({
-  className: "header-cell"
-}))\`
-  background: \${props => (props.sortDirection ? "rgb(39, 40, 34)" : undefined)};
-\`;
-
-// className header-cell-text is NOT required
-const HeaderCellText = styled.div.attrs(() => ({
-  className: "header-cell-text"
-}))\`
-  color: \${props => (props.isSorted ? "rgb(249, 38, 114)" : "black")};
-\`;
-
 /**
- * \`rest\` contains \`style\`, \`onClick\`, and \`sortDirection.\`
+ * \`props\` contains \`style\`, \`onClick\`, and \`sortDirection.\`
 */
-const CustomHeader = ({ name, ...rest }) => {
-  const { sortDirection } = rest;
+const HeaderCell = ({ name, sortDirection, style, onClick }) => {
   const icon = !sortDirection ? null : (
     <Arrow size="small" name={\`chevron \${sortDirection === "ASC" ? "up" : "down"}\`} />
   );
+
+  const cellStyle = {
+    background: !!sortDirection ? "rgb(39, 40, 34)" : undefined,
+    ...style
+  };
+
+  const textStyle = { color: !!sortDirection ? "rgb(249, 38, 114)" : "black" };
+
   return (
-    <HeaderCell {...rest}>
-      <HeaderCellText isSorted={Boolean(sortDirection)}>{name}</HeaderCellText>
+    <div className="header-cell" onClick={onClick} style={cellStyle}>
+      <div className="header-cell-text" style={textStyle}>
+        {name}
+      </div>
       {icon}
-    </HeaderCell>
+    </div>
   );
 };
 
@@ -123,7 +107,7 @@ const columns = [
   { key: "email", header: "Email", sortable: true, width: 250 }
 ].map(c => ({
   ...c,
-  header: props => <CustomHeader name={c.header} {...props} />
+  header: props => <HeaderCell name={c.header} {...props} />
 }));
 
 const Example = () => {
@@ -137,8 +121,12 @@ const Example = () => {
     }
   };
 
+  const rowStyle = index => ({
+    backgroundColor: index % 2 === 0 ? "#33be54" : "#21ba49"
+  });
+
   return (
-    <StyledTable
+    <Table
       data={data}
       columns={columns}
       tableHeight={400}
@@ -146,6 +134,10 @@ const Example = () => {
       onSort={onSort}
       sortColumn="firstName"
       sortDirection="ASC"
+      borders={false}
+      rowStyle={rowStyle}
+      tableStyle={{ backgroundColor: "#33be54" }}
+      headerStyle={{ backgroundColor: "#1e9f3f" }}
     />
   );
 };
