@@ -68,6 +68,45 @@ const GitHub = styled(Icon).attrs(() => ({
   margin: 0 0.5em 0 0 !important;
 `;
 
+const LinkContainer = () => (
+  <>
+    <Menu.Item>
+      <Banner>react-fluid-table</Banner>
+    </Menu.Item>
+    <Menu.Item as={Link} to="/">
+      Basic Table
+    </Menu.Item>
+    <Menu.Item as={Link} to="/sort">
+      Sortable Table
+    </Menu.Item>
+    <Menu.Item as={Link} to="/sub">
+      Table w/Subcomponent
+    </Menu.Item>
+    <Menu.Item as={Link} to="/custom">
+      Cell Renderer
+    </Menu.Item>
+    <Menu.Item as={Link} to="/variable">
+      Variable Row Size
+    </Menu.Item>
+    <Menu.Item as={Link} to="/expanded">
+      Expanded Row Height
+    </Menu.Item>
+    <Menu.Item as={Link} to="/controlled">
+      Controlled Props
+    </Menu.Item>
+    <Menu.Item as={Link} to="/header">
+      Custom Styling
+    </Menu.Item>
+    <Menu.Item as={Link} to="/props">
+      Table Props
+    </Menu.Item>
+    <Menu.Item as="a" href="https://github.com/mckervinc/react-fluid-table">
+      <GitHub />
+      GitHub
+    </Menu.Item>
+  </>
+);
+
 const App = () => {
   const [mobile, setIsMobile] = useState(window.innerWidth <= 768);
   const onResize = useCallback(() => {
@@ -97,77 +136,11 @@ const App = () => {
       <Application>
         <Navigation>
           <MobileMenu vertical inverted>
-            <Menu.Item>
-              <Banner>react-fluid-table</Banner>
-            </Menu.Item>
-            <Menu.Item as={Link} to="/">
-              Basic Table
-            </Menu.Item>
-            <Menu.Item as={Link} to="/sort">
-              Sortable Table
-            </Menu.Item>
-            <Menu.Item as={Link} to="/sub">
-              Table w/Subcomponent
-            </Menu.Item>
-            <Menu.Item as={Link} to="/custom">
-              Cell Renderer
-            </Menu.Item>
-            <Menu.Item as={Link} to="/variable">
-              Variable Row Size
-            </Menu.Item>
-            <Menu.Item as={Link} to="/expanded">
-              Expanded Row Height
-            </Menu.Item>
-            <Menu.Item as={Link} to="/controlled">
-              Controlled Props
-            </Menu.Item>
-            <Menu.Item as={Link} to="/header">
-              Custom Styling
-            </Menu.Item>
-            <Menu.Item as={Link} to="/props">
-              Table Props
-            </Menu.Item>
-            <Menu.Item as="a" href="https://github.com/mckervinc/react-fluid-table">
-              <GitHub />
-              GitHub
-            </Menu.Item>
+            <LinkContainer />
           </MobileMenu>
         </Navigation>
         <Sidebar vertical inverted id="sidebar" as={Menu} visible={!mobile}>
-          <Menu.Item>
-            <Banner>react-fluid-table</Banner>
-          </Menu.Item>
-          <Menu.Item as={Link} to="/">
-            Basic Table
-          </Menu.Item>
-          <Menu.Item as={Link} to="/sort">
-            Sortable Table
-          </Menu.Item>
-          <Menu.Item as={Link} to="/sub">
-            Table w/Subcomponent
-          </Menu.Item>
-          <Menu.Item as={Link} to="/custom">
-            Cell Renderer
-          </Menu.Item>
-          <Menu.Item as={Link} to="/variable">
-            Variable Row Size
-          </Menu.Item>
-          <Menu.Item as={Link} to="/expanded">
-            Expanded Row Height
-          </Menu.Item>
-          <Menu.Item as={Link} to="/controlled">
-            Controlled Props
-          </Menu.Item>
-          <Menu.Item as={Link} to="/header">
-            Custom Styling
-          </Menu.Item>
-          <Menu.Item as={Link} to="/props">
-            Table Props
-          </Menu.Item>
-          <Menu.Item as="a" href="https://github.com/mckervinc/react-fluid-table">
-            <GitHub />
-            GitHub
-          </Menu.Item>
+          <LinkContainer />
         </Sidebar>
         <Page id="pusher">
           <Switch>
