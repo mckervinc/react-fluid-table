@@ -21,6 +21,8 @@ interface State {
   sortDirection: string | null;
   id?: string;
   onSort?: SortFunction;
+  tableStyle?: React.CSSProperties;
+  headerStyle?: React.CSSProperties;
 }
 
 interface Action {
@@ -45,7 +47,15 @@ const baseState = {
   sortDirection: null
 };
 
-const fields = ["sortColumn", "sortDirection", "minColumnWidth", "onSort", "columns"];
+const fields = [
+  "sortColumn",
+  "sortDirection",
+  "minColumnWidth",
+  "onSort",
+  "columns",
+  "tableStyle",
+  "headerStyle"
+];
 
 const TableContext = createContext<A>({ state: baseState, dispatch: () => {} });
 

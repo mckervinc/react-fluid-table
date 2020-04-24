@@ -1,4 +1,4 @@
-import { FC, ElementType } from "react";
+import { FC, ElementType, CSSProperties } from "react";
 
 declare module "*.svg" {
   const content: string;
@@ -50,11 +50,10 @@ export interface ColumnProps {
 export interface RowProps {
   row: Generic;
   index: number;
-  style: {
-    height: number;
-    [key: string]: any;
-  };
+  style: CSSProperties;
+  borders: boolean;
   rowHeight: number;
+  rowStyle: CSSProperties | ((index: number) => CSSProperties);
   pixelWidths: number[];
   useRowWidth: boolean;
   clearSizeCache: CacheFunction;
@@ -74,8 +73,10 @@ export interface ListProps {
   height: number;
   width: number;
   data: Generic[];
+  borders?: boolean;
   className?: string;
   rowHeight?: number;
+  rowStyle?: CSSProperties | ((index: number) => CSSProperties);
   itemKey?: KeyFunction;
   subComponent?: ElementType<SubComponentProps>;
   [key: string]: any;
@@ -126,10 +127,27 @@ export interface TableProps {
    */
   minColumnWidth?: number;
   /**
+   * Enable or disable row borders. Default: `true`.
+   */
+  borders?: boolean;
+  /**
    * The fixed height of each row in pixels. If `subComponent` is specified, then this will be the fixed height
    * of the portion of the row that is NOT the subComponent.
    */
   rowHeight?: number;
+  /**
+   * React styles used for customizing the table
+   */
+  tableStyle?: CSSProperties;
+  /**
+   * React styles used for customizing the header
+   */
+  headerStyle?: CSSProperties;
+  /**
+   * React styles used for customizing each row. Could be an object or
+   * a function that takes the index of the row and returns an object
+   */
+  rowStyle?: CSSProperties | ((index: number) => CSSProperties);
   /**
    * When a column has `expander`, this component will be rendered under the row.
    */

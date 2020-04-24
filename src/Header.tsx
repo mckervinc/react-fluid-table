@@ -77,7 +77,7 @@ const Header = forwardRef(({ children, ...rest }, ref: any) => {
   const tableContext = useContext(TableContext);
 
   // variables
-  const { id, uuid, columns, pixelWidths } = tableContext.state;
+  const { id, uuid, columns, pixelWidths, headerStyle } = tableContext.state;
   const { scrollWidth, clientWidth } = ref.current || NO_REF;
   const width = scrollWidth <= clientWidth ? "100%" : undefined;
 
@@ -85,7 +85,7 @@ const Header = forwardRef(({ children, ...rest }, ref: any) => {
     <div id={id} ref={ref} data-table-key={uuid} className="react-fluid-table-container" {...rest}>
       <div className="sticky-header" data-header-key={`${uuid}-header`}>
         <div className="row-wrapper" style={{ width }}>
-          <div className="react-fluid-table-header">
+          <div className="react-fluid-table-header" style={headerStyle}>
             {columns.map((c: ColumnProps, i: number) => (
               <HeaderCell key={c.key} column={c} width={pixelWidths[i]} />
             ))}

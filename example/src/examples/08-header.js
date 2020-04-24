@@ -19,12 +19,6 @@ const HeaderCellText = styled.div.attrs(() => ({
   color: ${props => (props.isSorted ? "rgb(249, 38, 114)" : "black")};
 `;
 
-const StyledTable = styled(Table)`
-  .react-fluid-table-header {
-    background-color: #bceb82;
-  }
-`;
-
 const Arrow = styled(Icon)`
   color: #50f97a;
   margin-left: 0.25rem !important;
@@ -64,8 +58,12 @@ const Example8 = () => {
     }
   };
 
+  const rowStyle = index => ({
+    backgroundColor: index % 2 === 0 ? "#33be54" : "#21ba49"
+  });
+
   return (
-    <StyledTable
+    <Table
       data={data}
       columns={columns}
       tableHeight={400}
@@ -73,6 +71,10 @@ const Example8 = () => {
       onSort={onSort}
       sortColumn="firstName"
       sortDirection="ASC"
+      borders={false}
+      rowStyle={rowStyle}
+      tableStyle={{ backgroundColor: "#33be54" }}
+      headerStyle={{ backgroundColor: "#1e9f3f" }}
     />
   );
 };

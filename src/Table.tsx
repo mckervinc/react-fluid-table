@@ -14,6 +14,7 @@ import NumberTree from "./NumberTree";
 import RowWrapper from "./RowWrapper";
 import { TableContext, TableContextProvider } from "./TableContext";
 import { arraysMatch, findHeaderByUuid, findRowByUuidAndKey, randomString } from "./util";
+import TableWrapper from "./TableWrapper";
 
 interface Data {
   rows: Generic[];
@@ -83,6 +84,8 @@ const ListComponent = ({
   width,
   height,
   itemKey,
+  borders,
+  rowStyle,
   rowHeight,
   className,
   subComponent
@@ -268,10 +271,11 @@ const ListComponent = ({
 
   return (
     <VariableSizeList
-      className={`react-fluid-table ${className || ""}`}
+      className={`react-fluid-table ${className || ""}`.trim()}
       ref={listRef}
       innerRef={tableRef}
       innerElementType={Header}
+      outerElementType={TableWrapper}
       height={height}
       width={width}
       itemCount={data.length + 1}
@@ -309,6 +313,8 @@ const ListComponent = ({
       }}
       itemData={{
         rows: data,
+        borders,
+        rowStyle,
         rowHeight,
         useRowWidth,
         subComponent,
@@ -331,6 +337,8 @@ const Table = ({
   sortDirection,
   tableHeight,
   tableWidth,
+  tableStyle,
+  headerStyle,
   ...rest
 }: TableProps) => {
   // TODO: do all prop validation here
@@ -347,7 +355,9 @@ const Table = ({
         minColumnWidth,
         onSort,
         sortColumn,
-        sortDirection
+        sortDirection,
+        tableStyle,
+        headerStyle
       }}
     >
       {typeof tableHeight === "number" && typeof tableWidth === "number" ? (
@@ -368,6 +378,7 @@ const Table = ({
 };
 
 Table.defaultProps = {
+  borders: true,
   minColumnWidth: 80
 };
 

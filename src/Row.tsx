@@ -18,6 +18,16 @@ interface TableCellProps {
   onExpanderClick: Function;
 }
 
+type CSSFunction = (index: number) => React.CSSProperties;
+
+const getRowStyle = (index: number, rowStyle?: React.CSSProperties | CSSFunction) => {
+  if (!rowStyle) {
+    return {};
+  }
+
+  return typeof rowStyle === "function" ? rowStyle(index) : rowStyle;
+};
+
 const TableCell = React.memo(
   ({ row, index, width, column, isExpanded, clearSizeCache, onExpanderClick }: TableCellProps) => {
     // variables
@@ -59,6 +69,8 @@ const Row = ({
   row,
   index,
   style,
+  borders,
+  rowStyle,
   rowHeight,
   useRowWidth,
   clearSizeCache,
@@ -86,6 +98,13 @@ const Row = ({
 
   // sub component props
   const subProps = { row, index, isExpanded, clearSizeCache };
+
+  // row styling
+  const borderBottom = borders ? undefined : "none";
+  const containerStyle = {
+    height: containerHeight,
+    ...getRowStyle(index, rowStyle)
+  };
 
   // function(s)
   const onExpanderClick = useCallback(() => {
@@ -123,9 +142,9 @@ const Row = ({
       className="react-fluid-table-row"
       data-index={index}
       data-row-key={rowKey}
-      style={{ ...style, width: useRowWidth ? style.width : undefined }}
+      style={{ ...style, borderBottom, width: useRowWidth ? style.width : undefined }}
     >
-      <div className="row-container" style={{ height: containerHeight }}>
+      <div className="row-container" style={containerStyle}>
         {columns.map((c: ColumnProps, i: number) => (
           <TableCell
             key={`${uuid}-${c.key}-${key}`}

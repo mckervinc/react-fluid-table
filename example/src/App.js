@@ -86,7 +86,7 @@ const App = () => (
           Controlled Props
         </Menu.Item>
         <Menu.Item as={Link} to="/header">
-          Custom Header
+          Custom Header & Rows
         </Menu.Item>
         <Menu.Item as={Link} to="/props">
           Table Props
@@ -148,7 +148,7 @@ const App = () => (
             <Snippet code={Example7Code} />
           </Route>
           <Route exact path="/header">
-            <Title title="Custom Header" />
+            <Title title="Custom Header & Rows" />
             <Wrapper>
               <Example8 />
             </Wrapper>
