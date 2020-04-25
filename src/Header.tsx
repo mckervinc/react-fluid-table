@@ -1,16 +1,12 @@
 import React, { forwardRef, useContext } from "react";
 import { ColumnProps } from "../index";
+import { NO_NODE } from "./constants";
 import { TableContext } from "./TableContext";
 
 interface ColumnCellProps {
   width: number;
   column: ColumnProps;
 }
-
-const NO_REF = {
-  scrollWidth: 0,
-  clientWidth: 0
-};
 
 const HeaderCell = React.memo(({ column, width }: ColumnCellProps) => {
   // hooks
@@ -78,7 +74,7 @@ const Header = forwardRef(({ children, ...rest }, ref: any) => {
 
   // variables
   const { id, uuid, columns, pixelWidths, headerStyle } = tableContext.state;
-  const { scrollWidth, clientWidth } = ref.current || NO_REF;
+  const { scrollWidth, clientWidth } = ref.current || NO_NODE;
   const width = scrollWidth <= clientWidth ? "100%" : undefined;
 
   return (

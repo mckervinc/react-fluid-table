@@ -7,74 +7,27 @@ import React, {
   useState
 } from "react";
 import { VariableSizeList } from "react-window";
-import { ColumnProps, Generic, ListProps, TableProps, Text } from "../index";
+import { Generic, ListProps, TableProps, Text } from "../index";
 import AutoSizer from "./AutoSizer";
+import { DEFAULT_HEADER_HEIGHT, DEFAULT_ROW_HEIGHT, NO_NODE } from "./constants";
 import Header from "./Header";
 import NumberTree from "./NumberTree";
 import RowWrapper from "./RowWrapper";
 import { TableContext, TableContextProvider } from "./TableContext";
-import { arraysMatch, findHeaderByUuid, findRowByUuidAndKey, randomString } from "./util";
 import TableWrapper from "./TableWrapper";
+import {
+  arraysMatch,
+  calculateColumnWidths,
+  findHeaderByUuid,
+  findRowByUuidAndKey,
+  guessTableHeight,
+  randomString
+} from "./util";
 
 interface Data {
   rows: Generic[];
   [key: string]: any;
 }
-
-// constants
-const DEFAULT_ROW_HEIGHT = 37;
-const DEFAULT_HEADER_HEIGHT = 37;
-const NO_NODE = { scrollWidth: 0, clientWidth: 0 };
-
-// functions
-const guessTableHeight = (rowHeight?: number) => {
-  const height = Math.max(rowHeight || DEFAULT_ROW_HEIGHT, 10);
-  return height * 10 + DEFAULT_HEADER_HEIGHT;
-};
-
-const calculateColumnWidths = (
-  element: HTMLElement | null,
-  numColumns: number,
-  fixedColumnWidths: number,
-  minColumnWidth: number,
-  columns: ColumnProps[]
-): number[] => {
-  if (!element) return columns.map(() => minColumnWidth);
-  const offsetWidth = element.offsetWidth;
-  let n = Math.max(numColumns, 1);
-  let usedSpace = fixedColumnWidths;
-  let freeSpace = Math.max(offsetWidth - usedSpace, 0);
-  let width = Math.max(minColumnWidth, Math.floor(freeSpace / n));
-
-  return columns.map((c: ColumnProps) => {
-    if (c.width) {
-      return c.width;
-    }
-
-    if (c.maxWidth) {
-      const diff = width - c.maxWidth;
-      if (diff > 0) {
-        n = Math.max(n - 1, 1);
-        usedSpace += c.maxWidth;
-        freeSpace = Math.max(offsetWidth - usedSpace, 0);
-        width = Math.max(minColumnWidth, Math.floor(freeSpace / n));
-        return c.maxWidth;
-      }
-    }
-
-    if (c.minWidth) {
-      const diff = c.minWidth - width;
-      if (diff > 0) {
-        n = Math.max(n - 1, 1);
-        usedSpace += c.minWidth;
-        freeSpace = Math.max(offsetWidth - usedSpace, 0);
-        width = Math.max(minColumnWidth, Math.floor(freeSpace / n));
-        return c.minWidth;
-      }
-    }
-    return width;
-  });
-};
 
 /**
  * The main table component
