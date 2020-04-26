@@ -39,11 +39,6 @@ export default class NumberTree {
 
   // recursively binary insert
   insert = (leaf: LeafProps) => {
-    // ignore already indexed rows
-    if (this.#indexedRows.has(leaf.index)) {
-      return;
-    }
-
     const m = Math.floor(this.#data.length / 2);
     this._insert(0, m, this.#data.length, leaf);
   };
@@ -60,6 +55,9 @@ export default class NumberTree {
       this.#indexedRows = new Set(this.#data.map(leaf => leaf.index));
     }
   };
+
+  // ignore already indexed rows
+  hasIndex = (index: number) => this.#indexedRows.has(index);
 
   private _insert = (l: number, m: number, r: number, data: LeafProps) => {
     const leaf = this.#data[m];

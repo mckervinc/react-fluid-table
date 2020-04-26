@@ -256,7 +256,12 @@ const ListComponent = ({
         [...tableRef.current.children[1].children].forEach(e => {
           const node = e as HTMLDivElement;
           const dataIndex = parseInt(node.dataset.index || "0");
-          treeRef.current.insert({ index: dataIndex, height: calculateHeight(node, dataIndex) });
+          if (!treeRef.current.hasIndex(dataIndex)) {
+            treeRef.current.insert({
+              index: dataIndex,
+              height: calculateHeight(node, dataIndex)
+            });
+          }
         });
 
         const median = treeRef.current.getMedian();
