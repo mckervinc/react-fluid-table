@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.3.8
+*2020-04-26*
+
+### Features
+* added the props `rowStyle`, `tableStyle`, and `headerStyle` to allow for more customization options. Since the Table component does take a `className`, you can still do things using libraries such as `styled-components` if you prefer.
+
 ## 0.3.7
 *2020-04-19*
 
