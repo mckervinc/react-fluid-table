@@ -117,8 +117,7 @@ const Row = ({
       return;
     }
 
-    const computed = calculateHeight(rowRef.current, index);
-    if (height !== computed) {
+    if (height !== calculateHeight(rowRef.current, index)) {
       clearSizeCache(index);
     }
   }, [rowRef, index, height, calculateHeight, clearSizeCache, pixelWidths]);
@@ -145,7 +144,7 @@ const Row = ({
       style={{ ...style, borderBottom, width: useRowWidth ? style.width : undefined }}
     >
       <div className="row-container" style={containerStyle}>
-        {columns.map((c: ColumnProps, i: number) => (
+        {columns.map((c, i) => (
           <TableCell
             key={`${uuid}-${c.key}-${key}`}
             row={row}

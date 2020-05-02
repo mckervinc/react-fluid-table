@@ -82,7 +82,7 @@ const Header = forwardRef(({ children, ...rest }, ref: any) => {
       <div className="sticky-header" data-header-key={`${uuid}-header`}>
         <div className="row-wrapper" style={{ width }}>
           <div className="react-fluid-table-header" style={headerStyle}>
-            {columns.map((c: ColumnProps, i: number) => (
+            {columns.map((c, i) => (
               <HeaderCell key={c.key} column={c} width={pixelWidths[i]} />
             ))}
           </div>

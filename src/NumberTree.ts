@@ -49,7 +49,7 @@ export default class NumberTree {
   clearFromIndex = (index: number) => {
     if (index <= 0) {
       this.#data = [];
-      this.#indexedRows = new Set<number>();
+      this.#indexedRows.clear();
     } else {
       this.#data = this.#data.filter(leaf => leaf.index < index);
       this.#indexedRows = new Set(this.#data.map(leaf => leaf.index));

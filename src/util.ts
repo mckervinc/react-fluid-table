@@ -43,7 +43,7 @@ export const calculateColumnWidths = (
   let freeSpace = Math.max(offsetWidth - usedSpace, 0);
   let width = Math.max(minColumnWidth, Math.floor(freeSpace / n));
 
-  return columns.map((c: ColumnProps) => {
+  return columns.map(c => {
     if (c.width) {
       return c.width;
     }
