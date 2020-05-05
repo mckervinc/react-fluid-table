@@ -30,38 +30,38 @@ const getRowStyle = (index: number, rowStyle?: React.CSSProperties | CSSFunction
 
 const TableCell = React.memo(
   ({ row, index, width, column, isExpanded, clearSizeCache, onExpanderClick }: TableCellProps) => {
-    // variables
+    // cell width
     const style = {
       width: width ? `${width}px` : undefined,
       minWidth: width ? `${width}px` : undefined
     };
 
-    // functions
-    const cellRenderer = () => {
+    // default cell styling
+    if (column.expander || !column.cell) {
+      let renderedCell: any;
       if (column.expander) {
         let Logo: any = column.expander;
         if (typeof column.expander === "boolean") {
           Logo = isExpanded ? Minus : Plus;
-          return <Logo className="expander" onClick={onExpanderClick} />;
+          renderedCell = <Logo className="expander" onClick={onExpanderClick} />;
         }
 
         // assume the expander is a component
-        return <Logo isExpanded={isExpanded} onClick={onExpanderClick} />;
+        renderedCell = <Logo isExpanded={isExpanded} onClick={onExpanderClick} />;
+      } else {
+        renderedCell = row[column.key] || null;
       }
 
-      if (!column.cell) {
-        return row[column.key] || null;
-      }
+      return (
+        <div className="cell" style={style}>
+          {renderedCell}
+        </div>
+      );
+    }
 
-      const CustomCell = column.cell;
-      return <CustomCell row={row} index={index} clearSizeCache={clearSizeCache} />;
-    };
-
-    return (
-      <div className="cell" style={style}>
-        {cellRenderer()}
-      </div>
-    );
+    // custom cell styling
+    const CustomCell = column.cell;
+    return <CustomCell row={row} index={index} style={style} clearSizeCache={clearSizeCache} />;
   }
 );
 

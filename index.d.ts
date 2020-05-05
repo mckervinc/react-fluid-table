@@ -27,6 +27,7 @@ export interface ExpanderProps {
 export interface CellProps {
   row: Generic;
   index: number;
+  style: CSSProperties;
   clearSizeCache: CacheFunction;
 }
 
@@ -95,7 +96,7 @@ export interface TableProps {
 
   // optional props
   /**
-   * The id of the table
+   * The id of the table.
    */
   id?: string;
   /**
@@ -136,22 +137,26 @@ export interface TableProps {
    */
   rowHeight?: number;
   /**
-   * React styles used for customizing the table
+   * React styles used for customizing the table.
    */
   tableStyle?: CSSProperties;
   /**
-   * React styles used for customizing the header
+   * React styles used for customizing the header.
    */
   headerStyle?: CSSProperties;
   /**
    * React styles used for customizing each row. Could be an object or
-   * a function that takes the index of the row and returns an object
+   * a function that takes the index of the row and returns an object.
    */
   rowStyle?: CSSProperties | ((index: number) => CSSProperties);
   /**
    * When a column has `expander`, this component will be rendered under the row.
    */
   subComponent?: ElementType<SubComponentProps>;
+  /**
+   * The callback that gets called every time a row is clicked.
+   */
+  onRowClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>, data: { index: number }) => void;
 }
 
 export const Table: FC<TableProps>;
