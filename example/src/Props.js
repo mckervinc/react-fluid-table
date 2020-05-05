@@ -46,7 +46,8 @@ const columns = [
   {
     key: "type",
     header: "Type",
-    width: 120,
+    minWidth: 120,
+    maxWidth: 170,
     content: ({ row }) => <code>{row.type}</code>
   },
   {
@@ -176,6 +177,17 @@ const data = [
     prop: "subComponent",
     type: "Element",
     description: "The element that is rendered on a table with row expansion"
+  },
+  {
+    prop: "onRowClick",
+    type: "(e: Event, { index: number }) => void",
+    description: "optional click handler for the rows in the table"
+  },
+  {
+    prop: "rowRenderer",
+    type: "(props: CellElement) => Element",
+    description:
+      "A custom element used to wrap an entire row. This provides another way of customizing each row of the table"
   }
 ];
 
