@@ -181,8 +181,9 @@ export interface TableProps {
    */
   borders?: boolean;
   /**
-   * The fixed height of each row in pixels. If `subComponent` is specified, then this will be the fixed height
-   * of the portion of the row that is NOT the subComponent.
+   * The fixed height of each row in pixels. If `subComponent` is specified,
+   * then this will be the fixed height of the portion of the row that is
+   * NOT the subComponent.
    */
   rowHeight?: number;
   /**
@@ -213,4 +214,7 @@ export interface TableProps {
   rowRenderer?: ElementType<RowRenderProps>;
 }
 
+/**
+ * A virtualized table build on top of `react-window`.
+ */
 export const Table: FC<TableProps>;
