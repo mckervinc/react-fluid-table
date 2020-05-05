@@ -36,25 +36,27 @@ const TableCell = React.memo(
       minWidth: width ? `${width}px` : undefined
     };
 
-    // default cell styling
-    if (column.expander || !column.cell) {
-      let renderedCell: any;
-      if (column.expander) {
-        let Logo: any = column.expander;
-        if (typeof column.expander === "boolean") {
-          Logo = isExpanded ? Minus : Plus;
-          renderedCell = <Logo className="expander" onClick={onExpanderClick} />;
-        }
+    // expander
+    if (column.expander) {
+      if (typeof column.expander === "boolean") {
+        const Logo: React.ElementType = isExpanded ? Minus : Plus;
 
-        // assume the expander is a component
-        renderedCell = <Logo isExpanded={isExpanded} onClick={onExpanderClick} />;
-      } else {
-        renderedCell = row[column.key] || null;
+        return (
+          <div className="cell" style={style}>
+            <Logo className="expander" onClick={onExpanderClick} />
+          </div>
+        );
       }
 
+      const Expander = column.expander;
+      return <Expander style={style} isExpanded={isExpanded} onClick={onExpanderClick} />;
+    }
+
+    // basic styling
+    if (!column.cell) {
       return (
         <div className="cell" style={style}>
-          {renderedCell}
+          {row[column.key] || null}
         </div>
       );
     }

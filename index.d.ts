@@ -22,6 +22,7 @@ export interface Generic {
 export interface ExpanderProps {
   isExpanded: boolean;
   onClick: Function;
+  style: CSSProperties;
 }
 
 export interface CellProps {
