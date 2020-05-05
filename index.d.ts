@@ -32,8 +32,8 @@ export interface ExpanderProps {
 export interface CellProps {
   row: Generic;
   index: number;
-  style: CSSProperties;
   clearSizeCache: CacheFunction;
+  style?: CSSProperties;
 }
 
 export interface HeaderProps {
@@ -43,13 +43,47 @@ export interface HeaderProps {
 }
 
 export interface ColumnProps {
+  /**
+   * The unique identifier for a particular column. This is also used as an index
+   * to get the particular value out of the row in order to display.
+   */
   key: string;
+  /**
+   * The name of the header column, or a component to return a customized header cell.
+   */
   header?: string | ElementType<HeaderProps>;
+  /**
+   * The width of a column in pixels. If this is set, the column will not resize.
+   */
   width?: number;
+  /**
+   * The minimum width of a column in pixels. On resize, the column will never
+   * dip below this width.
+   */
   minWidth?: number;
+  /**
+   * The maximum width of a column in pixels. On resize, the column will never
+   * grow beyond this width.
+   */
   maxWidth?: number;
+  /**
+   * Determines whether or not a column is sortable.
+   */
   sortable?: boolean;
+  /**
+   * Marks this cell as an expansion cell. The style is pre-determined, and does the
+   * functionalitty of collapsing/expanding a row.
+   */
   expander?: boolean | ElementType<ExpanderProps>;
+  /**
+   * Used to render custom content inside of a cell. This is useful for rendering different
+   * things inside of the react-fluid-table cell container.
+   */
+  content?: string | number | ElementType<CellProps>;
+  /**
+   * An advanced feature, this is used to render an entire cell, including the cell container.
+   * The `content` prop is ignored if this property is enabled.
+   */
   cell?: ElementType<CellProps>;
 }
 

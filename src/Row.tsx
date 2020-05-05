@@ -53,9 +53,18 @@ const TableCell = React.memo(
 
     // basic styling
     if (!column.cell) {
+      let content: React.ReactNode = row[column.key] || null;
+      if (column.content) {
+        if (typeof column.content === "string" || typeof column.content === "number") {
+          content = column.content;
+        } else {
+          const Content = column.content;
+          content = <Content row={row} index={index} clearSizeCache={clearSizeCache} />;
+        }
+      }
       return (
         <div className="cell" style={style}>
-          {row[column.key] || null}
+          {content}
         </div>
       );
     }
