@@ -74,6 +74,7 @@ const Row = ({
   borders,
   rowStyle,
   rowHeight,
+  onRowClick,
   useRowWidth,
   clearSizeCache,
   calculateHeight,
@@ -109,6 +110,15 @@ const Row = ({
   };
 
   // function(s)
+  const onContainerClick = useCallback(
+    event => {
+      if (onRowClick) {
+        onRowClick(event, { index });
+      }
+    },
+    [index, onRowClick]
+  );
+
   const onExpanderClick = useCallback(() => {
     dispatch({ type: "updateExpanded", key: generateKeyFromRow(row, index) });
     expandedCalledRef.current = true;
@@ -145,7 +155,7 @@ const Row = ({
       data-row-key={rowKey}
       style={{ ...style, borderBottom, width: useRowWidth ? style.width : undefined }}
     >
-      <div className="row-container" style={containerStyle}>
+      <div className="row-container" style={containerStyle} onClick={onContainerClick}>
         {columns.map((c, i) => (
           <TableCell
             key={`${uuid}-${c.key}-${key}`}

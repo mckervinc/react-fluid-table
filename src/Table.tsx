@@ -41,6 +41,7 @@ const ListComponent = ({
   rowStyle,
   rowHeight,
   className,
+  onRowClick,
   subComponent
 }: ListProps) => {
   // hooks
@@ -274,6 +275,7 @@ const ListComponent = ({
         borders,
         rowStyle,
         rowHeight,
+        onRowClick,
         useRowWidth,
         subComponent,
         clearSizeCache,

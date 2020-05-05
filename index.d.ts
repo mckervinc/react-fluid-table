@@ -14,6 +14,10 @@ type HeightFunction = (
   optionalDataIndex?: number | null
 ) => number;
 type GenKeyFunction = (row: Generic, defaultValue: number) => Text;
+type ClickFunction = (
+  event: React.MouseEvent<HTMLElement, MouseEvent>,
+  data: { index: number }
+) => void;
 
 export interface Generic {
   [key: string]: any;
@@ -62,6 +66,7 @@ export interface RowProps {
   calculateHeight: HeightFunction;
   generateKeyFromRow: GenKeyFunction;
   subComponent: ElementType<SubComponentProps>;
+  onRowClick: ClickFunction;
 }
 
 export interface SubComponentProps {
@@ -81,6 +86,7 @@ export interface ListProps {
   rowStyle?: CSSProperties | ((index: number) => CSSProperties);
   itemKey?: KeyFunction;
   subComponent?: ElementType<SubComponentProps>;
+  onRowClick?: ClickFunction;
   [key: string]: any;
 }
 
@@ -157,7 +163,7 @@ export interface TableProps {
   /**
    * The callback that gets called every time a row is clicked.
    */
-  onRowClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>, data: { index: number }) => void;
+  onRowClick?: ClickFunction;
 }
 
 export const Table: FC<TableProps>;
