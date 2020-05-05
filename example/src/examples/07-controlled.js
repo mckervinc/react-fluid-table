@@ -63,7 +63,7 @@ const testData2 = _.range(3000).map(i => ({
   zipCode: faker.address.zipCode()
 }));
 
-const Controlled = ({ data, columns: variableColumns }) => {
+const Controlled = ({ data, height, columns: variableColumns }) => {
   const [rows, setRows] = useState([]);
 
   const onSort = (col, dir) => {
@@ -82,7 +82,7 @@ const Controlled = ({ data, columns: variableColumns }) => {
     <StyledTable
       data={rows}
       columns={variableColumns}
-      tableHeight={400}
+      tableHeight={height}
       rowHeight={35}
       onSort={onSort}
       sortColumn="firstName"
@@ -91,10 +91,13 @@ const Controlled = ({ data, columns: variableColumns }) => {
   );
 };
 
+const viewableTypes = new Set(["string", "number", "boolean"]);
+
 const Example7 = () => {
   // hooks
   const [toggles, setToggles] = useState({
     data: false,
+    height: false,
     columns: false
   });
 
@@ -102,6 +105,7 @@ const Example7 = () => {
   const keys = Object.keys(toggles);
   const props = {
     data: toggles.data ? testData2 : testData,
+    height: toggles.height ? 200 : 400,
     columns: toggles.columns
       ? [...columns, { key: "address", header: "Address", sortable: true }]
       : columns
@@ -134,6 +138,15 @@ const Example7 = () => {
               <Form.Field>
                 <Checkbox
                   toggle
+                  label="height - changes tableHeight"
+                  value={toggles.height.toString()}
+                  checked={toggles.height}
+                  onChange={() => onToggle("height")}
+                />
+              </Form.Field>
+              <Form.Field>
+                <Checkbox
+                  toggle
                   label="columns - adds an address column"
                   checked={toggles.columns}
                   onChange={() => onToggle("columns")}
@@ -148,10 +161,19 @@ const Example7 = () => {
                 {"{\n"}
                 {keys.map((key, index) => {
                   const ending = index !== keys.length - 1 ? ",\n" : "\n";
+                  const val = viewableTypes.has(typeof props[key]);
+                  let color = "rgb(166, 226, 46)";
+                  if (typeof props[key] === "number") {
+                    color = "rgb(174, 129, 255)";
+                  } else if (typeof props[key] === "boolean") {
+                    color = "rgb(102, 217, 239)";
+                  }
                   return (
                     <React.Fragment key={key}>
                       {`  ${key}: `}
-                      <Span>"{toggles[key] ? "altered" : "original"}"</Span>
+                      <span style={{ color }}>
+                        {val ? props[key] : toggles[key] ? '"altered"' : '"original"'}
+                      </span>
                       {ending}
                     </React.Fragment>
                   );

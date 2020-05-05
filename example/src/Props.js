@@ -200,7 +200,7 @@ const Example = () => <Table data={data} columns={columns} />;
 `;
 
 const cellSnippet = `
-const Contact = ({ row, index, clearSizeCache }) => {
+const Contact = ({ row, index, style, clearSizeCache }) => {
   const mounted = useRef(false);
   const [showInfo, setShowInfo] = useState(false);
 
@@ -298,7 +298,7 @@ const Props = () => (
           <code>CellElement</code>:{" "}
           <code>
             {
-              "({ row: object, index: number, clearSizeCache: (index: number, forceUpdate?: boolean = false) => void }) => React.Element"
+              "({ row: object, index: number, style?: React.CSSProperties, clearSizeCache: (index: number, forceUpdate?: boolean = false) => void }) => React.Element"
             }
           </code>
         </List.Header>

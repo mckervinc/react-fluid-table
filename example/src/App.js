@@ -83,7 +83,7 @@ const LinkContainer = () => (
       Table w/Subcomponent
     </Menu.Item>
     <Menu.Item as={Link} to="/custom">
-      Cell Renderer
+      Cell Content
     </Menu.Item>
     <Menu.Item as={Link} to="/variable">
       Variable Row Size
@@ -166,7 +166,7 @@ const App = () => {
               <Snippet code={Example3Code} />
             </Route>
             <Route exact path="/custom">
-              <Title title="Cell Renderer" />
+              <Title title="Cell Content" />
               <Wrapper>
                 <Example4 />
               </Wrapper>
