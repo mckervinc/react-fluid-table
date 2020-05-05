@@ -17,11 +17,15 @@ const TextStyle = styled.div`
   text-overflow: ellipsis;
 `;
 
-const EmailBox = styled(Input)`
-  width: 100%;
+const CustomCell = styled.div`
+  padding: 8px;
+  display: flex;
+  align-items: center;
 `;
 
-const Email = ({ email }) => <EmailBox defaultValue={email} />;
+const EmailInput = styled(Input)`
+  width: 100%;
+`;
 
 const ProfPic = styled(Image)`
   &&& {
@@ -289,37 +293,56 @@ const columns = [
     key: "avatar",
     header: "Profile Photo",
     width: 150,
-    cell: ({ row }) => <ProfPic size="small" src={row.avatar} />
+    cell: ({ row, style }) => (
+      <CustomCell style={style}>
+        <ProfPic size="small" src={row.avatar} />
+      </CustomCell>
+    )
   },
   {
     key: "email",
     header: "Email",
-    cell: ({ row }) => <Email email={row.email} />
+    cell: ({ row, style }) => (
+      <CustomCell style={style}>
+        <EmailInput defaultValue={row.email} />
+      </CustomCell>
+    )
   },
   {
     key: "firstName",
     header: "First",
     width: 100,
-    cell: ({ row }) => <TextStyle>{row.firstName}</TextStyle>
+    cell: ({ row, style }) => (
+      <CustomCell style={style}>
+        <TextStyle>{row.firstName}</TextStyle>
+      </CustomCell>
+    )
   },
   {
     key: "lastName",
     header: "Last",
     width: 100,
-    cell: ({ row }) => <TextStyle>{row.lastName}</TextStyle>
+    cell: ({ row, style }) => (
+      <CustomCell style={style}>
+        <TextStyle>{row.lastName}</TextStyle>
+      </CustomCell>
+    )
   },
   {
     key: "country",
     header: "Country",
-    cell: ({ row }) =>
-      !countryMap[row.country] ? (
-        `No flag for this country: ${row.country.toUpperCase()}`
-      ) : (
-        <>
-          <Flag name={row.country} />
-          {countryMap[row.country]}
-        </>
-      )
+    cell: ({ row, style }) => (
+      <CustomCell style={style}>
+        {!countryMap[row.country] ? (
+          `No flag for this country: ${row.country.toUpperCase()}`
+        ) : (
+          <>
+            <Flag name={row.country} />
+            {countryMap[row.country]}
+          </>
+        )}
+      </CustomCell>
+    )
   }
 ];
 
