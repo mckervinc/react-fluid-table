@@ -17,10 +17,6 @@ const Background = styled.div`
   color: rgb(248, 248, 242);
 `;
 
-const Span = styled.span`
-  color: rgb(166, 226, 46);
-`;
-
 const columns = [
   {
     key: "id",
