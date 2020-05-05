@@ -1,10 +1,9 @@
 import React, { useCallback, useContext, useLayoutEffect, useRef } from "react";
-import { ColumnProps, RowProps, Generic, CacheFunction } from "../index";
+import { CacheFunction, ColumnProps, Generic, RowProps } from "../index";
 import { TableContext } from "./TableContext";
 
 //@ts-ignore TS2307
 import Minus from "./svg/minus-circle.svg";
-
 //@ts-ignore TS2307
 import Plus from "./svg/plus-circle.svg";
 
@@ -79,6 +78,7 @@ const Row = ({
   clearSizeCache,
   calculateHeight,
   generateKeyFromRow,
+  rowRenderer: RowRenderer,
   subComponent: SubComponent
 }: RowProps) => {
   // hooks
@@ -147,6 +147,28 @@ const Row = ({
     expandedCalledRef.current = false;
   }, [isExpanded, expandedCalledRef, resetHeight, index, clearSizeCache]);
 
+  // components
+  // row renderer
+  const RowContainer = ({ children }: { children: React.ReactNode }) => {
+    if (RowRenderer) {
+      const style = {
+        ...containerStyle,
+        display: "flex"
+      };
+      return (
+        <RowRenderer row={row} index={index} style={style}>
+          {children}
+        </RowRenderer>
+      );
+    }
+
+    return (
+      <div className="row-container" style={containerStyle} onClick={onContainerClick}>
+        {children}
+      </div>
+    );
+  };
+
   return (
     <div
       ref={rowRef}
@@ -155,7 +177,7 @@ const Row = ({
       data-row-key={rowKey}
       style={{ ...style, borderBottom, width: useRowWidth ? style.width : undefined }}
     >
-      <div className="row-container" style={containerStyle} onClick={onContainerClick}>
+      <RowContainer>
         {columns.map((c, i) => (
           <TableCell
             key={`${uuid}-${c.key}-${key}`}
@@ -168,7 +190,7 @@ const Row = ({
             onExpanderClick={onExpanderClick}
           />
         ))}
-      </div>
+      </RowContainer>
       {!SubComponent ? null : (
         <div className={isExpanded ? undefined : "hidden"}>
           <SubComponent {...subProps} />

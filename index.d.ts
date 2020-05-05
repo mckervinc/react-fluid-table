@@ -1,4 +1,4 @@
-import { FC, ElementType, CSSProperties } from "react";
+import { CSSProperties, ElementType, FC, ReactNode } from "react";
 
 declare module "*.svg" {
   const content: string;
@@ -53,6 +53,13 @@ export interface ColumnProps {
   cell?: ElementType<CellProps>;
 }
 
+export interface RowRenderProps {
+  row: Generic;
+  index: number;
+  style: CSSProperties;
+  children: ReactNode;
+}
+
 export interface RowProps {
   row: Generic;
   index: number;
@@ -65,8 +72,9 @@ export interface RowProps {
   clearSizeCache: CacheFunction;
   calculateHeight: HeightFunction;
   generateKeyFromRow: GenKeyFunction;
-  subComponent: ElementType<SubComponentProps>;
   onRowClick: ClickFunction;
+  subComponent: ElementType<SubComponentProps>;
+  rowRenderer: ElementType<RowRenderProps>;
 }
 
 export interface SubComponentProps {
@@ -131,7 +139,7 @@ export interface TableProps {
    */
   tableWidth?: number;
   /**
-   * Specify the minimum width of any column. Default: `80`
+   * Specify the minimum width of any column. Default: `80`.
    */
   minColumnWidth?: number;
   /**
@@ -164,6 +172,11 @@ export interface TableProps {
    * The callback that gets called every time a row is clicked.
    */
   onRowClick?: ClickFunction;
+  /**
+   * Custom component to wrap a table row. This provides another way of providing
+   * more row customization options.
+   */
+  rowRenderer?: ElementType<RowRenderProps>;
 }
 
 export const Table: FC<TableProps>;

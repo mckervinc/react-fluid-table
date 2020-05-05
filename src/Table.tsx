@@ -37,12 +37,9 @@ const ListComponent = ({
   width,
   height,
   itemKey,
-  borders,
-  rowStyle,
   rowHeight,
   className,
-  onRowClick,
-  subComponent
+  ...rest
 }: ListProps) => {
   // hooks
   const timeoutRef = useRef(0);
@@ -272,15 +269,12 @@ const ListComponent = ({
       }}
       itemData={{
         rows: data,
-        borders,
-        rowStyle,
         rowHeight,
-        onRowClick,
         useRowWidth,
-        subComponent,
         clearSizeCache,
         calculateHeight,
-        generateKeyFromRow
+        generateKeyFromRow,
+        ...rest
       }}
     >
       {RowWrapper}
