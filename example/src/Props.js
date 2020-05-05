@@ -41,19 +41,19 @@ const columns = [
     key: "prop",
     header: "Prop",
     width: 170,
-    cell: ({ row }) => <code>{row.prop}</code>
+    content: ({ row }) => <code>{row.prop}</code>
   },
   {
     key: "type",
     header: "Type",
     width: 120,
-    cell: ({ row }) => <code>{row.type}</code>
+    content: ({ row }) => <code>{row.type}</code>
   },
   {
     key: "required",
     header: "Required",
     width: 100,
-    cell: ({ row }) => (
+    content: ({ row }) => (
       <Icon
         name={`${row.required ? "check" : "times"} circle`}
         color={row.required ? "green" : "grey"}
@@ -64,12 +64,12 @@ const columns = [
     key: "default",
     header: "Default",
     width: 100,
-    cell: ({ row }) => (row.default ? <code>{row.default}</code> : null)
+    content: ({ row }) => (row.default ? <code>{row.default}</code> : null)
   },
   {
     key: "description",
     header: "Description",
-    cell: ({ row }) => row.description
+    content: ({ row }) => row.description
   }
 ];
 
@@ -228,7 +228,7 @@ const columns = [{
   key: "contact",
   width: 100,
   header: "Contact",
-  cell: Contact
+  content: Contact
 }];
 
 const Example = () => <Table data={data} columns={columns} />;

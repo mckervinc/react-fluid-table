@@ -17,12 +17,6 @@ const TextStyle = styled.div`
   text-overflow: ellipsis;
 `;
 
-const CustomCell = styled.div`
-  padding: 8px;
-  display: flex;
-  align-items: center;
-`;
-
 const EmailInput = styled(Input)`
   width: 100%;
 `;
@@ -293,56 +287,37 @@ const columns = [
     key: "avatar",
     header: "Profile Photo",
     width: 150,
-    cell: ({ row, style }) => (
-      <CustomCell style={style}>
-        <ProfPic size="small" src={row.avatar} />
-      </CustomCell>
-    )
+    content: ({ row }) => <ProfPic size="small" src={row.avatar} />
   },
   {
     key: "email",
     header: "Email",
-    cell: ({ row, style }) => (
-      <CustomCell style={style}>
-        <EmailInput defaultValue={row.email} />
-      </CustomCell>
-    )
+    content: ({ row }) => <EmailInput defaultValue={row.email} />
   },
   {
     key: "firstName",
     header: "First",
     width: 100,
-    cell: ({ row, style }) => (
-      <CustomCell style={style}>
-        <TextStyle>{row.firstName}</TextStyle>
-      </CustomCell>
-    )
+    content: ({ row }) => <TextStyle>{row.firstName}</TextStyle>
   },
   {
     key: "lastName",
     header: "Last",
     width: 100,
-    cell: ({ row, style }) => (
-      <CustomCell style={style}>
-        <TextStyle>{row.lastName}</TextStyle>
-      </CustomCell>
-    )
+    content: ({ row }) => <TextStyle>{row.lastName}</TextStyle>
   },
   {
     key: "country",
     header: "Country",
-    cell: ({ row, style }) => (
-      <CustomCell style={style}>
-        {!countryMap[row.country] ? (
-          `No flag for this country: ${row.country.toUpperCase()}`
-        ) : (
-          <>
-            <Flag name={row.country} />
-            {countryMap[row.country]}
-          </>
-        )}
-      </CustomCell>
-    )
+    content: ({ row }) =>
+      !countryMap[row.country] ? (
+        `No flag for this country: ${row.country.toUpperCase()}`
+      ) : (
+        <>
+          <Flag name={row.country} />
+          {countryMap[row.country]}
+        </>
+      )
   }
 ];
 
@@ -359,29 +334,29 @@ const columns = [
     key: "avatar",
     header: "Profile Photo",
     width: 150,
-    cell: ({ row }) => <ProfPic size="small" src={row.avatar} />
+    content: ({ row }) => <ProfPic size="small" src={row.avatar} />
   },
   {
     key: "email",
     header: "Email",
-    cell: ({ row }) => <Email email={row.email} />
+    content: ({ row }) => <Email email={row.email} />
   },
   {
     key: "firstName",
     header: "First",
     width: 100,
-    cell: ({ row }) => <TextStyle>{row.firstName}</TextStyle>
+    content: ({ row }) => <TextStyle>{row.firstName}</TextStyle>
   },
   {
     key: "lastName",
     header: "Last",
     width: 100,
-    cell: ({ row }) => <TextStyle>{row.lastName}</TextStyle>
+    content: ({ row }) => <TextStyle>{row.lastName}</TextStyle>
   },
   {
     key: "country",
     header: "Country",
-    cell: ({ row }) =>
+    content: ({ row }) =>
       !countryMap[row.country] ? (
         \`No flag for this country: \${row.country.toUpperCase()}\`
       ) : (

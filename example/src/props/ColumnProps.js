@@ -27,18 +27,18 @@ const columns = [
     key: "prop",
     header: "Prop",
     width: 140,
-    cell: ({ row }) => <code>{row.prop}</code>
+    content: ({ row }) => <code>{row.prop}</code>
   },
   {
     key: "type",
     header: "Type",
     width: 270,
-    cell: ({ row }) => <code>{row.type}</code>
+    content: ({ row }) => <code>{row.type}</code>
   },
   {
     key: "description",
     header: "Description",
-    cell: ({ row }) => row.description
+    content: ({ row }) => row.description
   }
 ];
 
