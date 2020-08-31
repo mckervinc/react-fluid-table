@@ -39,6 +39,7 @@ const ListComponent = ({
   itemKey,
   rowHeight,
   className,
+  onItemsRendered,
   ...rest
 }: ListProps) => {
   // hooks
@@ -244,7 +245,7 @@ const ListComponent = ({
 
         return calculateHeight(index - 1);
       }}
-      onItemsRendered={() => {
+      onItemsRendered={(...args) => {
         // find median height of rows if no rowHeight provided
         if (rowHeight || !tableRef.current) {
           return;
@@ -266,6 +267,8 @@ const ListComponent = ({
         if (median && defaultSize !== median) {
           setDefaultSize(median);
         }
+
+        onItemsRendered && onItemsRendered(...args)
       }}
       itemData={{
         rows: data,

@@ -1,4 +1,5 @@
 import { CSSProperties, ElementType, FC, ReactNode } from "react";
+import { ListProps as ReactWindowListProps } from "react-window";
 
 declare module "*.svg" {
   const content: string;
@@ -118,6 +119,8 @@ export interface SubComponentProps {
   clearSizeCache: CacheFunction;
 }
 
+export type onItemsRendered = ReactWindowListProps['onItemsRendered']
+
 export interface ListProps {
   height: number;
   width: number;
@@ -129,6 +132,7 @@ export interface ListProps {
   itemKey?: KeyFunction;
   subComponent?: ElementType<SubComponentProps>;
   onRowClick?: ClickFunction;
+  onItemsRendered?: onItemsRendered;
   [key: string]: any;
 }
 
@@ -212,6 +216,11 @@ export interface TableProps {
    * more row customization options.
    */
   rowRenderer?: ElementType<RowRenderProps>;
+
+  /**
+   * Called when the items rendered by the list/table change.
+   */
+  onItemsRendered?: onItemsRendered;
 }
 
 /**
