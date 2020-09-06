@@ -11,6 +11,7 @@ import { Example5, Source as Example5Code } from "./examples/05-variable";
 import { Example6, Source as Example6Code } from "./examples/06-expanded";
 import { Example7, Source as Example7Code } from "./examples/07-controlled";
 import { Example8, Source as Example8Code } from "./examples/08-header";
+import { Example9, Source as Example9Code } from "./examples/09-scroll";
 import Navigation from "./Navigation";
 import Props from "./Props";
 import { Snippet } from "./shared/Snippet";
@@ -96,6 +97,9 @@ const LinkContainer = () => (
     </Menu.Item>
     <Menu.Item as={Link} to="/header">
       Custom Styling
+    </Menu.Item>
+    <Menu.Item as={Link} to="/scroll">
+      Methods
     </Menu.Item>
     <Menu.Item as={Link} to="/props">
       Table Props
@@ -199,6 +203,13 @@ const App = () => {
                 <Example8 />
               </Wrapper>
               <Snippet code={Example8Code} />
+            </Route>
+            <Route exact path="/scroll">
+              <Title title="Methods" />
+              <Wrapper>
+                <Example9 />
+              </Wrapper>
+              <Snippet code={Example9Code} />
             </Route>
             <Route exact path="/props">
               <Props />
