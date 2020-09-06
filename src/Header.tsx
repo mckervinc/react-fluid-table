@@ -3,12 +3,12 @@ import { ColumnProps } from "../index";
 import { NO_NODE } from "./constants";
 import { TableContext } from "./TableContext";
 
-interface ColumnCellProps {
+interface HeaderCellProps {
   width: number;
   column: ColumnProps;
 }
 
-const HeaderCell = React.memo(({ column, width }: ColumnCellProps) => {
+const HeaderCell = React.memo(({ column, width }: HeaderCellProps) => {
   // hooks
   const tableContext = useContext(TableContext);
 
