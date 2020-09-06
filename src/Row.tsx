@@ -1,11 +1,10 @@
-import React, { useCallback, useContext, useLayoutEffect, useRef } from "react";
+import React, { SVGProps, useCallback, useContext, useLayoutEffect, useRef } from "react";
 import { CacheFunction, ColumnProps, Generic, RowProps } from "../index";
-import { TableContext } from "./TableContext";
-
 //@ts-ignore TS2307
 import Minus from "./svg/minus-circle.svg";
 //@ts-ignore TS2307
 import Plus from "./svg/plus-circle.svg";
+import { TableContext } from "./TableContext";
 
 interface TableCellProps {
   row: Generic;
@@ -14,7 +13,7 @@ interface TableCellProps {
   column: ColumnProps;
   isExpanded: boolean;
   clearSizeCache: CacheFunction;
-  onExpanderClick: Function;
+  onExpanderClick: (event?: React.MouseEvent<Element, MouseEvent>) => void;
 }
 
 type CSSFunction = (index: number) => React.CSSProperties;
@@ -38,7 +37,7 @@ const TableCell = React.memo(
     // expander
     if (column.expander) {
       if (typeof column.expander === "boolean") {
-        const Logo: React.ElementType = isExpanded ? Minus : Plus;
+        const Logo: React.ElementType<SVGProps<SVGSVGElement>> = isExpanded ? Minus : Plus;
 
         return (
           <div className="cell" style={style}>
@@ -105,7 +104,7 @@ const Row = ({
   const rowKey = `${uuid}-${key}`;
 
   // expanded
-  const isExpanded = Boolean(expanded[key]);
+  const isExpanded = !!expanded[key];
   const containerHeight = !rowHeight ? undefined : isExpanded && SubComponent ? rowHeight : "100%";
 
   // sub component props

@@ -30,7 +30,7 @@ interface Action {
   [key: string]: any;
 }
 
-interface A {
+interface ReactContext {
   state: State;
   dispatch: DispatchFunction;
 }
@@ -57,7 +57,7 @@ const fields = [
   "headerStyle"
 ];
 
-const TableContext = createContext<A>({ state: baseState, dispatch: () => {} });
+const TableContext = createContext<ReactContext>({ state: baseState, dispatch: () => {} });
 
 const findColumnWidthConstants = (columns: ColumnProps[]) => {
   return columns.reduce(
