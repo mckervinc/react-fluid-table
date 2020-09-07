@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## 0.4.2
+
+_2020-09-07_
+
+### Bugfix
+
+- Moved the `RowContainer` to its own component. This should resolve the issue of the table cell re-rendering on resize.
+
+## 0.4.1
+
+_2020-09-06_
+
+### Features
+
+- Added the ability to pass in a `ref` to the component in order to access the `scrollTo` and `scrollToItem` functions.
+
 ## 0.4.0
 
 _2020-05-05_
