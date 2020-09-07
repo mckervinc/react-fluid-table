@@ -1,5 +1,12 @@
 import React, { SVGProps, useCallback, useContext, useLayoutEffect, useRef } from "react";
-import { CacheFunction, ColumnProps, Generic, RowProps } from "../index";
+import {
+  CacheFunction,
+  ClickFunction,
+  ColumnProps,
+  Generic,
+  RowProps,
+  RowRenderProps
+} from "../index";
 //@ts-ignore TS2307
 import Minus from "./svg/minus-circle.svg";
 //@ts-ignore TS2307
@@ -14,6 +21,15 @@ interface TableCellProps {
   isExpanded: boolean;
   clearSizeCache: CacheFunction;
   onExpanderClick: (event?: React.MouseEvent<Element, MouseEvent>) => void;
+}
+
+interface RowContainerProps {
+  row: Generic;
+  index: number;
+  children: React.ReactNode;
+  containerStyle: React.CSSProperties;
+  onRowClick: ClickFunction;
+  rowRenderer: React.ElementType<RowRenderProps>;
 }
 
 type CSSFunction = (index: number) => React.CSSProperties;
@@ -74,6 +90,42 @@ const TableCell = React.memo(
   }
 );
 
+const RowContainer = ({
+  row,
+  index,
+  children,
+  onRowClick,
+  containerStyle,
+  rowRenderer: RowRenderer
+}: RowContainerProps) => {
+  const onContainerClick = useCallback(
+    event => {
+      if (onRowClick) {
+        onRowClick(event, { index });
+      }
+    },
+    [index, onRowClick]
+  );
+
+  if (RowRenderer) {
+    const style = {
+      ...containerStyle,
+      display: "flex"
+    };
+    return (
+      <RowRenderer row={row} index={index} style={style}>
+        {children}
+      </RowRenderer>
+    );
+  }
+
+  return (
+    <div className="row-container" style={containerStyle} onClick={onContainerClick}>
+      {children}
+    </div>
+  );
+};
+
 const Row = ({
   row,
   index,
@@ -83,10 +135,10 @@ const Row = ({
   rowHeight,
   onRowClick,
   useRowWidth,
+  rowRenderer,
   clearSizeCache,
   calculateHeight,
   generateKeyFromRow,
-  rowRenderer: RowRenderer,
   subComponent: SubComponent
 }: RowProps) => {
   // hooks
@@ -118,15 +170,6 @@ const Row = ({
   };
 
   // function(s)
-  const onContainerClick = useCallback(
-    event => {
-      if (onRowClick) {
-        onRowClick(event, { index });
-      }
-    },
-    [index, onRowClick]
-  );
-
   const onExpanderClick = useCallback(() => {
     dispatch({ type: "updateExpanded", key: generateKeyFromRow(row, index) });
     expandedCalledRef.current = true;
@@ -155,28 +198,6 @@ const Row = ({
     expandedCalledRef.current = false;
   }, [isExpanded, expandedCalledRef, resetHeight, index, clearSizeCache]);
 
-  // components
-  // row renderer
-  const RowContainer = ({ children }: { children: React.ReactNode }) => {
-    if (RowRenderer) {
-      const style = {
-        ...containerStyle,
-        display: "flex"
-      };
-      return (
-        <RowRenderer row={row} index={index} style={style}>
-          {children}
-        </RowRenderer>
-      );
-    }
-
-    return (
-      <div className="row-container" style={containerStyle} onClick={onContainerClick}>
-        {children}
-      </div>
-    );
-  };
-
   return (
     <div
       ref={rowRef}
@@ -185,7 +206,13 @@ const Row = ({
       data-row-key={rowKey}
       style={{ ...style, borderBottom, width: useRowWidth ? style.width : undefined }}
     >
-      <RowContainer>
+      <RowContainer
+        row={row}
+        index={index}
+        onRowClick={onRowClick}
+        rowRenderer={rowRenderer}
+        containerStyle={containerStyle}
+      >
         {columns.map((c, i) => (
           <TableCell
             key={`${uuid}-${c.key}-${key}`}
