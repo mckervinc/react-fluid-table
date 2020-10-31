@@ -12,6 +12,7 @@ import { Example6, Source as Example6Code } from "./examples/06-expanded";
 import { Example7, Source as Example7Code } from "./examples/07-controlled";
 import { Example8, Source as Example8Code } from "./examples/08-header";
 import { Example9, Source as Example9Code } from "./examples/09-scroll";
+import { Example10, Source as Example10Code } from "./examples/10-infinitescroll";
 import Navigation from "./Navigation";
 import Props from "./Props";
 import { Snippet } from "./shared/Snippet";
@@ -97,6 +98,9 @@ const LinkContainer = () => (
     </Menu.Item>
     <Menu.Item as={Link} to="/header">
       Custom Styling
+    </Menu.Item>
+    <Menu.Item as={Link} to="/infinitescroll">
+      Infinite Scrolling
     </Menu.Item>
     <Menu.Item as={Link} to="/scroll">
       Methods
@@ -213,6 +217,13 @@ const App = () => {
             </Route>
             <Route exact path="/props">
               <Props />
+            </Route>
+            <Route exact path="/infinitescroll">
+              <Title title="Infinite Scrolling" />
+              <Wrapper>
+                <Example10 />
+              </Wrapper>
+              <Snippet code={Example10Code} />
             </Route>
           </Switch>
         </Page>

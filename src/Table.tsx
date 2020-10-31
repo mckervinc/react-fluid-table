@@ -15,6 +15,7 @@ import { DEFAULT_HEADER_HEIGHT, DEFAULT_ROW_HEIGHT, NO_NODE } from "./constants"
 import Header from "./Header";
 import NumberTree from "./NumberTree";
 import RowWrapper from "./RowWrapper";
+import InfiniteLoaderWrapper from "./InfiniteLoaderWrapper";
 import { TableContext, TableContextProvider } from "./TableContext";
 import TableWrapper from "./TableWrapper";
 import {
@@ -36,6 +37,7 @@ interface Data {
  */
 const ListComponent = forwardRef(
   ({ data, width, height, itemKey, rowHeight, className, ...rest }: ListProps, ref) => {
+
     // hooks
     const timeoutRef = useRef(0);
     const prevRef = useRef(width);
@@ -224,6 +226,7 @@ const ListComponent = forwardRef(
         listRef.current.scrollToItem(index, align)
     }));
 
+
     return (
       <VariableSizeList
         className={`react-fluid-table ${className || ""}`.trim()}
@@ -240,6 +243,7 @@ const ListComponent = forwardRef(
           const row = data.rows[dataIndex];
           return generateKeyFromRow(row, index);
         }}
+        
         itemSize={index => {
           if (!index) {
             const header = findHeaderByUuid(uuid);
@@ -250,7 +254,10 @@ const ListComponent = forwardRef(
 
           return calculateHeight(index - 1);
         }}
-        onItemsRendered={() => {
+        onItemsRendered={(info) => {
+          if (rest.onListItemsRendered) {
+            rest.onListItemsRendered(info);
+          }
           // find median height of rows if no rowHeight provided
           if (rowHeight || !tableRef.current) {
             return;
@@ -302,6 +309,7 @@ const Table = forwardRef(
       tableWidth,
       tableStyle,
       headerStyle,
+      infiniteLoading,
       ...rest
     }: TableProps,
     ref
@@ -310,6 +318,7 @@ const Table = forwardRef(
     const disableHeight = tableHeight !== undefined;
     const disableWidth = tableWidth !== undefined;
     const [uuid] = useState(`${id || "data-table"}-${randomString()}`);
+    //console.log(rest.data)
 
     return (
       <TableContextProvider
@@ -325,9 +334,31 @@ const Table = forwardRef(
           headerStyle
         }}
       >
-        {typeof tableHeight === "number" && typeof tableWidth === "number" ? (
+       
+
+{typeof tableHeight === "number" && typeof tableWidth === "number" ? infiniteLoading ? 
+        (<InfiniteLoaderWrapper  {...rest} >
+                 {({onItemsRendered, ref}) => (<ListComponent onListItemsRendered={onItemsRendered} ref={ref} height={tableHeight} width={tableWidth} {...rest} />)}
+        </InfiniteLoaderWrapper>) : (
           <ListComponent ref={ref} height={tableHeight} width={tableWidth} {...rest} />
-        ) : (
+        ) : infiniteLoading ?
+        (
+          <AutoSizer disableHeight={disableHeight} disableWidth={disableWidth}>
+            {({ height, width }) => (
+              <InfiniteLoaderWrapper {...rest} >
+             {({onItemsRendered, ref}) => ( <ListComponent
+                onListItemsRendered={onItemsRendered}
+                ref={ref}
+                width={tableWidth || width}
+                height={tableHeight || height || guessTableHeight(rest.rowHeight)}
+                {...rest}
+              />)}
+              </InfiniteLoaderWrapper>
+            )}
+          </AutoSizer>
+        ) : 
+        (
+
           <AutoSizer disableHeight={disableHeight} disableWidth={disableWidth}>
             {({ height, width }) => (
               <ListComponent
@@ -346,7 +377,12 @@ const Table = forwardRef(
 
 Table.defaultProps = {
   borders: true,
-  minColumnWidth: 80
+  minColumnWidth: 80,
+  infiniteLoading: false,
+  hasNextPage: false,
+  isNextPageLoading: false,
+  loadNextPage: undefined,
+  minimumBatchSize: 10,
 };
 
 export default Table;

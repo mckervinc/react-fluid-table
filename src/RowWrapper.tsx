@@ -13,6 +13,9 @@ const RowWrapper = React.memo(({ data, index, ...rest }: Props) => {
   const { rows, ...metaData } = data;
   const row = rows[dataIndex];
 
+  
+ 
+
   return !row ? null : <Row row={row} index={dataIndex} {...rest} {...metaData} />;
 }, areEqual);
 
