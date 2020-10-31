@@ -1,6 +1,6 @@
 {
   "name": "@carlospence/react-fluid-table",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "A React table inspired by react-window",
   "author": "Mckervin Ceme <mckervinc@live.com>",
   "license": "MIT",
@@ -27,7 +27,7 @@
   "scripts": {
     "test": "cross-env CI=1 react-scripts test --env=jsdom",
     "test:watch": "react-scripts test --env=jsdom",
-    "build": "rm -rf dist ||: && rollup -c --environment BUILD:production",
+    "build": "rm -rf dist && rollup -c --environment BUILD:production",
     "start": "rollup -c -w --environment BUILD:development",
     "prepare": "yarn run build",
     "predeploy": "cd example && yarn install && yarn run build",
