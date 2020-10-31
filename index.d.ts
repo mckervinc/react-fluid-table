@@ -1,4 +1,5 @@
 import { CSSProperties, ElementType, FC, ReactNode } from "react";
+import { ListOnItemsRenderedProps } from 'react-window';
 
 declare module "*.svg" {
   const content: string;
@@ -129,6 +130,7 @@ export interface ListProps {
   itemKey?: KeyFunction;
   subComponent?: ElementType<SubComponentProps>;
   onRowClick?: ClickFunction;
+  onListItemsRendered?: (props: ListOnItemsRenderedProps) => any;
   [key: string]: any;
 }
 
@@ -199,6 +201,30 @@ export interface TableProps {
    * a function that takes the index of the row and returns an object.
    */
   rowStyle?: CSSProperties | ((index: number) => CSSProperties);
+
+   /**
+   * Enable or disable infinite loading. Default: `false`.
+   */
+  infiniteLoading?: boolean;
+ /**
+   *  Are there more items to load?. Default: `false`.
+   * (This information comes from the most recent API request.)
+   */
+  hasNextPage?: boolean;
+ /**
+   *  Are we currently loading a page of items?. Default: `false`.
+   * (This may be an in-flight flag in your Redux store or in-memory.)
+   */
+  isNextPageLoading?: boolean;
+  /**
+   *  Minimum number of rows to be loaded at a time; . . Default: `10`.
+   * (This property can be used to batch requests to reduce HTTP requests.)
+   */
+  minimumBatchSize?: number;
+  /**
+   *  Callback function responsible for loading the next page of items. Default: `undefined`.
+   */
+  loadNextPage?:  (startIndex: number, stopIndex: number) => Promise<any> | null;
   /**
    * When a column has `expander`, this component will be rendered under the row.
    */
