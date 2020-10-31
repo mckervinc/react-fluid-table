@@ -65,6 +65,7 @@
     "@svgr/rollup": "^5.3.1",
     "@testing-library/react-hooks": "^3.2.1",
     "@types/react-window": "^1.8.1",
+    "@types/react-window-infinite-loader": "^1.0.3",
     "babel-eslint": "^10.1.0",
     "cross-env": "^7.0.2",
     "eslint": "6.6.0",
@@ -82,7 +83,6 @@
     "react": "^16.12.0",
     "react-scripts": "^3.1.0",
     "react-test-renderer": "^16.12.0",
-    "react-window-infinite-loader": "^1.0.5",
     "rollup": "^2.3.3",
     "rollup-plugin-analyzer": "^3.2.2",
     "rollup-plugin-babel": "^4.4.0",
@@ -94,7 +94,7 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "@types/react-window-infinite-loader": "^1.0.3",
+    "react-window-infinite-loader": "^1.0.5",
     "react-window": "^1.8.5"
   }
 }
