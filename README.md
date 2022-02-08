@@ -31,17 +31,17 @@ const data = _.range(100).map(i => ({
 const columns = [
   {
     key: "firstName",
-    name: "First Name",
+    header: "First Name",
     width: 100
   },
   {
     key: "lastName",
-    name: "Last Name",
+    header: "Last Name",
     width: 100
   },
   {
     key: "email",
-    name: "Email"
+    header: "Email"
   }
 ];
 
