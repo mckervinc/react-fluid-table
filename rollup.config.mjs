@@ -1,20 +1,18 @@
-import babel from "rollup-plugin-babel";
+import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
-import external from "rollup-plugin-peer-deps-external";
 import resolve from "@rollup/plugin-node-resolve";
+import terser from "@rollup/plugin-terser";
 import url from "@rollup/plugin-url";
-import postcss from "rollup-plugin-postcss";
 import svgr from "@svgr/rollup";
-import bundleSize from "rollup-plugin-bundle-size";
 import analyze from "rollup-plugin-analyzer";
-import visualizer from "rollup-plugin-visualizer";
-import { terser } from "rollup-plugin-terser";
+import bundleSize from "rollup-plugin-bundle-size";
+import external from "rollup-plugin-peer-deps-external";
+import postcss from "rollup-plugin-postcss";
+import { visualizer } from "rollup-plugin-visualizer";
 
-import pkg from "./package.json";
+import pkg from "./package.json" assert { type: "json" };
 
-const extensions = [
-  '.js', '.jsx', '.ts', '.tsx',
-];
+const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
 const config = {
   input: "src/index.ts",
@@ -38,7 +36,8 @@ const config = {
     external(),
     url({ exclude: ["**/*.svg"] }),
     babel({
-      extensions, exclude: "node_modules/**"
+      extensions,
+      exclude: "node_modules/**"
     }),
     resolve({ extensions }),
     commonjs(),

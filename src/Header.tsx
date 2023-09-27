@@ -1,21 +1,23 @@
 import React, { forwardRef, useContext } from "react";
-import { ColumnProps } from "../index";
-import { NO_NODE } from "./constants";
+import { ColumnProps, SortDirection } from "../index";
 import { TableContext } from "./TableContext";
+import { NO_NODE } from "./constants";
 
-interface HeaderCellProps {
+interface HeaderCellProps<T> {
   width: number;
-  column: ColumnProps;
+  column: ColumnProps<T>;
 }
 
-const HeaderCell = React.memo(({ column, width }: HeaderCellProps) => {
-  // hooks
-  const tableContext = useContext(TableContext);
+interface HeaderProps {
+  children: React.ReactNode;
+}
 
-  // variables
-  const { sortColumn: col, sortDirection, onSort } = tableContext.state;
-  const { dispatch } = tableContext;
-  const dir = sortDirection ? sortDirection.toUpperCase() : null;
+function InnerHeaderCell<T>({ column, width }: HeaderCellProps<T>) {
+  // hooks
+  const { dispatch, sortColumn: col, sortDirection, onSort } = useContext(TableContext);
+
+  // constants
+  const dir = sortDirection ? (sortDirection.toUpperCase() as SortDirection) : null;
 
   const style = {
     cursor: column.sortable ? "pointer" : undefined,
@@ -31,7 +33,7 @@ const HeaderCell = React.memo(({ column, width }: HeaderCellProps) => {
     // sorting the same column
     const oldCol = col;
     const oldDir = dir;
-    let newDir: string | null = "ASC";
+    let newDir: SortDirection = "ASC";
     let newCol: string | null = column.key;
 
     if (oldCol === newCol) {
@@ -66,14 +68,17 @@ const HeaderCell = React.memo(({ column, width }: HeaderCellProps) => {
   const ColumnCell = column.header;
   const headerDir = column.key === col ? dir || null : null;
   return <ColumnCell style={style} onClick={onClick} sortDirection={headerDir} />;
-});
+}
 
-const Header = forwardRef(({ children, ...rest }, ref: any) => {
+const HeaderCell = React.memo(InnerHeaderCell);
+
+HeaderCell.displayName = "HeaderCell";
+
+const Header = forwardRef(({ children, ...rest }: HeaderProps, ref: any) => {
   // hooks
-  const tableContext = useContext(TableContext);
+  const { id, uuid, columns, pixelWidths, headerStyle } = useContext(TableContext);
 
   // variables
-  const { id, uuid, columns, pixelWidths, headerStyle } = tableContext.state;
   const { scrollWidth, clientWidth } = ref.current || NO_NODE;
   const width = scrollWidth <= clientWidth ? "100%" : undefined;
 

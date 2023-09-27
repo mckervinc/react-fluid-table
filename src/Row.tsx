@@ -1,35 +1,48 @@
 import React, { SVGProps, useCallback, useContext, useLayoutEffect, useRef } from "react";
-import {
-  CacheFunction,
-  ClickFunction,
-  ColumnProps,
-  Generic,
-  RowProps,
-  RowRenderProps
-} from "../index";
+import { CacheFunction, ColumnProps, RowRenderProps, SubComponentProps } from "../index";
 //@ts-ignore TS2307
 import Minus from "./svg/minus-circle.svg";
 //@ts-ignore TS2307
 import Plus from "./svg/plus-circle.svg";
 import { TableContext } from "./TableContext";
 
-interface TableCellProps {
-  row: Generic;
+interface TableCellProps<T> {
+  row: T;
   index: number;
   width?: number;
-  column: ColumnProps;
+  column: ColumnProps<T>;
   isExpanded: boolean;
   clearSizeCache: CacheFunction;
   onExpanderClick: (event?: React.MouseEvent<Element, MouseEvent>) => void;
 }
 
-interface RowContainerProps {
-  row: Generic;
+interface RowContainerProps<T> {
+  row: T;
   index: number;
   children: React.ReactNode;
   containerStyle: React.CSSProperties;
-  onRowClick: ClickFunction;
-  rowRenderer: React.ElementType<RowRenderProps>;
+  onRowClick: (event: React.MouseEvent<Element, MouseEvent>, data: { index: number }) => void;
+  rowRenderer: (props: RowRenderProps<T>) => JSX.Element;
+}
+
+interface RowProps<T> {
+  row: T;
+  index: number;
+  style: React.CSSProperties;
+  borders: boolean;
+  rowHeight: number;
+  rowStyle: React.CSSProperties | ((index: number) => React.CSSProperties);
+  pixelWidths: number[];
+  useRowWidth: boolean;
+  clearSizeCache: CacheFunction;
+  calculateHeight: (
+    queryParam: number | HTMLElement | null,
+    optionalDataIndex?: number | null
+  ) => number;
+  generateKeyFromRow: (row: T, defaultValue: number) => string | number;
+  onRowClick: (event: React.MouseEvent<Element, MouseEvent>, data: { index: number }) => void;
+  subComponent?: (props: SubComponentProps<T>) => React.ReactNode;
+  rowRenderer: (props: RowRenderProps<T>) => JSX.Element;
 }
 
 type CSSFunction = (index: number) => React.CSSProperties;
@@ -42,64 +55,75 @@ const getRowStyle = (index: number, rowStyle?: React.CSSProperties | CSSFunction
   return typeof rowStyle === "function" ? rowStyle(index) : rowStyle;
 };
 
-const TableCell = React.memo(
-  ({ row, index, width, column, isExpanded, clearSizeCache, onExpanderClick }: TableCellProps) => {
-    // cell width
-    const style = {
-      width: width ? `${width}px` : undefined,
-      minWidth: width ? `${width}px` : undefined
-    };
+function InnerTableCell<T>({
+  row,
+  index,
+  width,
+  column,
+  isExpanded,
+  clearSizeCache,
+  onExpanderClick
+}: TableCellProps<T>) {
+  // cell width
+  const style: React.CSSProperties = {
+    width: width ? `${width}px` : undefined,
+    minWidth: width ? `${width}px` : undefined
+  };
 
-    // expander
-    if (column.expander) {
-      if (typeof column.expander === "boolean") {
-        const Logo: React.ElementType<SVGProps<SVGSVGElement>> = isExpanded ? Minus : Plus;
+  // expander
+  if (column.expander) {
+    if (typeof column.expander === "boolean") {
+      const Logo: React.ElementType<SVGProps<SVGSVGElement>> = isExpanded ? Minus : Plus;
 
-        return (
-          <div className="cell" style={style}>
-            <Logo className="expander" onClick={onExpanderClick} />
-          </div>
-        );
-      }
-
-      const Expander = column.expander;
-      return <Expander style={style} isExpanded={isExpanded} onClick={onExpanderClick} />;
-    }
-
-    // basic styling
-    if (!column.cell) {
-      let content: React.ReactNode = row[column.key] || null;
-      if (column.content) {
-        if (typeof column.content === "string" || typeof column.content === "number") {
-          content = column.content;
-        } else {
-          const Content = column.content;
-          content = <Content row={row} index={index} clearSizeCache={clearSizeCache} />;
-        }
-      }
       return (
         <div className="cell" style={style}>
-          {content}
+          <Logo className="expander" onClick={onExpanderClick} />
         </div>
       );
     }
 
-    // custom cell styling
-    const CustomCell = column.cell;
-    return <CustomCell row={row} index={index} style={style} clearSizeCache={clearSizeCache} />;
+    const Expander = column.expander;
+    return <Expander style={style} isExpanded={isExpanded} onClick={onExpanderClick} />;
   }
-);
 
-const RowContainer = ({
+  // basic styling
+  if (!column.cell) {
+    // @ts-ignore
+    let content: React.ReactNode = row[column.key] || null;
+    if (column.content) {
+      if (typeof column.content === "string" || typeof column.content === "number") {
+        content = column.content;
+      } else {
+        const Content = column.content;
+        content = <Content row={row} index={index} clearSizeCache={clearSizeCache} />;
+      }
+    }
+    return (
+      <div className="cell" style={style}>
+        {content}
+      </div>
+    );
+  }
+
+  // custom cell styling
+  const CustomCell = column.cell;
+  return <CustomCell row={row} index={index} style={style} clearSizeCache={clearSizeCache} />;
+}
+
+const TableCell = React.memo(InnerTableCell);
+
+TableCell.displayName = "TableCell";
+
+function RowContainer<T>({
   row,
   index,
   children,
   onRowClick,
   containerStyle,
   rowRenderer: RowRenderer
-}: RowContainerProps) => {
+}: RowContainerProps<T>) {
   const onContainerClick = useCallback(
-    event => {
+    (event: React.MouseEvent<Element, MouseEvent>) => {
       if (onRowClick) {
         onRowClick(event, { index });
       }
@@ -124,9 +148,9 @@ const RowContainer = ({
       {children}
     </div>
   );
-};
+}
 
-const Row = ({
+function Row<T>({
   row,
   index,
   style,
@@ -140,16 +164,14 @@ const Row = ({
   calculateHeight,
   generateKeyFromRow,
   subComponent: SubComponent
-}: RowProps) => {
+}: RowProps<T>) {
   // hooks
   const expandedCalledRef = useRef(false);
   const rowRef = useRef<HTMLDivElement>(null);
-  const tableContext = useContext(TableContext);
+  const { dispatch, uuid, columns, expanded, pixelWidths } = useContext(TableContext);
 
   // variables
   const { height } = style;
-  const { dispatch } = tableContext;
-  const { uuid, columns, expanded, pixelWidths } = tableContext.state;
 
   // key
   const key = generateKeyFromRow(row, index);
@@ -164,7 +186,7 @@ const Row = ({
 
   // row styling
   const borderBottom = borders ? undefined : "none";
-  const containerStyle = {
+  const containerStyle: React.CSSProperties = {
     height: containerHeight,
     ...getRowStyle(index, rowStyle)
   };
@@ -233,6 +255,6 @@ const Row = ({
       )}
     </div>
   );
-};
+}
 
 export default Row;

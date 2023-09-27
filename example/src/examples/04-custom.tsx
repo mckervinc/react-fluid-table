@@ -1,8 +1,7 @@
-import React from "react";
-import { Table } from "react-fluid-table";
+import { ColumnProps, Table } from "react-fluid-table";
+import { Flag, FlagNameValues, Image, Input } from "semantic-ui-react";
 import styled from "styled-components";
-import { Input, Image, Flag } from "semantic-ui-react";
-import { testData } from "../data";
+import { TestData, testData } from "../data";
 
 const TextStyle = styled.div`
   font-family: Helvetica;
@@ -275,9 +274,12 @@ const countries = [
   { name: "Zimbabwe", countryCode: "zw" }
 ];
 
-const countryMap = countries.reduce((pv, c) => ({ ...pv, [c.countryCode]: c.name }), {});
+const countryMap = countries.reduce(
+  (pv, c) => ({ ...pv, [c.countryCode]: c.name }),
+  {} as { [x: string]: string }
+);
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   {
     key: "id",
     header: "ID",
@@ -314,7 +316,7 @@ const columns = [
         `No flag for this country: ${row.country.toUpperCase()}`
       ) : (
         <>
-          <Flag name={row.country} />
+          <Flag name={row.country as FlagNameValues} />
           {countryMap[row.country]}
         </>
       )
@@ -328,35 +330,35 @@ const Example4 = () => (
 const Source = `
 const data = [/* ... */];
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   { key: "id", header: "ID", width: 50 },
   {
     key: "avatar",
     header: "Profile Photo",
     width: 150,
-    content: ({ row }) => <ProfPic size="small" src={row.avatar} />
+    content: ({ row}) => <ProfPic size="small" src={row.avatar} />
   },
   {
     key: "email",
     header: "Email",
-    content: ({ row }) => <Email email={row.email} />
+    content: ({ row}) => <Email email={row.email} />
   },
   {
     key: "firstName",
     header: "First",
     width: 100,
-    content: ({ row }) => <TextStyle>{row.firstName}</TextStyle>
+    content: ({ row}) => <TextStyle>{row.firstName}</TextStyle>
   },
   {
     key: "lastName",
     header: "Last",
     width: 100,
-    content: ({ row }) => <TextStyle>{row.lastName}</TextStyle>
+    content: ({ row}) => <TextStyle>{row.lastName}</TextStyle>
   },
   {
     key: "country",
     header: "Country",
-    content: ({ row }) =>
+    content: ({ row}) =>
       !countryMap[row.country] ? (
         \`No flag for this country: \${row.country.toUpperCase()}\`
       ) : (

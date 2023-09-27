@@ -1,48 +1,106 @@
-import { CSSProperties, ElementType, FC, ReactNode } from "react";
+import { CSSProperties, ReactNode } from "react";
 
 declare module "*.svg" {
   const content: string;
   export default content;
 }
 
-export type Text = string | number;
+export type SortDirection = "ASC" | "DESC" | null;
 
-type KeyFunction = (row: Generic) => Text;
 type CacheFunction = (dataIndex: number, forceUpdate?: boolean) => void;
-type HeightFunction = (
-  queryParam: number | HTMLElement | null,
-  optionalDataIndex?: number | null
-) => number;
-type GenKeyFunction = (row: Generic, defaultValue: number) => Text;
-type ClickFunction = (
-  event: React.MouseEvent<HTMLElement, MouseEvent>,
-  data: { index: number }
-) => void;
-
-export interface Generic {
-  [key: string]: any;
-}
 
 export interface ExpanderProps {
+  /**
+   * whether or not the row is expanded
+   */
   isExpanded: boolean;
-  onClick: Function;
+  /**
+   * handler for clicking the expansion button
+   * @param event mouse event
+   * @returns void
+   */
+  onClick: (event?: React.MouseEvent<Element, MouseEvent>) => void;
+  /**
+   * required style for the expander
+   */
   style: CSSProperties;
 }
 
-export interface CellProps {
-  row: Generic;
+export interface CellProps<T> {
+  /**
+   * the data for the row
+   */
+  row: T;
+  /**
+   * the index of the row
+   */
   index: number;
+  /**
+   * an optional function that can be used to clear the size cache
+   */
   clearSizeCache: CacheFunction;
+  /**
+   * optional custom styles for each cell
+   */
   style?: CSSProperties;
 }
 
 export interface HeaderProps {
-  onClick: Function;
-  style: Generic;
-  sortDirection: string | null;
+  /**
+   * the onclick handler for the header cell
+   * @param e mouse event
+   * @returns void
+   */
+  onClick: (e: React.MouseEvent<Element, MouseEvent>) => void;
+  /**
+   * required style for the header
+   */
+  style: React.CSSProperties;
+  /**
+   * the direction of the sort, if applicable
+   */
+  sortDirection: SortDirection;
 }
 
-export interface ColumnProps {
+export interface RowRenderProps<T> {
+  /**
+   * the data for the row
+   */
+  row: T;
+  /**
+   * the index of the row
+   */
+  index: number;
+  /**
+   * required row position styles
+   */
+  style: CSSProperties;
+  /**
+   * the cells for the row
+   */
+  children: ReactNode;
+}
+
+export interface SubComponentProps<T> {
+  /**
+   * the data for the row
+   */
+  row: T;
+  /**
+   * the index of the row
+   */
+  index: number;
+  /**
+   * whether or not the row is expanded
+   */
+  isExpanded: boolean;
+  /**
+   * an optional function that can be used to clear the size cache
+   */
+  clearSizeCache: CacheFunction;
+}
+
+export interface ColumnProps<T> {
   /**
    * The unique identifier for a particular column. This is also used as an index
    * to get the particular value out of the row in order to display.
@@ -51,7 +109,7 @@ export interface ColumnProps {
   /**
    * The name of the header column, or a component to return a customized header cell.
    */
-  header?: string | ElementType<HeaderProps>;
+  header?: string | ((props: HeaderProps) => JSX.Element);
   /**
    * The width of a column in pixels. If this is set, the column will not resize.
    */
@@ -74,74 +132,34 @@ export interface ColumnProps {
    * Marks this cell as an expansion cell. The style is pre-determined, and does the
    * functionalitty of collapsing/expanding a row.
    */
-  expander?: boolean | ElementType<ExpanderProps>;
+  expander?: boolean | ((props: ExpanderProps) => React.ReactNode);
   /**
    * Used to render custom content inside of a cell. This is useful for rendering different
    * things inside of the react-fluid-table cell container.
    */
-  content?: string | number | ElementType<CellProps>;
+  content?: string | number | ((props: CellProps<T>) => React.ReactNode);
   /**
    * An advanced feature, this is used to render an entire cell, including the cell container.
    * The `content` prop is ignored if this property is enabled.
    */
-  cell?: ElementType<CellProps>;
+  cell?: (props: CellProps<T>) => JSX.Element;
 }
 
-export interface RowRenderProps {
-  row: Generic;
-  index: number;
-  style: CSSProperties;
-  children: ReactNode;
+export interface TableRef {
+  scrollTo: (scrollOffset: number) => void;
+  scrollToItem: (index: number, align?: string) => void;
 }
 
-export interface RowProps {
-  row: Generic;
-  index: number;
-  style: CSSProperties;
-  borders: boolean;
-  rowHeight: number;
-  rowStyle: CSSProperties | ((index: number) => CSSProperties);
-  pixelWidths: number[];
-  useRowWidth: boolean;
-  clearSizeCache: CacheFunction;
-  calculateHeight: HeightFunction;
-  generateKeyFromRow: GenKeyFunction;
-  onRowClick: ClickFunction;
-  subComponent: ElementType<SubComponentProps>;
-  rowRenderer: ElementType<RowRenderProps>;
-}
-
-export interface SubComponentProps {
-  row: Generic;
-  index: number;
-  isExpanded: boolean;
-  clearSizeCache: CacheFunction;
-}
-
-export interface ListProps {
-  height: number;
-  width: number;
-  data: Generic[];
-  borders?: boolean;
-  className?: string;
-  rowHeight?: number;
-  rowStyle?: CSSProperties | ((index: number) => CSSProperties);
-  itemKey?: KeyFunction;
-  subComponent?: ElementType<SubComponentProps>;
-  onRowClick?: ClickFunction;
-  [key: string]: any;
-}
-
-export interface TableProps {
+export interface TableProps<T> {
   // required props
   /**
    * A list of rows that are to be displayed in the table.
    */
-  data: Generic[];
+  data: T[];
   /**
    * This property determines how each cell is going to be rendered.
    */
-  columns: ColumnProps[];
+  columns: ColumnProps<T>[];
 
   // optional props
   /**
@@ -155,7 +173,7 @@ export interface TableProps {
   /**
    * Function that is called when a header cell is sorted.
    */
-  onSort?: (col: string | null, dir: string | null) => void;
+  onSort?: (col: string | null, dir: SortDirection) => void;
   /**
    * The column that is sorted by default.
    */
@@ -163,7 +181,7 @@ export interface TableProps {
   /**
    * The direction that is sorted by default.
    */
-  sortDirection?: string;
+  sortDirection?: SortDirection;
   /**
    * Specify the height of the table in pixels.
    */
@@ -200,21 +218,31 @@ export interface TableProps {
    */
   rowStyle?: CSSProperties | ((index: number) => CSSProperties);
   /**
+   * generates a unique identifier for the row
+   * @param row the row
+   * @returns string or number representing the item key
+   */
+  itemKey?: (row: T) => string | number;
+  /**
    * When a column has `expander`, this component will be rendered under the row.
    */
-  subComponent?: ElementType<SubComponentProps>;
+  subComponent?: (props: SubComponentProps<T>) => React.ReactNode;
   /**
    * The callback that gets called every time a row is clicked.
    */
-  onRowClick?: ClickFunction;
+  onRowClick?: (event: React.MouseEvent<Element, MouseEvent>, data: { index: number }) => void;
   /**
    * Custom component to wrap a table row. This provides another way of providing
    * more row customization options.
    */
-  rowRenderer?: ElementType<RowRenderProps>;
+  rowRenderer?: (props: RowRenderProps<T>) => JSX.Element;
+  /**
+   * a ref for specific table functions
+   */
+  ref?: React.ForwardedRef<TableRef>;
 }
 
 /**
  * A virtualized table build on top of `react-window`.
  */
-export const Table: FC<TableProps>;
+export const Table: <T>(props: TableProps<T>) => JSX.Element;

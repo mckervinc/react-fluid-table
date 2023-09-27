@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Table } from "react-fluid-table";
 import _ from "lodash";
-import { testData } from "../data";
+import { useState } from "react";
+import { ColumnProps, SortDirection, Table } from "react-fluid-table";
+import { TestData, testData } from "../data";
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   {
     key: "id",
     header: "ID",
@@ -33,11 +33,12 @@ const columns = [
 const Example2 = () => {
   const [data, setData] = useState(_.orderBy(testData, ["firstName"], ["asc"]));
 
-  const onSort = (col, dir) => {
+  const onSort = (col: string | null, dir: SortDirection) => {
     if (!col || !dir) {
       setData(testData);
     } else {
-      setData(_.orderBy(data, [col], [dir.toLowerCase()]));
+      const direction = dir === "ASC" ? "asc" : "desc";
+      setData(_.orderBy(data, [col], [direction]));
     }
   };
 
@@ -58,7 +59,7 @@ const Example2 = () => {
 const Source = `
 const testData = [/* ... */];
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   { key: "id", header: "ID", sortable: true, width: 50 },
   { key: "firstName", header: "First", sortable: true, width: 120 },
   { key: "lastName", header: "Last", sortable: true, width: 120 },
@@ -68,8 +69,13 @@ const columns = [
 const Example = () => {
   const [data, setData] = useState(_.orderBy(testData, ['firstName'], ['asc']));
 
-  const onSort = (col, dir) => {
-    setData(!col || !dir ? testData : _.orderBy(data, [col], [dir.toLowerCase()]));
+  const onSort = (col: string | null, dir: SortDirection) => {
+    if (!col || !dir) {
+      setData(testData);
+    } else {
+      const direction = dir === "ASC" ? "asc" : "desc";
+      setData(_.orderBy(data, [col], [direction]));
+    }
   };
 
   return (

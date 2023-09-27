@@ -1,7 +1,7 @@
 import React from "react";
-import styled from "styled-components";
 import { Table } from "react-fluid-table";
-import { InlineCode } from "../shared/styles";
+import styled from "styled-components";
+import { InlineCode } from "./components/library/InlineCode";
 
 const StyledTable = styled(Table)`
   .react-fluid-table-header {
@@ -22,27 +22,37 @@ const StyledTable = styled(Table)`
   }
 `;
 
+interface PropData {
+  prop: string;
+  type: string;
+  description: React.ReactNode;
+  required?: boolean;
+  content?: () => React.ReactNode;
+  expandedType?: () => React.ReactNode;
+  default?: string | number;
+}
+
 const columns = [
   {
     key: "prop",
     header: "Prop",
     width: 140,
-    content: ({ row }) => <code>{row.prop}</code>
+    content: ({ row }: { row: PropData }) => <code>{row.prop}</code>
   },
   {
     key: "type",
     header: "Type",
     width: 270,
-    content: ({ row }) => <code>{row.type}</code>
+    content: ({ row }: { row: PropData }) => <code>{row.type}</code>
   },
   {
     key: "description",
     header: "Description",
-    content: ({ row }) => row.description
+    content: ({ row }: { row: PropData }) => row.description
   }
 ];
 
-const data = [
+const data: PropData[] = [
   {
     prop: "key",
     type: "string",

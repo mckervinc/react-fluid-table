@@ -1,8 +1,7 @@
-import React from "react";
-import { Table } from "react-fluid-table";
-import { testData } from "../data";
+import { ColumnProps, Table } from "react-fluid-table";
+import { TestData, testData } from "../data";
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   {
     key: "id",
     header: "ID",
@@ -28,14 +27,21 @@ const columns = [
 const Example1 = () => <Table data={testData} columns={columns} />;
 
 const Source = `
-const data = _.range(3000).map(i => ({
+interface TestData {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+const data: TestData[] = _.range(3000).map(i => ({
   id: i + 1,
   firstName: faker.name.firstName(),
   lastName: faker.name.lastName(),
   email: faker.internet.email()
 }));
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   { key: "id", header: "ID", width: 50 },
   { key: "firstName", header: "First", width: 120 },
   { key: "lastName", header: "Last", width: 120 },

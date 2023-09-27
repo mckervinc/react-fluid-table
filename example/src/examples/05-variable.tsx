@@ -1,8 +1,7 @@
-import React from "react";
-import { Table } from "react-fluid-table";
-import { testData } from "../data";
+import { ColumnProps, Table } from "react-fluid-table";
+import { TestData, testData } from "../data";
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   {
     key: "id",
     header: "ID",
@@ -28,7 +27,7 @@ const Example5 = () => <Table data={testData} columns={columns} tableHeight={400
 const Source = `
 const data = [/* ... */];
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   { key: "id", header: "ID", width: 50 },
   { key: "words", header: "Words", width: 100 },
   { key: "sentence", header: "Sentences" },
@@ -42,6 +41,6 @@ const Example = () => (
     tableHeight={400}
   />
 );
-`
+`;
 
 export { Example5, Source };

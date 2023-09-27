@@ -1,33 +1,44 @@
 {
   "name": "react-fluid-table-example",
   "homepage": "https://mckervinc.github.io/react-fluid-table",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "license": "MIT",
   "private": true,
-  "dependencies": {
-    "faker": "^4.1.0",
-    "lodash": "^4.17.19",
-    "prop-types": "^15.6.2",
-    "react": "link:../node_modules/react",
-    "react-dom": "^16.12.0",
-    "react-fluid-table": "link:..",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.1.0",
-    "react-syntax-highlighter": "^12.2.1",
-    "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^1.2.1",
-    "styled-components": "^5.0.0"
-  },
+  "type": "module",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "dependencies": {
+    "@ngneat/falso": "^7.1.1",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-fluid-table": "link:..",
+    "react-router-dom": "^6.16.0",
+    "react-syntax-highlighter": "^15.5.0",
+    "semantic-ui-css": "^2.5.0",
+    "semantic-ui-react": "^2.1.4",
+    "styled-components": "^6.0.8"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.199",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@types/react-syntax-highlighter": "^15.5.7",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitejs/plugin-react": "^4.0.3",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
+  },
+  "volta": {
+    "node": "18.17.0",
+    "yarn": "1.22.19"
+  }
 }

@@ -1,10 +1,10 @@
-import React, { useRef, useState } from "react";
-import styled from "styled-components";
-import { Menu, Icon, Popup } from "semantic-ui-react";
+import { useRef, useState } from "react";
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import jsx from "react-syntax-highlighter/dist/esm/languages/prism/jsx";
 import okaidia from "react-syntax-highlighter/dist/esm/styles/prism/okaidia";
-import { copy } from "../util";
+import { Icon, Menu, Popup } from "semantic-ui-react";
+import styled from "styled-components";
+import { copy } from "./util";
 
 SyntaxHighlighter.registerLanguage("jsx", jsx);
 
@@ -18,9 +18,7 @@ const Highligher = styled(SyntaxHighlighter)`
   border-radius: 0 !important;
 `;
 
-const Group = styled(Menu).attrs(() => ({
-  borderless: true
-}))`
+const Group = styled(Menu)`
   position: absolute;
   top: 14px;
   right: 14px;
@@ -29,10 +27,7 @@ const Group = styled(Menu).attrs(() => ({
   }
 `;
 
-const MenuItem = styled(Menu.Item).attrs(() => ({
-  as: "a",
-  className: "item"
-}))`
+const MenuItem = styled(Menu.Item)`
   color: rgba(255, 255, 255, 0.7) !important;
   :hover {
     color: rgb(248, 248, 243) !important;
@@ -43,23 +38,26 @@ const MenuItem = styled(Menu.Item).attrs(() => ({
   }
 `;
 
-const Alert = styled(Popup).attrs(() => ({
-  on: "click",
-  basic: true,
-  position: "bottom center",
-  content: "copied to clipboard"
-}))`
+const Alert = styled(Popup)`
   &&& {
     margin: 0;
     color: #2185d0;
     border: none;
     background-color: #dff0ff;
-    box-shadow: 0 0 0 1px #2185d0 inset, 0 0 0 0 transparent;
+    box-shadow:
+      0 0 0 1px #2185d0 inset,
+      0 0 0 0 transparent;
   }
 `;
 
-const Snippet = ({ code, copy: showCopy, edit }) => {
-  const ref = useRef(null);
+interface SnippetProps {
+  code: string;
+  copy?: boolean;
+  edit?: boolean;
+}
+
+const Snippet = ({ code, copy: showCopy = true, edit = true }: SnippetProps) => {
+  const ref = useRef(0);
   const [open, setOpen] = useState(false);
   const onOpen = () => {
     if (ref.current) {
@@ -75,11 +73,15 @@ const Snippet = ({ code, copy: showCopy, edit }) => {
 
   return (
     <Container>
-      <Group>
+      <Group borderless>
         {!showCopy ? null : (
           <Alert
+            basic
+            on="click"
+            position="bottom center"
+            content="copied to clipboard"
             trigger={
-              <MenuItem>
+              <MenuItem as="a" className="item">
                 <Icon name="copy" />
                 Copy
               </MenuItem>
@@ -90,7 +92,7 @@ const Snippet = ({ code, copy: showCopy, edit }) => {
           />
         )}
         {!edit ? null : (
-          <MenuItem>
+          <MenuItem as="a" className="item">
             <Icon name="react" />
             Edit
           </MenuItem>
@@ -101,11 +103,6 @@ const Snippet = ({ code, copy: showCopy, edit }) => {
       </Highligher>
     </Container>
   );
-};
-
-Snippet.defaultProps = {
-  copy: true,
-  edit: true
 };
 
 export { Snippet };

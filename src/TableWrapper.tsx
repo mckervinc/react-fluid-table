@@ -3,11 +3,10 @@ import { TableContext } from "./TableContext";
 
 const TableWrapper = forwardRef(({ style, children, ...rest }: any, ref: any) => {
   // hooks
-  const tableContext = useContext(TableContext);
+  const { tableStyle } = useContext(TableContext);
 
   // variables
-  const { tableStyle } = tableContext.state;
-  const styles = {
+  const styles: React.CSSProperties = {
     ...(tableStyle || {}),
     ...style
   };
@@ -18,5 +17,7 @@ const TableWrapper = forwardRef(({ style, children, ...rest }: any, ref: any) =>
     </div>
   );
 });
+
+TableWrapper.displayName = "TableWrapper";
 
 export default TableWrapper;

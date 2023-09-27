@@ -24,7 +24,7 @@ const AutoSizer = ({ disableHeight, disableWidth, children }: AutoSizerProps) =>
   // functions
   const calculateDimensions = useCallback(() => {
     // base cases
-    if (!ref.current || !ref.current.parentElement) {
+    if (!ref.current?.parentElement) {
       return;
     }
 
