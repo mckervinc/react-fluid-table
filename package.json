@@ -27,7 +27,7 @@
   "scripts": {
     "build": "rm -rf dist ||: && rollup -c --environment BUILD:production",
     "start": "rollup -c -w --environment BUILD:development",
-    "site:build": "cd example && yarn install && yarn run build"
+    "site:build": "cd example && yarn install && yarn build"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
