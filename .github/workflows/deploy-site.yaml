@@ -41,7 +41,7 @@ jobs:
         working-directory: ./example
         run: |
           sed -i '/link:/d' package.json
-          yarn install react-fluid-table
+          yarn add react-fluid-table
           yarn install
       - name: Build
         working-directory: ./example
