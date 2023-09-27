@@ -1,41 +1,39 @@
 import React, { createContext, useEffect, useReducer, useRef } from "react";
-import { ColumnProps, Generic, SortDirection } from "../index";
+import { ColumnProps, SortDirection } from "../index";
 
-type SortFunction = (col: string | null, dir: string | null) => void;
-type DispatchFunction = (x: Action) => void;
-
-interface ProviderProps {
-  children: any;
-  initialState: any;
+interface Action {
+  type: string;
+  col?: string | null;
+  dir?: SortDirection;
+  key?: string | number;
+  widths?: number[];
+  initialState?: TableState;
 }
 
-interface State {
+interface ReactContext {
+  dispatch: React.Dispatch<Action>;
+}
+
+interface TableState extends ReactContext {
   pixelWidths: number[];
-  expanded: Generic;
   uuid: string;
   minColumnWidth: number;
   columns: ColumnProps<any>[];
   fixedWidth: number;
   remainingCols: number;
   sortColumn: string | null;
-  sortDirection: SortDirection | null;
+  sortDirection: SortDirection;
+  expanded: {
+    [key: string | number]: boolean;
+  };
   id?: string;
-  onSort?: SortFunction;
+  onSort?: (col: string | null, dir: SortDirection) => void;
   tableStyle?: React.CSSProperties;
   headerStyle?: React.CSSProperties;
 }
 
-interface Action {
-  type: string;
-  [key: string]: any;
-}
-
-interface ReactContext {
-  state: State;
-  dispatch: DispatchFunction;
-}
-
-const baseState = {
+const baseState: TableState = {
+  dispatch: () => {},
   expanded: {},
   columns: [],
   pixelWidths: [],
@@ -57,7 +55,7 @@ const fields = [
   "headerStyle"
 ];
 
-const TableContext = createContext<ReactContext>({ state: baseState, dispatch: () => {} });
+const TableContext = createContext<TableState>(baseState);
 
 function findColumnWidthConstants<T>(columns: ColumnProps<T>[]) {
   return columns.reduce(
@@ -69,17 +67,18 @@ function findColumnWidthConstants<T>(columns: ColumnProps<T>[]) {
   );
 }
 
-const reducer = (state: State, action: Action): State => {
+const reducer = (state: TableState, action: Action): TableState => {
   switch (action.type) {
     case "updateSortedColumn":
-      return { ...state, sortColumn: action.col, sortDirection: action.dir };
+      return { ...state, sortColumn: action.col || null, sortDirection: action.dir || null };
     case "updateExpanded":
+      const key = action.key || "";
       return {
         ...state,
-        expanded: { ...state.expanded, [action.key]: !state.expanded[action.key] }
+        expanded: { ...state.expanded, [key]: !state.expanded[key] }
       };
     case "updatePixelWidths":
-      return { ...state, pixelWidths: action.widths };
+      return { ...state, pixelWidths: action.widths || [] };
     case "refresh":
       return {
         ...state,
@@ -90,9 +89,13 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-const getChangedFields = (prevState: any, currState: any) => {
+const getChangedFields = (
+  prevState: Omit<TableState, "dispatch">,
+  currState: Omit<TableState, "dispatch">
+) => {
   const changedFields = new Set<string>();
   fields.forEach(field => {
+    // @ts-ignore
     if (prevState[field] !== currState[field]) {
       changedFields.add(field);
     }
@@ -100,6 +103,11 @@ const getChangedFields = (prevState: any, currState: any) => {
 
   return changedFields;
 };
+
+interface ProviderProps {
+  children: React.ReactNode;
+  initialState: any;
+}
 
 const TableContextProvider = ({ children, initialState }: ProviderProps) => {
   // hooks
@@ -118,6 +126,7 @@ const TableContextProvider = ({ children, initialState }: ProviderProps) => {
     if (changedFields.size) {
       let refreshed: any = {};
       changedFields.forEach(field => {
+        // @ts-ignore
         refreshed[field] = initialState[field];
       });
 
@@ -132,7 +141,7 @@ const TableContextProvider = ({ children, initialState }: ProviderProps) => {
     }
   }, [_stateOnMount, initialState]);
 
-  return <TableContext.Provider value={{ state, dispatch }}>{children}</TableContext.Provider>;
+  return <TableContext.Provider value={{ ...state, dispatch }}>{children}</TableContext.Provider>;
 };
 
 export { TableContext, TableContextProvider };

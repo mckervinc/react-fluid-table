@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   randCatchPhrase,
   randCity,
@@ -30,7 +31,7 @@ const Background = styled.div`
   color: rgb(248, 248, 242);
 `;
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   {
     key: "id",
     header: "ID",
@@ -82,12 +83,12 @@ interface ControlledProps {
 const Controlled = ({ data, height, columns: variableColumns }: ControlledProps) => {
   const [rows, setRows] = useState<TestData[]>([]);
 
-  const onSort = (col: string | null, dir: SortDirection | null) => {
+  const onSort = (col: string | null, dir: SortDirection) => {
     if (!col || !dir) {
       setRows(data);
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      setRows(_.orderBy(rows, [col], [dir.toLowerCase() as any]));
+      const direction = dir === "ASC" ? "asc" : "desc";
+      setRows(_.orderBy(rows, [col], [direction]));
     }
   };
 
@@ -220,7 +221,8 @@ const Controlled = ({ data, columns: variableColumns }) => {
     if (!col || !dir) {
       setRows(data);
     } else {
-      setRows(_.orderBy(rows, [col], [dir.toLowerCase()]));
+      const direction = dir === "ASC" ? "asc" : "desc";
+      setRows(_.orderBy(rows, [col], [direction]));
     }
   };
 

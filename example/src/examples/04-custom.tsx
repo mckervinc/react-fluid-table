@@ -1,5 +1,5 @@
-import { Table } from "react-fluid-table";
-import { Flag, Image, Input } from "semantic-ui-react";
+import { ColumnProps, Table } from "react-fluid-table";
+import { Flag, FlagNameValues, Image, Input } from "semantic-ui-react";
 import styled from "styled-components";
 import { TestData, testData } from "../data";
 
@@ -279,7 +279,7 @@ const countryMap = countries.reduce(
   {} as { [x: string]: string }
 );
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   {
     key: "id",
     header: "ID",
@@ -289,35 +289,34 @@ const columns = [
     key: "avatar",
     header: "Profile Photo",
     width: 150,
-    content: ({ row }: { row: TestData }) => <ProfPic size="small" src={row.avatar} />
+    content: ({ row }) => <ProfPic size="small" src={row.avatar} />
   },
   {
     key: "email",
     header: "Email",
-    content: ({ row }: { row: TestData }) => <EmailInput defaultValue={row.email} />
+    content: ({ row }) => <EmailInput defaultValue={row.email} />
   },
   {
     key: "firstName",
     header: "First",
     width: 100,
-    content: ({ row }: { row: TestData }) => <TextStyle>{row.firstName}</TextStyle>
+    content: ({ row }) => <TextStyle>{row.firstName}</TextStyle>
   },
   {
     key: "lastName",
     header: "Last",
     width: 100,
-    content: ({ row }: { row: TestData }) => <TextStyle>{row.lastName}</TextStyle>
+    content: ({ row }) => <TextStyle>{row.lastName}</TextStyle>
   },
   {
     key: "country",
     header: "Country",
-    content: ({ row }: { row: TestData }) =>
+    content: ({ row }) =>
       !countryMap[row.country] ? (
         `No flag for this country: ${row.country.toUpperCase()}`
       ) : (
         <>
-          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          <Flag name={row.country as any} />
+          <Flag name={row.country as FlagNameValues} />
           {countryMap[row.country]}
         </>
       )
@@ -331,35 +330,35 @@ const Example4 = () => (
 const Source = `
 const data = [/* ... */];
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   { key: "id", header: "ID", width: 50 },
   {
     key: "avatar",
     header: "Profile Photo",
     width: 150,
-    content: ({ row }: {row: TestData}) => <ProfPic size="small" src={row.avatar} />
+    content: ({ row}) => <ProfPic size="small" src={row.avatar} />
   },
   {
     key: "email",
     header: "Email",
-    content: ({ row }: {row: TestData}) => <Email email={row.email} />
+    content: ({ row}) => <Email email={row.email} />
   },
   {
     key: "firstName",
     header: "First",
     width: 100,
-    content: ({ row }: {row: TestData}) => <TextStyle>{row.firstName}</TextStyle>
+    content: ({ row}) => <TextStyle>{row.firstName}</TextStyle>
   },
   {
     key: "lastName",
     header: "Last",
     width: 100,
-    content: ({ row }: {row: TestData}) => <TextStyle>{row.lastName}</TextStyle>
+    content: ({ row}) => <TextStyle>{row.lastName}</TextStyle>
   },
   {
     key: "country",
     header: "Country",
-    content: ({ row }: {row: TestData}) =>
+    content: ({ row}) =>
       !countryMap[row.country] ? (
         \`No flag for this country: \${row.country.toUpperCase()}\`
       ) : (

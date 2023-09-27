@@ -16,4 +16,6 @@ const RowWrapper = React.memo(({ data, index, ...rest }: Props) => {
   return !row ? null : <Row row={row} index={dataIndex} {...rest} {...metaData} />;
 }, areEqual);
 
+RowWrapper.displayName = "RowWrapper";
+
 export default RowWrapper;

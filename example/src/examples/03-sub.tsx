@@ -1,10 +1,10 @@
 import _ from "lodash";
 import { useState } from "react";
-import { SortDirection, SubComponentProps, Table } from "react-fluid-table";
+import { ColumnProps, SortDirection, Table } from "react-fluid-table";
 import styled from "styled-components";
 import { TestData, testData } from "../data";
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   {
     key: "",
     width: 40,
@@ -36,24 +36,20 @@ const columns = [
   }
 ];
 
-const SubComponentStyle = styled.div`
+const Custom = styled.div`
   height: 100px;
   background-color: lightblue;
 `;
 
-const SubComponent = ({ row }: SubComponentProps<TestData>) => (
-  <SubComponentStyle>{`Row ${row.id} is expanded`}</SubComponentStyle>
-);
-
 const Example3 = () => {
   const [data, setData] = useState(testData);
 
-  const onSort = (col: string | null, dir: SortDirection | null) => {
+  const onSort = (col: string | null, dir: SortDirection) => {
     if (!col || !dir) {
       setData(testData);
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      setData(_.orderBy(data, [col], [dir.toLowerCase() as any]));
+      const direction = dir === "ASC" ? "asc" : "desc";
+      setData(_.orderBy(data, [col], [direction]));
     }
   };
 
@@ -65,7 +61,7 @@ const Example3 = () => {
       rowHeight={35}
       itemKey={row => row.id}
       onSort={onSort}
-      subComponent={SubComponent}
+      subComponent={({ row }) => <Custom>{`Row ${row.id} is expanded`}</Custom>}
       sortColumn="id"
       sortDirection="ASC"
     />
@@ -75,17 +71,13 @@ const Example3 = () => {
 const Source = `
 const testData = [/* ... */];
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   { key: "", width: 40, expander: true },
   { key: "id", header: "ID", width: 50, sortable: true, },
   { key: "firstName", header: "First", width: 120, sortable: true, },
   { key: "lastName", header: "Last", width: 120, sortable: true, },
   { key: "email", header: "Email", width: 250, sortable: true, }
 ];
-
-const SubComponent = ({ row }) => (
-  <SubComponentStyle>{\`Row \${row.id} is expanded\`}</SubComponentStyle>
-);
 
 const Example = () => {
   const [data, setData] = useState(testData);
@@ -106,7 +98,7 @@ const Example = () => {
       rowHeight={35}
       itemKey={row => row.id}
       onSort={onSort}
-      subComponent={SubComponent}
+      subComponent={({ row }) => <Custom>{\`Row \${row.id} is expanded\`}</Custom>}
       sortColumn="id"
       sortDirection="ASC"
     />

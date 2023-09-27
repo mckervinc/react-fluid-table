@@ -9,7 +9,7 @@ import React, {
   useState
 } from "react";
 import { VariableSizeList } from "react-window";
-import { Generic, ListProps, TableProps, TableRef, Text } from "../index";
+import { SubComponentProps, TableProps, TableRef } from "../index";
 import AutoSizer from "./AutoSizer";
 import Header from "./Header";
 import NumberTree from "./NumberTree";
@@ -26,9 +26,22 @@ import {
   randomString
 } from "./util";
 
-interface Data {
-  rows: Generic[];
+interface Data<T> {
+  rows: T[];
   [key: string]: any;
+}
+
+interface ListProps<T> {
+  height: number;
+  width: number;
+  data: T[];
+  borders?: boolean;
+  className?: string;
+  rowHeight?: number;
+  rowStyle?: React.CSSProperties | ((index: number) => React.CSSProperties);
+  itemKey?: (row: T) => string | number;
+  subComponent?: (props: SubComponentProps<T>) => React.ReactNode;
+  onRowClick?: (event: React.MouseEvent<Element, MouseEvent>, data: { index: number }) => void;
 }
 
 /**
@@ -46,18 +59,14 @@ const ListComponent = forwardRef(
     const listRef = useRef<any>(null);
     const treeRef = useRef(new NumberTree());
     const tableRef = useRef<HTMLDivElement>(null);
-    const tableContext = useContext(TableContext);
+    const { dispatch, uuid, columns, minColumnWidth, fixedWidth, remainingCols, pixelWidths } =
+      useContext(TableContext);
     const [useRowWidth, setUseRowWidth] = useState(true);
     const [defaultSize, setDefaultSize] = useState(rowHeight || DEFAULT_ROW_HEIGHT);
 
-    // variables
-    const { dispatch } = tableContext;
-    const { uuid, columns, minColumnWidth, fixedWidth, remainingCols, pixelWidths } =
-      tableContext.state;
-
     // functions
     const generateKeyFromRow = useCallback(
-      (row: Generic, defaultValue: number): Text => {
+      (row: any, defaultValue: number) => {
         const generatedKey = itemKey ? itemKey(row) : undefined;
         return generatedKey !== undefined ? generatedKey : defaultValue;
       },
@@ -149,10 +158,10 @@ const ListComponent = forwardRef(
 
     /* updates */
     // update pixel widths every time the width changes
-    useLayoutEffect(updatePixelWidths, [width]);
+    useLayoutEffect(() => updatePixelWidths(), [width]);
 
     // check if we should use the row width when width changes
-    useEffect(shouldUseRowWidth, [width]);
+    useEffect(() => shouldUseRowWidth(), [width]);
 
     // manually alter the height of each row if height is incorrect
     // to help with flicker on resize
@@ -233,10 +242,9 @@ const ListComponent = forwardRef(
         height={height}
         width={width}
         itemCount={data.length + 1}
-        itemKey={(index: number, data: Data): Text => {
+        itemKey={(index: number, data: Data<any>) => {
           if (!index) return `${uuid}-header`;
-          const dataIndex = index - 1;
-          const row = data.rows[dataIndex];
+          const row = data.rows[index - 1];
           return generateKeyFromRow(row, index);
         }}
         itemSize={index => {
@@ -288,12 +296,13 @@ const ListComponent = forwardRef(
   }
 );
 
+ListComponent.displayName = "ListComponent";
+
 const Table = forwardRef(
   (
     {
       id,
       columns,
-      minColumnWidth,
       onSort,
       sortColumn,
       sortDirection,
@@ -301,6 +310,8 @@ const Table = forwardRef(
       tableWidth,
       tableStyle,
       headerStyle,
+      borders = true,
+      minColumnWidth = 80,
       ...rest
     }: TableProps<any>,
     ref: React.ForwardedRef<TableRef>
@@ -308,7 +319,7 @@ const Table = forwardRef(
     // TODO: do all prop validation here
     const disableHeight = tableHeight !== undefined;
     const disableWidth = tableWidth !== undefined;
-    const [uuid] = useState(`${id || "data-table"}-${randomString()}`);
+    const [uuid] = useState(`${id || "data-table"}-${randomString(5)}`);
 
     return (
       <TableContextProvider
@@ -325,12 +336,19 @@ const Table = forwardRef(
         }}
       >
         {typeof tableHeight === "number" && typeof tableWidth === "number" ? (
-          <ListComponent ref={ref} height={tableHeight} width={tableWidth} {...rest} />
+          <ListComponent
+            ref={ref}
+            borders={borders}
+            height={tableHeight}
+            width={tableWidth}
+            {...rest}
+          />
         ) : (
           <AutoSizer disableHeight={disableHeight} disableWidth={disableWidth}>
             {({ height, width }) => (
               <ListComponent
                 ref={ref}
+                borders={borders}
                 width={tableWidth || width}
                 height={tableHeight || height || guessTableHeight(rest.rowHeight)}
                 {...rest}
@@ -343,9 +361,6 @@ const Table = forwardRef(
   }
 );
 
-Table.defaultProps = {
-  borders: true,
-  minColumnWidth: 80
-};
+Table.displayName = "Table";
 
 export default Table;

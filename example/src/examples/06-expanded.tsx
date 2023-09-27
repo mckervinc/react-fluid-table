@@ -1,10 +1,10 @@
 import React, { useLayoutEffect, useState } from "react";
-import { SubComponentProps, Table } from "react-fluid-table";
+import { ColumnProps, SubComponentProps, Table } from "react-fluid-table";
 import { Accordion, AccordionTitleProps, Icon, Segment } from "semantic-ui-react";
 import styled from "styled-components";
 import { TestData, testData } from "../data";
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   {
     key: "",
     width: 40,
@@ -115,7 +115,7 @@ const Example6 = () => (
 const Source = `
 const data = [/* ... */];
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   { key: "", width: 40, expander: true },
   { key: "id", header: "ID", width: 50 },
   { key: "firstName", header: "First", width: 120 },
@@ -123,7 +123,7 @@ const columns = [
   { key: "email", header: "Email", width: 250 }
 ];
 
-const SubComponent = ({ row, index, clearSizeCache }) => {
+const SubComponent = ({ row, index, clearSizeCache }: SubComponentProps<TestData>) => {
   const [activeIndex, setActiveIndex] = useState(context[index]);
   const onClick = (e, { index: selected }) => {
     const result = activeIndex === selected ? null : selected;

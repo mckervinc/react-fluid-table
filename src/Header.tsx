@@ -14,11 +14,9 @@ interface HeaderProps {
 
 function InnerHeaderCell<T>({ column, width }: HeaderCellProps<T>) {
   // hooks
-  const tableContext = useContext(TableContext);
+  const { dispatch, sortColumn: col, sortDirection, onSort } = useContext(TableContext);
 
-  // variables
-  const { sortColumn: col, sortDirection, onSort } = tableContext.state;
-  const { dispatch } = tableContext;
+  // constants
   const dir = sortDirection ? (sortDirection.toUpperCase() as SortDirection) : null;
 
   const style = {
@@ -35,7 +33,7 @@ function InnerHeaderCell<T>({ column, width }: HeaderCellProps<T>) {
     // sorting the same column
     const oldCol = col;
     const oldDir = dir;
-    let newDir: string | null = "ASC";
+    let newDir: SortDirection = "ASC";
     let newCol: string | null = column.key;
 
     if (oldCol === newCol) {
@@ -78,10 +76,9 @@ HeaderCell.displayName = "HeaderCell";
 
 const Header = forwardRef(({ children, ...rest }: HeaderProps, ref: any) => {
   // hooks
-  const tableContext = useContext(TableContext);
+  const { id, uuid, columns, pixelWidths, headerStyle } = useContext(TableContext);
 
   // variables
-  const { id, uuid, columns, pixelWidths, headerStyle } = tableContext.state;
   const { scrollWidth, clientWidth } = ref.current || NO_NODE;
   const width = scrollWidth <= clientWidth ? "100%" : undefined;
 

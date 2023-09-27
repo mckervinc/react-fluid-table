@@ -1,10 +1,10 @@
 import { useCallback, useRef, useState } from "react";
-import { Table, TableRef } from "react-fluid-table";
+import { ColumnProps, Table, TableRef } from "react-fluid-table";
 import { Form as BaseForm } from "semantic-ui-react";
 import styled from "styled-components";
-import { testData } from "../data";
+import { TestData, testData } from "../data";
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   {
     key: "id",
     header: "ID",

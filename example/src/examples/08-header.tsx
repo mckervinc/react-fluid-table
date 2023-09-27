@@ -1,9 +1,9 @@
-import React, { useState } from "react";
 import _ from "lodash";
-import styled from "styled-components";
+import React, { useState } from "react";
+import { ColumnProps, HeaderProps, SortDirection, Table } from "react-fluid-table";
 import { Icon } from "semantic-ui-react";
-import { HeaderProps, SortDirection, Table } from "react-fluid-table";
-import { testData } from "../data";
+import styled from "styled-components";
+import { TestData, testData } from "../data";
 
 const Arrow = styled(Icon)`
   color: #50f97a;
@@ -11,7 +11,7 @@ const Arrow = styled(Icon)`
 `;
 
 interface HeaderCellProps extends HeaderProps {
-  name: string;
+  name?: string;
 }
 
 const HeaderCell = ({ name, sortDirection, style, onClick }: HeaderCellProps) => {
@@ -36,25 +36,25 @@ const HeaderCell = ({ name, sortDirection, style, onClick }: HeaderCellProps) =>
   );
 };
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   { key: "id", header: "ID", sortable: true, width: 50 },
   { key: "firstName", header: "First", sortable: true, width: 120 },
   { key: "lastName", header: "Last", sortable: true, width: 120 },
   { key: "email", header: "Email", sortable: true, width: 250 }
 ].map(c => ({
   ...c,
-  header: (props: HeaderProps) => <HeaderCell name={c.header} {...props} />
+  header: props => <HeaderCell name={c.header} {...props} />
 }));
 
 const Example8 = () => {
   const [data, setData] = useState(_.orderBy(testData, ["firstName"], ["asc"]));
 
-  const onSort = (col: string | null, dir: SortDirection | null) => {
+  const onSort = (col: string | null, dir: SortDirection) => {
     if (!col || !dir) {
       setData(testData);
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      setData(_.orderBy(data, [col], [dir.toLowerCase() as any]));
+      const direction = dir === "ASC" ? "asc" : "desc";
+      setData(_.orderBy(data, [col], [direction]));
     }
   };
 
@@ -105,7 +105,7 @@ const HeaderCell = ({ name, sortDirection, style, onClick }) => {
   );
 };
 
-const columns = [
+const columns: ColumnProps<TestData>[] = [
   { key: "id", header: "ID", sortable: true, width: 50 },
   { key: "firstName", header: "First", sortable: true, width: 120 },
   { key: "lastName", header: "Last", sortable: true, width: 120 },

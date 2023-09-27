@@ -15,7 +15,15 @@ export const arraysMatch = <T>(arr1: T[], arr2: T[]) => {
   return true;
 };
 
-export const randomString = (num = 5) => Math.random().toString(36).substr(2, num);
+export const randomString = (num: number) => {
+  let result = "";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const length = characters.length;
+  for (let i = 0; i < num; i++) {
+    result += characters.charAt(Math.floor(Math.random() * length));
+  }
+  return result;
+};
 
 export const findHeaderByUuid = (uuid: string): HTMLElement | null =>
   document.querySelector(`[data-header-key='${uuid}-header']`);
@@ -29,12 +37,12 @@ export const guessTableHeight = (rowHeight?: number) => {
   return height * 10 + DEFAULT_HEADER_HEIGHT;
 };
 
-export const calculateColumnWidths = (
+export const calculateColumnWidths = <T>(
   element: HTMLElement | null,
   numColumns: number,
   fixedColumnWidths: number,
   minColumnWidth: number,
-  columns: ColumnProps<any>[]
+  columns: ColumnProps<T>[]
 ) => {
   if (!element) return columns.map(() => minColumnWidth);
   const offsetWidth = element.offsetWidth;
