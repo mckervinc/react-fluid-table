@@ -13,11 +13,11 @@ import Minus from "./svg/minus-circle.svg";
 import Plus from "./svg/plus-circle.svg";
 import { TableContext } from "./TableContext";
 
-interface TableCellProps {
-  row: Generic;
+interface TableCellProps<T> {
+  row: T;
   index: number;
   width?: number;
-  column: ColumnProps;
+  column: ColumnProps<T>;
   isExpanded: boolean;
   clearSizeCache: CacheFunction;
   onExpanderClick: (event?: React.MouseEvent<Element, MouseEvent>) => void;
@@ -43,7 +43,15 @@ const getRowStyle = (index: number, rowStyle?: React.CSSProperties | CSSFunction
 };
 
 const TableCell = React.memo(
-  ({ row, index, width, column, isExpanded, clearSizeCache, onExpanderClick }: TableCellProps) => {
+  ({
+    row,
+    index,
+    width,
+    column,
+    isExpanded,
+    clearSizeCache,
+    onExpanderClick
+  }: TableCellProps<any>) => {
     // cell width
     const style = {
       width: width ? `${width}px` : undefined,
@@ -99,7 +107,7 @@ const RowContainer = ({
   rowRenderer: RowRenderer
 }: RowContainerProps) => {
   const onContainerClick = useCallback(
-    event => {
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       if (onRowClick) {
         onRowClick(event, { index });
       }
@@ -140,7 +148,7 @@ const Row = ({
   calculateHeight,
   generateKeyFromRow,
   subComponent: SubComponent
-}: RowProps) => {
+}: RowProps<any>) => {
   // hooks
   const expandedCalledRef = useRef(false);
   const rowRef = useRef<HTMLDivElement>(null);

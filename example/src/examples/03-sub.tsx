@@ -1,8 +1,8 @@
-import React, { useState } from "react";
 import _ from "lodash";
-import { Table } from "react-fluid-table";
+import { useState } from "react";
+import { SortDirection, SubComponentProps, Table } from "react-fluid-table";
 import styled from "styled-components";
-import { testData } from "../data";
+import { TestData, testData } from "../data";
 
 const columns = [
   {
@@ -41,18 +41,19 @@ const SubComponentStyle = styled.div`
   background-color: lightblue;
 `;
 
-const SubComponent = ({ row }) => (
+const SubComponent = ({ row }: SubComponentProps<TestData>) => (
   <SubComponentStyle>{`Row ${row.id} is expanded`}</SubComponentStyle>
 );
 
 const Example3 = () => {
   const [data, setData] = useState(testData);
 
-  const onSort = (col, dir) => {
+  const onSort = (col: string | null, dir: SortDirection | null) => {
     if (!col || !dir) {
       setData(testData);
     } else {
-      setData(_.orderBy(data, [col], [dir.toLowerCase()]));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setData(_.orderBy(data, [col], [dir.toLowerCase() as any]));
     }
   };
 

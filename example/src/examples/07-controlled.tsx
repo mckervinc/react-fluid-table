@@ -1,10 +1,23 @@
-import React, { useEffect, useState } from "react";
-import faker from "faker";
+import {
+  randCatchPhrase,
+  randCity,
+  randCountryCode,
+  randEmail,
+  randFirstName,
+  randImg,
+  randLastName,
+  randParagraph,
+  randSentence,
+  randStateAbbr,
+  randStreetAddress,
+  randZipCode
+} from "@ngneat/falso";
 import _ from "lodash";
-import { Table } from "react-fluid-table";
+import React, { useEffect, useState } from "react";
+import { ColumnProps, SortDirection, Table } from "react-fluid-table";
 import { Checkbox, Form, Grid } from "semantic-ui-react";
 import styled from "styled-components";
-import { testData } from "../data";
+import { TestData, testData } from "../data";
 
 const StyledTable = styled(Table)`
   margin-top: 10px;
@@ -44,29 +57,37 @@ const columns = [
   }
 ];
 
-const testData2 = _.range(3000).map(i => ({
+const testData2: TestData[] = _.range(3000).map(i => ({
   id: i + 1,
-  firstName: faker.name.firstName(),
-  lastName: faker.name.lastName(),
-  email: faker.internet.email(),
-  avatar: faker.image.avatar(),
-  country: faker.address.countryCode().toLowerCase(),
-  words: faker.lorem.words(),
-  sentence: faker.lorem.sentences(),
-  address: faker.address.streetAddress(),
-  city: faker.address.city(),
-  state: faker.address.stateAbbr(),
-  zipCode: faker.address.zipCode()
+  firstName: randFirstName(),
+  lastName: randLastName(),
+  email: randEmail(),
+  avatar: randImg({ width: 20, height: 20 }),
+  country: randCountryCode().toLowerCase(),
+  words: randCatchPhrase(),
+  sentence: randSentence(),
+  lorem: randParagraph(),
+  address: randStreetAddress(),
+  city: randCity(),
+  state: randStateAbbr(),
+  zipCode: randZipCode()
 }));
 
-const Controlled = ({ data, height, columns: variableColumns }) => {
-  const [rows, setRows] = useState([]);
+interface ControlledProps {
+  data: TestData[];
+  height: number;
+  columns: ColumnProps<TestData>[];
+}
 
-  const onSort = (col, dir) => {
+const Controlled = ({ data, height, columns: variableColumns }: ControlledProps) => {
+  const [rows, setRows] = useState<TestData[]>([]);
+
+  const onSort = (col: string | null, dir: SortDirection | null) => {
     if (!col || !dir) {
       setRows(data);
     } else {
-      setRows(_.orderBy(rows, [col], [dir.toLowerCase()]));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setRows(_.orderBy(rows, [col], [dir.toLowerCase() as any]));
     }
   };
 
@@ -108,11 +129,13 @@ const Example7 = () => {
   };
 
   // functions
-  const onToggle = key => {
-    setToggles({
-      ...toggles,
-      [key]: !toggles[key]
-    });
+  const onToggle = (key: string) => {
+    if (key === "data" || key === "height" || key === "columns") {
+      setToggles({
+        ...toggles,
+        [key]: !toggles[key]
+      });
+    }
   };
 
   return (
@@ -157,10 +180,13 @@ const Example7 = () => {
                 {"{\n"}
                 {keys.map((key, index) => {
                   const ending = index !== keys.length - 1 ? ",\n" : "\n";
+                  // @ts-ignore
                   const val = viewableTypes.has(typeof props[key]);
                   let color = "rgb(166, 226, 46)";
+                  // @ts-ignore
                   if (typeof props[key] === "number") {
                     color = "rgb(174, 129, 255)";
+                    // @ts-ignore
                   } else if (typeof props[key] === "boolean") {
                     color = "rgb(102, 217, 239)";
                   }
@@ -168,6 +194,7 @@ const Example7 = () => {
                     <React.Fragment key={key}>
                       {`  ${key}: `}
                       <span style={{ color }}>
+                        {/* @ts-ignore */}
                         {val ? props[key] : toggles[key] ? '"altered"' : '"original"'}
                       </span>
                       {ending}

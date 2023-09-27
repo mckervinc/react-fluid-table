@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import _ from "lodash";
 import styled from "styled-components";
 import { Icon } from "semantic-ui-react";
-import { Table } from "react-fluid-table";
+import { HeaderProps, SortDirection, Table } from "react-fluid-table";
 import { testData } from "../data";
 
 const Arrow = styled(Icon)`
@@ -10,17 +10,21 @@ const Arrow = styled(Icon)`
   margin-left: 0.25rem !important;
 `;
 
-const HeaderCell = ({ name, sortDirection, style, onClick }) => {
+interface HeaderCellProps extends HeaderProps {
+  name: string;
+}
+
+const HeaderCell = ({ name, sortDirection, style, onClick }: HeaderCellProps) => {
   const icon = !sortDirection ? null : (
     <Arrow size="small" name={`chevron ${sortDirection === "ASC" ? "up" : "down"}`} />
   );
 
   const cellStyle = {
-    background: !!sortDirection ? "rgb(39, 40, 34)" : undefined,
+    background: sortDirection ? "rgb(39, 40, 34)" : undefined,
     ...style
   };
 
-  const textStyle = { color: !!sortDirection ? "rgb(249, 38, 114)" : "black" };
+  const textStyle = { color: sortDirection ? "rgb(249, 38, 114)" : "black" };
 
   return (
     <div className="header-cell" onClick={onClick} style={cellStyle}>
@@ -39,21 +43,22 @@ const columns = [
   { key: "email", header: "Email", sortable: true, width: 250 }
 ].map(c => ({
   ...c,
-  header: props => <HeaderCell name={c.header} {...props} />
+  header: (props: HeaderProps) => <HeaderCell name={c.header} {...props} />
 }));
 
 const Example8 = () => {
   const [data, setData] = useState(_.orderBy(testData, ["firstName"], ["asc"]));
 
-  const onSort = (col, dir) => {
+  const onSort = (col: string | null, dir: SortDirection | null) => {
     if (!col || !dir) {
       setData(testData);
     } else {
-      setData(_.orderBy(data, [col], [dir.toLowerCase()]));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setData(_.orderBy(data, [col], [dir.toLowerCase() as any]));
     }
   };
 
-  const rowStyle = index => ({
+  const rowStyle = (index: number): React.CSSProperties => ({
     backgroundColor: index % 2 === 0 ? "#33be54" : "#21ba49"
   });
 

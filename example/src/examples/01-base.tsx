@@ -1,4 +1,3 @@
-import React from "react";
 import { Table } from "react-fluid-table";
 import { testData } from "../data";
 

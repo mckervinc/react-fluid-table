@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useReducer, useRef } from "react";
-import { ColumnProps, Generic } from "../index";
+import { ColumnProps, Generic, SortDirection } from "../index";
 
 type SortFunction = (col: string | null, dir: string | null) => void;
 type DispatchFunction = (x: Action) => void;
@@ -14,11 +14,11 @@ interface State {
   expanded: Generic;
   uuid: string;
   minColumnWidth: number;
-  columns: ColumnProps[];
+  columns: ColumnProps<any>[];
   fixedWidth: number;
   remainingCols: number;
   sortColumn: string | null;
-  sortDirection: string | null;
+  sortDirection: SortDirection | null;
   id?: string;
   onSort?: SortFunction;
   tableStyle?: React.CSSProperties;
@@ -59,7 +59,7 @@ const fields = [
 
 const TableContext = createContext<ReactContext>({ state: baseState, dispatch: () => {} });
 
-const findColumnWidthConstants = (columns: ColumnProps[]) => {
+function findColumnWidthConstants<T>(columns: ColumnProps<T>[]) {
   return columns.reduce(
     (pv, c) => ({
       fixedWidth: pv.fixedWidth + (c.width || 0),
@@ -67,9 +67,9 @@ const findColumnWidthConstants = (columns: ColumnProps[]) => {
     }),
     { fixedWidth: 0, remainingCols: 0 }
   );
-};
+}
 
-const reducer = (state: State, action: Action) => {
+const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case "updateSortedColumn":
       return { ...state, sortColumn: action.col, sortDirection: action.dir };
@@ -102,6 +102,7 @@ const getChangedFields = (prevState: any, currState: any) => {
 };
 
 const TableContextProvider = ({ children, initialState }: ProviderProps) => {
+  // hooks
   const _stateOnMount = useRef(initialState);
   const [state, dispatch] = useReducer(reducer, {
     ...baseState,

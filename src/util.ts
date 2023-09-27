@@ -1,7 +1,7 @@
 import { ColumnProps } from "..";
-import { DEFAULT_ROW_HEIGHT, DEFAULT_HEADER_HEIGHT } from "./constants";
+import { DEFAULT_HEADER_HEIGHT, DEFAULT_ROW_HEIGHT } from "./constants";
 
-export const arraysMatch = (arr1: any[], arr2: any[]) => {
+export const arraysMatch = <T>(arr1: T[], arr2: T[]) => {
   if (arr1.length !== arr2.length) {
     return false;
   }
@@ -15,7 +15,7 @@ export const arraysMatch = (arr1: any[], arr2: any[]) => {
   return true;
 };
 
-export const randomString = (num = 5): string => Math.random().toString(36).substr(2, num);
+export const randomString = (num = 5) => Math.random().toString(36).substr(2, num);
 
 export const findHeaderByUuid = (uuid: string): HTMLElement | null =>
   document.querySelector(`[data-header-key='${uuid}-header']`);
@@ -34,8 +34,8 @@ export const calculateColumnWidths = (
   numColumns: number,
   fixedColumnWidths: number,
   minColumnWidth: number,
-  columns: ColumnProps[]
-): number[] => {
+  columns: ColumnProps<any>[]
+) => {
   if (!element) return columns.map(() => minColumnWidth);
   const offsetWidth = element.offsetWidth;
   let n = Math.max(numColumns, 1);

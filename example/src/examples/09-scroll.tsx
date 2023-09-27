@@ -1,5 +1,5 @@
-import React, { useCallback, useRef, useState } from "react";
-import { Table } from "react-fluid-table";
+import { useCallback, useRef, useState } from "react";
+import { Table, TableRef } from "react-fluid-table";
 import { Form as BaseForm } from "semantic-ui-react";
 import styled from "styled-components";
 import { testData } from "../data";
@@ -41,14 +41,14 @@ const Group = styled(Form.Group)`
 `;
 
 const Example9 = () => {
-  const ref = useRef(null);
+  const ref = useRef<TableRef | null>(null);
   const [scrollToOffset, setScrollToOffset] = useState("");
   const [scrollToNumber, setScrollToNumber] = useState("");
   const scrollToIndex = useCallback(() => {
-    ref.current.scrollToItem(parseInt(scrollToNumber));
+    ref.current?.scrollToItem(parseInt(scrollToNumber));
   }, [scrollToNumber]);
   const scrollToPixel = useCallback(() => {
-    ref.current.scrollTo(parseInt(scrollToOffset));
+    ref.current?.scrollTo(parseInt(scrollToOffset));
   }, [scrollToOffset]);
 
   return (

@@ -1,8 +1,7 @@
-import React from "react";
 import { Table } from "react-fluid-table";
+import { Flag, Image, Input } from "semantic-ui-react";
 import styled from "styled-components";
-import { Input, Image, Flag } from "semantic-ui-react";
-import { testData } from "../data";
+import { TestData, testData } from "../data";
 
 const TextStyle = styled.div`
   font-family: Helvetica;
@@ -275,7 +274,10 @@ const countries = [
   { name: "Zimbabwe", countryCode: "zw" }
 ];
 
-const countryMap = countries.reduce((pv, c) => ({ ...pv, [c.countryCode]: c.name }), {});
+const countryMap = countries.reduce(
+  (pv, c) => ({ ...pv, [c.countryCode]: c.name }),
+  {} as { [x: string]: string }
+);
 
 const columns = [
   {
@@ -287,34 +289,35 @@ const columns = [
     key: "avatar",
     header: "Profile Photo",
     width: 150,
-    content: ({ row }) => <ProfPic size="small" src={row.avatar} />
+    content: ({ row }: { row: TestData }) => <ProfPic size="small" src={row.avatar} />
   },
   {
     key: "email",
     header: "Email",
-    content: ({ row }) => <EmailInput defaultValue={row.email} />
+    content: ({ row }: { row: TestData }) => <EmailInput defaultValue={row.email} />
   },
   {
     key: "firstName",
     header: "First",
     width: 100,
-    content: ({ row }) => <TextStyle>{row.firstName}</TextStyle>
+    content: ({ row }: { row: TestData }) => <TextStyle>{row.firstName}</TextStyle>
   },
   {
     key: "lastName",
     header: "Last",
     width: 100,
-    content: ({ row }) => <TextStyle>{row.lastName}</TextStyle>
+    content: ({ row }: { row: TestData }) => <TextStyle>{row.lastName}</TextStyle>
   },
   {
     key: "country",
     header: "Country",
-    content: ({ row }) =>
+    content: ({ row }: { row: TestData }) =>
       !countryMap[row.country] ? (
         `No flag for this country: ${row.country.toUpperCase()}`
       ) : (
         <>
-          <Flag name={row.country} />
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          <Flag name={row.country as any} />
           {countryMap[row.country]}
         </>
       )
@@ -334,29 +337,29 @@ const columns = [
     key: "avatar",
     header: "Profile Photo",
     width: 150,
-    content: ({ row }) => <ProfPic size="small" src={row.avatar} />
+    content: ({ row }: {row: TestData}) => <ProfPic size="small" src={row.avatar} />
   },
   {
     key: "email",
     header: "Email",
-    content: ({ row }) => <Email email={row.email} />
+    content: ({ row }: {row: TestData}) => <Email email={row.email} />
   },
   {
     key: "firstName",
     header: "First",
     width: 100,
-    content: ({ row }) => <TextStyle>{row.firstName}</TextStyle>
+    content: ({ row }: {row: TestData}) => <TextStyle>{row.firstName}</TextStyle>
   },
   {
     key: "lastName",
     header: "Last",
     width: 100,
-    content: ({ row }) => <TextStyle>{row.lastName}</TextStyle>
+    content: ({ row }: {row: TestData}) => <TextStyle>{row.lastName}</TextStyle>
   },
   {
     key: "country",
     header: "Country",
-    content: ({ row }) =>
+    content: ({ row }: {row: TestData}) =>
       !countryMap[row.country] ? (
         \`No flag for this country: \${row.country.toUpperCase()}\`
       ) : (

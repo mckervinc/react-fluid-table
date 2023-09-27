@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Table } from "react-fluid-table";
 import _ from "lodash";
+import { useState } from "react";
+import { SortDirection, Table } from "react-fluid-table";
 import { testData } from "../data";
 
 const columns = [
@@ -33,11 +33,12 @@ const columns = [
 const Example2 = () => {
   const [data, setData] = useState(_.orderBy(testData, ["firstName"], ["asc"]));
 
-  const onSort = (col, dir) => {
+  const onSort = (col: string | null, dir: SortDirection | null) => {
     if (!col || !dir) {
       setData(testData);
     } else {
-      setData(_.orderBy(data, [col], [dir.toLowerCase()]));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setData(_.orderBy(data, [col], [dir.toLowerCase() as any]));
     }
   };
 

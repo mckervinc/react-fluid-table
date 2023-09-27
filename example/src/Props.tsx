@@ -1,10 +1,10 @@
 import React from "react";
+import { Table as BaseTable, ColumnProps } from "react-fluid-table";
+import { Divider, Header, Icon, List } from "semantic-ui-react";
 import styled from "styled-components";
-import { Table as BaseTable } from "react-fluid-table";
-import { Icon, Divider, Header, List } from "semantic-ui-react";
-import { InlineCode } from "./shared/styles";
-import ColumnPropsTable from "./props/ColumnProps";
-import { Snippet } from "./shared/Snippet";
+import ColumnPropsTable from "./ColumnProps";
+import { Snippet } from "./Snippet";
+import { InlineCode } from "./components/library/InlineCode";
 
 const Container = styled.div`
   padding: 1em;
@@ -36,25 +36,35 @@ const Item = styled(List.Item)`
   width: 100%;
 `;
 
-const columns = [
+interface PropData {
+  prop: string;
+  type: string;
+  description: string;
+  required?: boolean;
+  content?: () => React.ReactNode;
+  expandedType?: () => React.ReactNode;
+  default?: string | number;
+}
+
+const columns: ColumnProps<PropData>[] = [
   {
     key: "prop",
     header: "Prop",
     width: 170,
-    content: ({ row }) => <code>{row.prop}</code>
+    content: ({ row }: { row: PropData }) => <code>{row.prop}</code>
   },
   {
     key: "type",
     header: "Type",
     minWidth: 120,
     maxWidth: 170,
-    content: ({ row }) => <code>{row.type}</code>
+    content: ({ row }: { row: PropData }) => <code>{row.type}</code>
   },
   {
     key: "required",
     header: "Required",
     width: 100,
-    content: ({ row }) => (
+    content: ({ row }: { row: PropData }) => (
       <Icon
         name={`${row.required ? "check" : "times"} circle`}
         color={row.required ? "green" : "grey"}
@@ -65,16 +75,16 @@ const columns = [
     key: "default",
     header: "Default",
     width: 100,
-    content: ({ row }) => (row.default ? <code>{row.default}</code> : null)
+    content: ({ row }: { row: PropData }) => (row.default ? <code>{row.default}</code> : null)
   },
   {
     key: "description",
     header: "Description",
-    content: ({ row }) => row.description
+    content: ({ row }: { row: PropData }) => row.description
   }
 ];
 
-const data = [
+const data: PropData[] = [
   {
     prop: "data",
     type: "object[]",
@@ -141,7 +151,7 @@ const data = [
   {
     prop: "onSort",
     type: "function",
-    expandedType: () => <code>function(col: string, dir: string) => void</code>,
+    expandedType: () => <code>{"function(col: string, dir: string) => void"}</code>,
     description: "The callback function when a sortable column is clicked",
     content: () => (
       <div>

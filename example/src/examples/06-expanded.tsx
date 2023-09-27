@@ -1,8 +1,8 @@
-import React, { useState, useLayoutEffect } from "react";
-import { Table } from "react-fluid-table";
+import React, { useLayoutEffect, useState } from "react";
+import { SubComponentProps, Table } from "react-fluid-table";
+import { Accordion, AccordionTitleProps, Icon, Segment } from "semantic-ui-react";
 import styled from "styled-components";
-import { Segment, Accordion, Icon } from "semantic-ui-react";
-import { testData } from "../data";
+import { TestData, testData } from "../data";
 
 const columns = [
   {
@@ -45,11 +45,14 @@ const StyledAccordian = styled(Accordion)`
   }
 `;
 
-let context = {};
+const context: { [x: number]: string | number | null | undefined } = {};
 
-const SubComponent = ({ row, index, clearSizeCache }) => {
+const SubComponent = ({ row, index, clearSizeCache }: SubComponentProps<TestData>) => {
   const [activeIndex, setActiveIndex] = useState(context[index]);
-  const onClick = (e, { index: selected }) => {
+  const onClick = (
+    _e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    { index: selected }: AccordionTitleProps
+  ) => {
     const result = activeIndex === selected ? null : selected;
     context[index] = result;
     setActiveIndex(result);

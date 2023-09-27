@@ -1,4 +1,3 @@
-import React from "react";
 import { Table } from "react-fluid-table";
 import { testData } from "../data";
 
@@ -42,6 +41,6 @@ const Example = () => (
     tableHeight={400}
   />
 );
-`
+`;
 
 export { Example5, Source };

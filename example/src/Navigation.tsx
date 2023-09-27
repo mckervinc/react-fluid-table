@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { Icon } from "semantic-ui-react";
+import styled from "styled-components";
 
 const StyledNav = styled.nav`
   position: sticky;
@@ -20,7 +20,7 @@ const Toggle = styled(Icon)`
   display: block;
 `;
 
-const Navigation = ({ children }) => {
+const Navigation = ({ children }: { children?: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onClick = () => {

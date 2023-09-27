@@ -3,20 +3,20 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useImperativeHandle,
   useLayoutEffect,
   useRef,
-  useState,
-  useImperativeHandle
+  useState
 } from "react";
 import { VariableSizeList } from "react-window";
-import { Generic, ListProps, TableProps, Text } from "../index";
+import { Generic, ListProps, TableProps, TableRef, Text } from "../index";
 import AutoSizer from "./AutoSizer";
-import { DEFAULT_HEADER_HEIGHT, DEFAULT_ROW_HEIGHT, NO_NODE } from "./constants";
 import Header from "./Header";
 import NumberTree from "./NumberTree";
 import RowWrapper from "./RowWrapper";
 import { TableContext, TableContextProvider } from "./TableContext";
 import TableWrapper from "./TableWrapper";
+import { DEFAULT_HEADER_HEIGHT, DEFAULT_ROW_HEIGHT, NO_NODE } from "./constants";
 import {
   arraysMatch,
   calculateColumnWidths,
@@ -35,7 +35,10 @@ interface Data {
  * The main table component
  */
 const ListComponent = forwardRef(
-  ({ data, width, height, itemKey, rowHeight, className, ...rest }: ListProps, ref) => {
+  (
+    { data, width, height, itemKey, rowHeight, className, ...rest }: ListProps<any>,
+    ref: React.ForwardedRef<TableRef>
+  ) => {
     // hooks
     const timeoutRef = useRef(0);
     const prevRef = useRef(width);
@@ -49,14 +52,8 @@ const ListComponent = forwardRef(
 
     // variables
     const { dispatch } = tableContext;
-    const {
-      uuid,
-      columns,
-      minColumnWidth,
-      fixedWidth,
-      remainingCols,
-      pixelWidths
-    } = tableContext.state;
+    const { uuid, columns, minColumnWidth, fixedWidth, remainingCols, pixelWidths } =
+      tableContext.state;
 
     // functions
     const generateKeyFromRow = useCallback(
@@ -91,8 +88,10 @@ const ListComponent = forwardRef(
     );
 
     const calculateHeight = useCallback(
-      (queryParam: number | HTMLElement, optionalDataIndex = null) => {
-        const dataIndex = typeof queryParam === "number" ? queryParam : optionalDataIndex;
+      (queryParam: number | HTMLElement, optionalDataIndex: number | null = null) => {
+        const dataIndex = (
+          typeof queryParam === "number" ? queryParam : optionalDataIndex
+        ) as number;
         const key = generateKeyFromRow(data[dataIndex], dataIndex);
         const row = typeof queryParam === "number" ? findRowByUuidAndKey(uuid, key) : queryParam;
 
@@ -303,8 +302,8 @@ const Table = forwardRef(
       tableStyle,
       headerStyle,
       ...rest
-    }: TableProps,
-    ref
+    }: TableProps<any>,
+    ref: React.ForwardedRef<TableRef>
   ) => {
     // TODO: do all prop validation here
     const disableHeight = tableHeight !== undefined;
