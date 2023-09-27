@@ -39,7 +39,10 @@ jobs:
         run: npm install -g yarn
       - name: Install dependencies
         working-directory: ./example
-        run: yarn install
+        run: |
+          sed -i '/link:/d' package.json
+          yarn install react-fluid-table
+          yarn install
       - name: Build
         working-directory: ./example
         run: yarn build
