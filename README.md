@@ -56,10 +56,8 @@ To get a development environment working, run the following:
 
 ```bash
 $ yarn install
-$ yarn link
 $ cd example
 $ yarn install
-$ yarn link react-fluid-table
 ```
 
 **Usage**
@@ -69,7 +67,7 @@ $ yarn link react-fluid-table
 $ yarn start
 # in a separate terminal window/tab
 $ cd example
-$ yarn start
+$ yarn dev
 ```
 
 ## License
