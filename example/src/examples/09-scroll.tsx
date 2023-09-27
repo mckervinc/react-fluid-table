@@ -79,7 +79,7 @@ const Example9 = () => {
           </Group>
         </Form>
       </Wrapper>
-      <Table ref={ref} data={testData} columns={columns} tableHeight={400} />
+      <Table borders ref={ref} data={testData} columns={columns} tableHeight={400} />
     </>
   );
 };
@@ -127,7 +127,7 @@ const Example = () => {
           </Group>
         </Form>
       </Wrapper>
-      <Table tableHeight={400} ref={ref} data={data} columns={columns} />
+      <Table borders tableHeight={400} ref={ref} data={data} columns={columns} />
     </>
   );
 };

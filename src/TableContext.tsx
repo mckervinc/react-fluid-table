@@ -23,6 +23,8 @@ interface TableState extends ReactContext {
   remainingCols: number;
   sortColumn: string | null;
   sortDirection: SortDirection;
+  stickyFooter: boolean;
+  footerComponent?: () => React.ReactNode;
   expanded: {
     [key: string | number]: boolean;
   };
@@ -42,7 +44,8 @@ const baseState: TableState = {
   fixedWidth: 0,
   remainingCols: 0,
   sortColumn: null,
-  sortDirection: null
+  sortDirection: null,
+  stickyFooter: false
 };
 
 const fields = [
@@ -52,7 +55,9 @@ const fields = [
   "onSort",
   "columns",
   "tableStyle",
-  "headerStyle"
+  "headerStyle",
+  "stickyFooter",
+  "footerComponent"
 ];
 
 const TableContext = createContext<TableState>(baseState);

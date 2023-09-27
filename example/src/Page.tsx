@@ -96,6 +96,9 @@ const LinkContainer = () => (
     <Menu.Item as={Link} to="/scroll">
       Methods
     </Menu.Item>
+    <Menu.Item as={Link} to="/footer">
+      Footer
+    </Menu.Item>
     <Menu.Item as={Link} to="/props">
       Table Props
     </Menu.Item>

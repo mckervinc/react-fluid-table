@@ -1,20 +1,21 @@
 import React from "react";
-import { areEqual } from "react-window";
+import { ListChildComponentProps, areEqual } from "react-window";
 import Row from "./Row";
 
-interface Props {
-  index: number;
+interface Props<T> extends Omit<ListChildComponentProps<T>, "data"> {
   data: any;
 }
 
-const RowWrapper = React.memo(({ data, index, ...rest }: Props) => {
+function InnerRowWrapper<T>({ data, index, ...rest }: Props<T>) {
   const dataIndex = index - 1; // the header is at index 0
 
   const { rows, ...metaData } = data;
-  const row = rows[dataIndex];
+  const row: T = rows[dataIndex];
 
   return !row ? null : <Row row={row} index={dataIndex} {...rest} {...metaData} />;
-}, areEqual);
+}
+
+const RowWrapper = React.memo(InnerRowWrapper, areEqual);
 
 RowWrapper.displayName = "RowWrapper";
 

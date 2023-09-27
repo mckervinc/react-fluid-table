@@ -98,6 +98,7 @@ const Controlled = ({ data, height, columns: variableColumns }: ControlledProps)
 
   return (
     <StyledTable
+      borders
       data={rows}
       columns={variableColumns}
       tableHeight={height}
@@ -232,6 +233,7 @@ const Controlled = ({ data, columns: variableColumns }) => {
 
   return (
     <StyledTable
+      borders
       data={rows}
       columns={variableColumns}
       tableHeight={400}

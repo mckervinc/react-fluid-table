@@ -79,6 +79,19 @@
   border-bottom: none;
 }
 
+.react-fluid-table-footer {
+  width: 100%;
+  border-top: 1px solid #ececec;
+}
+
+.react-fluid-table-footer.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+}
+
 .row-container {
   display: -webkit-box;
   display: -webkit-flex;

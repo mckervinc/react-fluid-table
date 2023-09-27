@@ -109,7 +109,7 @@ const SubComponent = ({ row, index, clearSizeCache }: SubComponentProps<TestData
 };
 
 const Example6 = () => (
-  <Table data={testData} columns={columns} tableHeight={400} subComponent={SubComponent} />
+  <Table borders data={testData} columns={columns} tableHeight={400} subComponent={SubComponent} />
 );
 
 const Source = `
@@ -183,6 +183,7 @@ const SubComponent = ({ row, index, clearSizeCache }: SubComponentProps<TestData
 
 const Example = () => (
   <Table
+    borders
     data={data}
     columns={columns}
     subComponent={SubComponent}

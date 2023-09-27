@@ -71,7 +71,6 @@ const Example8 = () => {
       onSort={onSort}
       sortColumn="firstName"
       sortDirection="ASC"
-      borders={false}
       rowStyle={rowStyle}
       tableStyle={{ backgroundColor: "#33be54" }}
       headerStyle={{ backgroundColor: "#1e9f3f" }}
@@ -139,7 +138,6 @@ const Example = () => {
       onSort={onSort}
       sortColumn="firstName"
       sortDirection="ASC"
-      borders={false}
       rowStyle={rowStyle}
       tableStyle={{ backgroundColor: "#33be54" }}
       headerStyle={{ backgroundColor: "#1e9f3f" }}

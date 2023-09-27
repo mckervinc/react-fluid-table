@@ -9,7 +9,7 @@ import React, {
   useState
 } from "react";
 import { VariableSizeList } from "react-window";
-import { SubComponentProps, TableProps, TableRef } from "../index";
+import { TableProps, TableRef } from "../index";
 import AutoSizer from "./AutoSizer";
 import Header from "./Header";
 import NumberTree from "./NumberTree";
@@ -31,17 +31,10 @@ interface Data<T> {
   [key: string]: any;
 }
 
-interface ListProps<T> {
+interface ListProps<T> extends Omit<TableProps<T>, "columns" | "borders"> {
   height: number;
   width: number;
-  data: T[];
-  borders?: boolean;
-  className?: string;
-  rowHeight?: number;
-  rowStyle?: React.CSSProperties | ((index: number) => React.CSSProperties);
-  itemKey?: (row: T) => string | number;
-  subComponent?: (props: SubComponentProps<T>) => React.ReactNode;
-  onRowClick?: (event: React.MouseEvent<Element, MouseEvent>, data: { index: number }) => void;
+  borders: boolean;
 }
 
 /**
@@ -49,7 +42,16 @@ interface ListProps<T> {
  */
 const ListComponent = forwardRef(
   (
-    { data, width, height, itemKey, rowHeight, className, ...rest }: ListProps<any>,
+    {
+      data,
+      width,
+      height,
+      itemKey,
+      rowHeight,
+      className,
+      headerHeight,
+      ...rest
+    }: ListProps<any>,
     ref: React.ForwardedRef<TableRef>
   ) => {
     // hooks
@@ -134,7 +136,7 @@ const ListComponent = forwardRef(
 
     const shouldUseRowWidth = useCallback(() => {
       const parentElement = tableRef.current?.parentElement || NO_NODE;
-      setUseRowWidth(parentElement.scrollWidth <= parentElement.clientWidth);
+      setUseRowWidth(parentElement.scrollWidth  <= parentElement.clientWidth);
     }, [tableRef]);
 
     // effects
@@ -249,6 +251,10 @@ const ListComponent = forwardRef(
         }}
         itemSize={index => {
           if (!index) {
+            if (!!headerHeight) {
+              return headerHeight;
+            }
+
             const header = findHeaderByUuid(uuid);
             return header
               ? (header.children[0] as HTMLElement).offsetHeight
@@ -310,8 +316,10 @@ const Table = forwardRef(
       tableWidth,
       tableStyle,
       headerStyle,
-      borders = true,
+      footerComponent,
+      borders = false,
       minColumnWidth = 80,
+      stickyFooter = false,
       ...rest
     }: TableProps<any>,
     ref: React.ForwardedRef<TableRef>
@@ -332,7 +340,9 @@ const Table = forwardRef(
           sortColumn,
           sortDirection,
           tableStyle,
-          headerStyle
+          headerStyle,
+          stickyFooter,
+          footerComponent
         }}
       >
         {typeof tableHeight === "number" && typeof tableWidth === "number" ? (

@@ -10,6 +10,7 @@ interface HeaderCellProps<T> {
 
 interface HeaderProps {
   children: React.ReactNode;
+  style: React.CSSProperties
 }
 
 function InnerHeaderCell<T>({ column, width }: HeaderCellProps<T>) {
@@ -76,14 +77,19 @@ HeaderCell.displayName = "HeaderCell";
 
 const Header = forwardRef(({ children, ...rest }: HeaderProps, ref: any) => {
   // hooks
-  const { id, uuid, columns, pixelWidths, headerStyle } = useContext(TableContext);
+  const { uuid, columns, pixelWidths, headerStyle } = useContext(TableContext);
 
   // variables
   const { scrollWidth, clientWidth } = ref.current || NO_NODE;
   const width = scrollWidth <= clientWidth ? "100%" : undefined;
 
   return (
-    <div id={id} ref={ref} data-table-key={uuid} className="react-fluid-table-container" {...rest}>
+    <div
+      ref={ref}
+      className="react-fluid-table-container"
+      data-container-key={`${uuid}-container`}
+      {...rest}
+    >
       <div className="sticky-header" data-header-key={`${uuid}-header`}>
         <div className="row-wrapper" style={{ width }}>
           <div className="react-fluid-table-header" style={headerStyle}>

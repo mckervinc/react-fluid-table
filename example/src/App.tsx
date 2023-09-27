@@ -10,6 +10,7 @@ import { Example6, Source as Example6Code } from "./examples/06-expanded";
 import { Example7, Source as Example7Code } from "./examples/07-controlled";
 import { Example8, Source as Example8Code } from "./examples/08-header";
 import { Example9, Source as Example9Code } from "./examples/09-scroll";
+import { Example10, Source as Example10Code } from "./examples/10-footer";
 
 const router = createHashRouter([
   {
@@ -81,6 +82,14 @@ const router = createHashRouter([
     element: (
       <Page title="Methods" code={Example9Code}>
         <Example9 />
+      </Page>
+    )
+  },
+  {
+    path: "/footer",
+    element: (
+      <Page title="Footer" code={Example10Code}>
+        <Example10 />
       </Page>
     )
   },

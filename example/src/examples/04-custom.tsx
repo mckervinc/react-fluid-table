@@ -324,7 +324,7 @@ const columns: ColumnProps<TestData>[] = [
 ];
 
 const Example4 = () => (
-  <Table data={testData} columns={columns} tableHeight={400} rowHeight={150} />
+  <Table borders data={testData} columns={columns} tableHeight={400} rowHeight={150} />
 );
 
 const Source = `
@@ -372,6 +372,7 @@ const columns: ColumnProps<TestData>[] = [
 
 const Example = () => (
   <Table
+    borders
     data={data}
     columns={columns}
     tableHeight={400}

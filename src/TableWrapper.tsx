@@ -1,22 +1,33 @@
 import React, { forwardRef, useContext } from "react";
+import Footer from "./Footer";
 import { TableContext } from "./TableContext";
 
-const TableWrapper = forwardRef(({ style, children, ...rest }: any, ref: any) => {
-  // hooks
-  const { tableStyle } = useContext(TableContext);
+interface TableWrapperProps {
+  style: React.CSSProperties;
+  children: React.ReactNode;
+  className?: string;
+  onScroll?: () => void;
+}
 
-  // variables
-  const styles: React.CSSProperties = {
-    ...(tableStyle || {}),
-    ...style
-  };
+const TableWrapper = forwardRef(
+  ({ style, children, ...rest }: TableWrapperProps, ref: React.ForwardedRef<HTMLDivElement>) => {
+    // hooks
+    const { id, tableStyle, uuid } = useContext(TableContext);
 
-  return (
-    <div ref={ref} style={styles} {...rest}>
-      {children}
-    </div>
-  );
-});
+    // variables
+    const styles: React.CSSProperties = {
+      ...(tableStyle || {}),
+      ...style
+    };
+
+    return (
+      <div id={id} ref={ref} data-table-key={uuid} style={styles} {...rest}>
+        {children}
+        <Footer />
+      </div>
+    );
+  }
+);
 
 TableWrapper.displayName = "TableWrapper";
 

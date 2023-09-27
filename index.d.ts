@@ -195,15 +195,19 @@ export interface TableProps<T> {
    */
   minColumnWidth?: number;
   /**
-   * Enable or disable row borders. Default: `true`.
-   */
-  borders?: boolean;
-  /**
    * The fixed height of each row in pixels. If `subComponent` is specified,
    * then this will be the fixed height of the portion of the row that is
    * NOT the subComponent.
    */
   rowHeight?: number;
+  /**
+   * specify a fixed header height
+   */
+  headerHeight?: number;
+  /**
+   * Enable or disable row borders. Default: `false`.
+   */
+  borders?: boolean;
   /**
    * React styles used for customizing the table.
    */
@@ -223,6 +227,15 @@ export interface TableProps<T> {
    * @returns string or number representing the item key
    */
   itemKey?: (row: T) => string | number;
+  /**
+   * controlls whether or not the footer is sticky. this is only used if
+   * `footerComponent` is specified.
+   */
+  stickyFooter?: boolean;
+  /**
+   * optionally add a footer
+   */
+  footerComponent?: () => React.ReactNode;
   /**
    * When a column has `expander`, this component will be rendered under the row.
    */

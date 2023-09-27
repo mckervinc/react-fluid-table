@@ -5,6 +5,7 @@ import Minus from "./svg/minus-circle.svg";
 //@ts-ignore TS2307
 import Plus from "./svg/plus-circle.svg";
 import { TableContext } from "./TableContext";
+import { ListChildComponentProps } from "react-window";
 
 interface TableCellProps<T> {
   row: T;
@@ -25,14 +26,11 @@ interface RowContainerProps<T> {
   rowRenderer: (props: RowRenderProps<T>) => JSX.Element;
 }
 
-interface RowProps<T> {
+interface RowProps<T> extends Omit<ListChildComponentProps<T>, "data"> {
   row: T;
-  index: number;
-  style: React.CSSProperties;
   borders: boolean;
   rowHeight: number;
   rowStyle: React.CSSProperties | ((index: number) => React.CSSProperties);
-  pixelWidths: number[];
   useRowWidth: boolean;
   clearSizeCache: CacheFunction;
   calculateHeight: (

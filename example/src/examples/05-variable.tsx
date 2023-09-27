@@ -22,7 +22,7 @@ const columns: ColumnProps<TestData>[] = [
   }
 ];
 
-const Example5 = () => <Table data={testData} columns={columns} tableHeight={400} />;
+const Example5 = () => <Table borders data={testData} columns={columns} tableHeight={400} />;
 
 const Source = `
 const data = [/* ... */];
@@ -36,6 +36,7 @@ const columns: ColumnProps<TestData>[] = [
 
 const Example = () => (
   <Table
+    borders
     data={data}
     columns={columns}
     tableHeight={400}

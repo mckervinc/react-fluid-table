@@ -145,7 +145,7 @@ const data: PropData[] = [
   },
   {
     prop: "sortDirection",
-    type: 'string | "ASC" | "DESC" ',
+    type: '"ASC" | "DESC" | null',
     description: "The direction of the sorted column (can be controlled)"
   },
   {
@@ -165,7 +165,7 @@ const data: PropData[] = [
     prop: "borders",
     type: "boolean",
     description: "Controls whether or not there is a bottom border for each row",
-    default: "true"
+    default: "false"
   },
   {
     prop: "tableStyle",
@@ -198,6 +198,18 @@ const data: PropData[] = [
     type: "(props: CellElement) => Element",
     description:
       "A custom element used to wrap an entire row. This provides another way of customizing each row of the table"
+  },
+  {
+    prop: "footerComponent",
+    type: "() => Element",
+    description: "You can provide an optional footer"
+  },
+  {
+    prop: "stickyFooter",
+    type: "boolean",
+    description:
+      "Controls whether or not the footer is sticky. This does nothing if footerComponent is not specified.",
+    default: "false"
   }
 ];
 
@@ -281,7 +293,7 @@ const Props = () => (
         </Header.Subheader>
       </Header.Content>
     </Header>
-    <Table data={data} columns={columns} tableHeight={500} />
+    <Table borders data={data} columns={columns} tableHeight={500} />
     <Divider section />
     <Header dividing color="red">
       Required Props
