@@ -1,4 +1,6 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { RouterProvider, createHashRouter } from "react-router-dom";
+import Page from "./Page";
+import Props from "./Props";
 import { Example1, Source as Example1Code } from "./examples/01-base";
 import { Example2, Source as Example2Code } from "./examples/02-sort";
 import { Example3, Source as Example3Code } from "./examples/03-sub";
@@ -8,10 +10,8 @@ import { Example6, Source as Example6Code } from "./examples/06-expanded";
 import { Example7, Source as Example7Code } from "./examples/07-controlled";
 import { Example8, Source as Example8Code } from "./examples/08-header";
 import { Example9, Source as Example9Code } from "./examples/09-scroll";
-import Page from "./Page";
-import Props from "./Props";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: (
