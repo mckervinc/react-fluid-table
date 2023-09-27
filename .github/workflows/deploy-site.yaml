@@ -38,14 +38,9 @@ jobs:
       - name: Install yarn
         run: npm install -g yarn
       - name: Install dependencies
-        working-directory: ./example
-        run: |
-          sed -i '/link:/d' package.json
-          yarn add react-fluid-table
-          yarn install
+        run: yarn install
       - name: Build
-        working-directory: ./example
-        run: yarn build
+        run: yarn site:build
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
