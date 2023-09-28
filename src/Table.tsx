@@ -310,6 +310,10 @@ const Table = forwardRef(
       headerStyle,
       headerClassname,
       footerComponent,
+      footerStyle,
+      footerClassname,
+      maxTableHeight,
+      minTableHeight,
       borders = false,
       minColumnWidth = 80,
       stickyFooter = false,
@@ -336,7 +340,9 @@ const Table = forwardRef(
           headerStyle,
           headerClassname,
           stickyFooter,
-          footerComponent
+          footerComponent,
+          footerClassname,
+          footerStyle
         }}
       >
         {typeof tableHeight === "number" && typeof tableWidth === "number" ? (
@@ -349,15 +355,26 @@ const Table = forwardRef(
           />
         ) : (
           <AutoSizer disableHeight={disableHeight} disableWidth={disableWidth}>
-            {({ height, width }) => (
-              <ListComponent
-                ref={ref}
-                borders={borders}
-                width={tableWidth || width}
-                height={tableHeight || height || guessTableHeight(rest.rowHeight)}
-                {...rest}
-              />
-            )}
+            {({ height, width }) => {
+              const componentHeight =
+                tableHeight ||
+                (maxTableHeight !== undefined && maxTableHeight >= 0
+                  ? Math.min(
+                      height || guessTableHeight(rest.rowHeight || 0, rest.data.length),
+                      maxTableHeight
+                    )
+                  : height || guessTableHeight(rest.rowHeight || 0));
+
+              return (
+                <ListComponent
+                  ref={ref}
+                  borders={borders}
+                  width={tableWidth || width}
+                  height={Math.max(componentHeight, minTableHeight || 0)}
+                  {...rest}
+                />
+              );
+            }}
           </AutoSizer>
         )}
       </TableContextProvider>

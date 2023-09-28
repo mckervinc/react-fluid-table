@@ -122,6 +122,17 @@ const data: PropData[] = [
       "The height of the table in pixels. If no height is specified, this will try to fill the height of the parent. If the parent node does not have a height specified, a height for the table will be calculated based on the default header height and the rowHeight or the defaultRowHeight (37)."
   },
   {
+    prop: "minTableHeight",
+    type: "number",
+    description: "The min height of the table in pixels."
+  },
+  {
+    prop: "maxTableHeight",
+    type: "number",
+    description:
+      "The max height of the table in pixels. If tableHeight is specified, this is ignored."
+  },
+  {
     prop: "tableWidth",
     type: "number",
     description: "The width of the table in pixels"
@@ -179,7 +190,7 @@ const data: PropData[] = [
   },
   {
     prop: "headerClassname",
-    type: "object",
+    type: "string",
     description: "Add custom css className to the table header"
   },
   {
@@ -212,8 +223,18 @@ const data: PropData[] = [
   },
   {
     prop: "footerComponent",
-    type: "() => Element",
+    type: "(props: FooterProps) => Element",
     description: "You can provide an optional footer"
+  },
+  {
+    prop: "footerStyle",
+    type: "object",
+    description: "Add custom css styles to the table footer"
+  },
+  {
+    prop: "footerClassname",
+    type: "string",
+    description: "Add custom css className to the table footer"
   },
   {
     prop: "stickyFooter",
@@ -266,7 +287,7 @@ const Contact = ({ row, index, style, clearSizeCache }) => {
     mounted.current = true;
   }, [showInfo]);
 
-  return <Accordion label={label} options={options} onChange={onChange} />;
+  return <Accordion style={style} label={label} options={options} onChange={onChange} />;
 };
 
 const columns = [{
@@ -336,7 +357,7 @@ const Props = () => (
           The HeaderElement is an element that takes in props that contains a style, onclick, and
           sortDirection. See below for an example:
         </List.Content>
-        <Snippet copy={false} edit={false} code={headerSnippet} />
+        <Snippet copy={false} code={headerSnippet} />
       </Item>
       <Item>
         <List.Header>
@@ -352,7 +373,7 @@ const Props = () => (
           index in the data array, and a function to reset the rowHeight (if needed). See below for
           an example:
         </List.Content>
-        <Snippet copy={false} edit={false} code={cellSnippet} />
+        <Snippet copy={false} code={cellSnippet} />
       </Item>
       <Item>
         <List.Header>
@@ -363,7 +384,7 @@ const Props = () => (
           The ExpandedElement is an element that takes in props that contains whether or not the row
           is expanded, as well as a function to toggle the row expansion. See below for an example:
         </List.Content>
-        <Snippet copy={false} edit={false} code={expanderSnippet} />
+        <Snippet copy={false} code={expanderSnippet} />
       </Item>
     </List>
     <Header dividing size="small" color="grey">

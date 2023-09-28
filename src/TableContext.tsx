@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useReducer, useRef } from "react";
-import { ColumnProps, SortDirection } from "../index";
+import { ColumnProps, FooterProps, SortDirection } from "../index";
 
 interface Action {
   type: string;
@@ -24,7 +24,7 @@ interface TableState extends ReactContext {
   sortColumn: string | null;
   sortDirection: SortDirection;
   stickyFooter: boolean;
-  footerComponent?: () => React.ReactNode;
+  footerComponent?: (props: FooterProps) => React.ReactNode;
   expanded: {
     [key: string | number]: boolean;
   };
@@ -33,6 +33,8 @@ interface TableState extends ReactContext {
   tableStyle?: React.CSSProperties;
   headerStyle?: React.CSSProperties;
   headerClassname?: string;
+  footerStyle?: React.CSSProperties;
+  footerClassname?: string;
 }
 
 const baseState: TableState = {
@@ -58,6 +60,8 @@ const fields = [
   "tableStyle",
   "headerStyle",
   "headerClassname",
+  "footerStyle",
+  "footerClassname",
   "stickyFooter",
   "footerComponent"
 ];

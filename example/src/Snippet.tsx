@@ -1,12 +1,12 @@
 import { useRef, useState } from "react";
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
-import jsx from "react-syntax-highlighter/dist/esm/languages/prism/jsx";
+import tsx from "react-syntax-highlighter/dist/esm/languages/prism/tsx";
 import okaidia from "react-syntax-highlighter/dist/esm/styles/prism/okaidia";
 import { Icon, Menu, Popup } from "semantic-ui-react";
 import styled from "styled-components";
 import { copy } from "./util";
 
-SyntaxHighlighter.registerLanguage("jsx", jsx);
+SyntaxHighlighter.registerLanguage("tsx", tsx);
 
 const Container = styled.div`
   position: relative;
@@ -56,7 +56,7 @@ interface SnippetProps {
   edit?: boolean;
 }
 
-const Snippet = ({ code, copy: showCopy = true, edit = true }: SnippetProps) => {
+const Snippet = ({ code, copy: showCopy = true, edit = false }: SnippetProps) => {
   const ref = useRef(0);
   const [open, setOpen] = useState(false);
   const onOpen = () => {
@@ -98,7 +98,7 @@ const Snippet = ({ code, copy: showCopy = true, edit = true }: SnippetProps) => 
           </MenuItem>
         )}
       </Group>
-      <Highligher language="jsx" style={okaidia}>
+      <Highligher language="tsx" style={okaidia}>
         {code.trim()}
       </Highligher>
     </Container>

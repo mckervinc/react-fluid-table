@@ -19,37 +19,33 @@ const columns: ColumnProps<TestData>[] = [
   {
     key: "id",
     header: "ID",
-    sortable: true,
     width: 50
   },
   {
     key: "firstName",
     header: "First",
-    sortable: true,
     width: 120
   },
   {
     key: "lastName",
     header: "Last",
-    sortable: true,
     width: 120
   },
   {
     key: "email",
     header: "Email",
-    sortable: true,
     width: 250
   }
 ];
 
 const Footer = styled.div`
   background-color: white;
-  padding: 8px;
 `;
 
 const Example10 = () => {
   // hooks
   const [sticky, setSticky] = useState(true);
+  const [simple, setSimple] = useState(true);
 
   return (
     <>
@@ -57,11 +53,20 @@ const Example10 = () => {
         <Grid.Row>
           <Grid.Column width={8}>
             <Form>
-              <h4>Change footer stickyness</h4>
+              <h4>Change footer properties</h4>
               <Form.Field>
                 <Checkbox
                   toggle
-                  label="sticky - change footer stick value"
+                  label="change footer type"
+                  value={simple.toString()}
+                  checked={simple}
+                  onChange={() => setSimple(prev => !prev)}
+                />
+              </Form.Field>
+              <Form.Field>
+                <Checkbox
+                  toggle
+                  label="change footer sticky value"
                   value={sticky.toString()}
                   checked={sticky}
                   onChange={() => setSticky(prev => !prev)}
@@ -73,7 +78,9 @@ const Example10 = () => {
             <h4>Controlled Props:</h4>
             <Background>
               <pre>
-                {"{\n  stickyFooter: "}
+                {"{\n  simpleFooter: "}
+                <span style={{ color: "rgb(102, 217, 239)" }}>{simple.toString()}</span>
+                {",\n  stickyFooter: "}
                 <span style={{ color: "rgb(102, 217, 239)" }}>{sticky.toString()}</span>
                 {"\n}"}
               </pre>
@@ -87,7 +94,30 @@ const Example10 = () => {
         columns={columns}
         stickyFooter={sticky}
         tableHeight={400}
-        footerComponent={() => <Footer>Footer content</Footer>}
+        footerStyle={{ backgroundColor: "white" }}
+        footerComponent={({ widths }) => (
+          <Footer>
+            {simple ? (
+              "Hello, World"
+            ) : (
+              <div style={{ display: "flex" }}>
+                {columns.map((c, i) => {
+                  const width = `${widths[i]}px`;
+                  const style: React.CSSProperties = {
+                    width,
+                    minWidth: width,
+                    padding: "8px"
+                  };
+                  return (
+                    <div key={c.key} style={style}>
+                      Footer Cell
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </Footer>
+        )}
       />
     </>
   );
@@ -96,12 +126,13 @@ const Example10 = () => {
 const Source = `
 const data = [/* ... */];
 
-const Footer = styled.div\`
-  background-color: white;
-  padding: 8px;
-\`;
+const Footer = ({ children }) => (
+  <div style={{ backgroundColor: "white" }}>
+    {children}
+  </div>
+);
 
-const Controlled = ({ stickyFooter }) => {
+const SimpleFooter = ({ stickyFooter }) => {
   return (
     <StyledTable
       borders
@@ -109,7 +140,40 @@ const Controlled = ({ stickyFooter }) => {
       columns={columns}
       tableHeight={400}
       stickyFooter={stickyFooter}
-      footerComponent={() => <Footer>Footer content</Footer>}
+      footerStyle={{ backgroundColor: "white" }}
+      footerComponent={() => <Footer>Hello, World</Footer>}
+    />
+  );
+};
+
+const ComplexFooter = ({ stickyFooter }) => {
+  return (
+    <StyledTable
+      borders
+      data={data}
+      columns={columns}
+      tableHeight={400}
+      stickyFooter={stickyFooter}
+      footerStyle={{ backgroundColor: "white" }}
+      footerComponent={({ widths }) => (
+        <Footer>
+          <div style={{ display: "flex" }}>
+            {columns.map((c, i) => {
+              const width = \`\${widths[i]}px\`;
+              const style: React.CSSProperties = {
+                width,
+                minWidth: width,
+                padding: "8px"
+              };
+              return (
+                <div key={c.key} style={style}>
+                  Footer Cell
+                </div>
+              );
+            })}
+          </div>
+        </Footer>
+      )}
     />
   );
 };
