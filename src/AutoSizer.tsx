@@ -155,8 +155,8 @@ const AutoSizer = ({
     const paddingBottom = parseInt(style.paddingBottom) || 0;
 
     // find new dimensions
-    const newHeight = (parent.offsetHeight || 0) - paddingTop - paddingBottom;
-    const newWidth = (parent.offsetWidth || 0) - paddingLeft - paddingRight;
+    const newHeight = Math.max((parent.offsetHeight || 0) - paddingTop - paddingBottom, 0);
+    const newWidth = Math.max((parent.offsetWidth || 0) - paddingLeft - paddingRight, 0);
 
     // update state
     if (newHeight !== containerHeight || newWidth !== containerWidth) {
