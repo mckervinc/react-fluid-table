@@ -178,10 +178,21 @@ const data: PropData[] = [
     description: "Add custom css styles to the table header"
   },
   {
+    prop: "headerClassname",
+    type: "object",
+    description: "Add custom css className to the table header"
+  },
+  {
     prop: "rowStyle",
     type: "object | (index: number) => object",
     description:
       "Add custom css styles to each row element. One can also pass in a function that takes in the row number in order to provide custom styling for particular rows."
+  },
+  {
+    prop: "rowClassname",
+    type: "string | (index: number) => string",
+    description:
+      "Add custom css className to each row element. One can also pass in a function that takes in the row number in order to provide custom styling for particular rows."
   },
   {
     prop: "subComponent",

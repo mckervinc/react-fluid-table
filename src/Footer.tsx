@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { TableContext } from "./TableContext";
+import { cx } from "./util";
 
 const Footer = () => {
   const { uuid, stickyFooter, footerComponent: FooterComponent } = useContext(TableContext);
@@ -12,7 +13,7 @@ const Footer = () => {
   return (
     <div
       data-footer-key={`${uuid}-footer`}
-      className={`react-fluid-table-footer ${stickyFooter ? "sticky" : ""}`.trim()}
+      className={cx(["react-fluid-table-footer", stickyFooter && "sticky"])}
     >
       <FooterComponent />
     </div>

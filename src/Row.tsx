@@ -6,6 +6,7 @@ import Minus from "./svg/minus-circle.svg";
 import Plus from "./svg/plus-circle.svg";
 import { TableContext } from "./TableContext";
 import { ListChildComponentProps } from "react-window";
+import { cx } from "./util";
 
 interface TableCellProps<T> {
   row: T;
@@ -20,6 +21,7 @@ interface TableCellProps<T> {
 interface RowContainerProps<T> {
   row: T;
   index: number;
+  className?: string;
   children: React.ReactNode;
   containerStyle: React.CSSProperties;
   onRowClick: (event: React.MouseEvent<Element, MouseEvent>, data: { index: number }) => void;
@@ -30,6 +32,7 @@ interface RowProps<T> extends Omit<ListChildComponentProps<T>, "data"> {
   row: T;
   borders: boolean;
   rowHeight: number;
+  rowClassname: string | ((index: number) => string);
   rowStyle: React.CSSProperties | ((index: number) => React.CSSProperties);
   useRowWidth: boolean;
   clearSizeCache: CacheFunction;
@@ -44,6 +47,7 @@ interface RowProps<T> extends Omit<ListChildComponentProps<T>, "data"> {
 }
 
 type CSSFunction = (index: number) => React.CSSProperties;
+type CSSClassFunction = (index: number) => string;
 
 const getRowStyle = (index: number, rowStyle?: React.CSSProperties | CSSFunction) => {
   if (!rowStyle) {
@@ -51,6 +55,14 @@ const getRowStyle = (index: number, rowStyle?: React.CSSProperties | CSSFunction
   }
 
   return typeof rowStyle === "function" ? rowStyle(index) : rowStyle;
+};
+
+const getRowClassname = (index: number, rowClassname?: string | CSSClassFunction) => {
+  if (!rowClassname) {
+    return undefined;
+  }
+
+  return typeof rowClassname === "function" ? rowClassname(index) : rowClassname;
 };
 
 function InnerTableCell<T>({
@@ -116,6 +128,7 @@ function RowContainer<T>({
   row,
   index,
   children,
+  className,
   onRowClick,
   containerStyle,
   rowRenderer: RowRenderer
@@ -135,14 +148,18 @@ function RowContainer<T>({
       display: "flex"
     };
     return (
-      <RowRenderer row={row} index={index} style={style}>
+      <RowRenderer row={row} index={index} className={className} style={style}>
         {children}
       </RowRenderer>
     );
   }
 
   return (
-    <div className="row-container" style={containerStyle} onClick={onContainerClick}>
+    <div
+      className={cx(["row-container", className])}
+      style={containerStyle}
+      onClick={onContainerClick}
+    >
       {children}
     </div>
   );
@@ -156,6 +173,7 @@ function Row<T>({
   rowStyle,
   rowHeight,
   onRowClick,
+  rowClassname,
   useRowWidth,
   rowRenderer,
   clearSizeCache,
@@ -188,6 +206,7 @@ function Row<T>({
     height: containerHeight,
     ...getRowStyle(index, rowStyle)
   };
+  const containerClassname = getRowClassname(index, rowClassname);
 
   // function(s)
   const onExpanderClick = useCallback(() => {
@@ -231,6 +250,7 @@ function Row<T>({
         index={index}
         onRowClick={onRowClick}
         rowRenderer={rowRenderer}
+        className={containerClassname}
         containerStyle={containerStyle}
       >
         {columns.map((c, i) => (

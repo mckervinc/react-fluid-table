@@ -2,6 +2,7 @@ import React, { forwardRef, useContext } from "react";
 import { ColumnProps, SortDirection } from "../index";
 import { TableContext } from "./TableContext";
 import { NO_NODE } from "./constants";
+import { cx } from "./util";
 
 interface HeaderCellProps<T> {
   width: number;
@@ -10,7 +11,7 @@ interface HeaderCellProps<T> {
 
 interface HeaderProps {
   children: React.ReactNode;
-  style: React.CSSProperties
+  style: React.CSSProperties;
 }
 
 function InnerHeaderCell<T>({ column, width }: HeaderCellProps<T>) {
@@ -77,7 +78,7 @@ HeaderCell.displayName = "HeaderCell";
 
 const Header = forwardRef(({ children, ...rest }: HeaderProps, ref: any) => {
   // hooks
-  const { uuid, columns, pixelWidths, headerStyle } = useContext(TableContext);
+  const { uuid, columns, pixelWidths, headerStyle, headerClassname } = useContext(TableContext);
 
   // variables
   const { scrollWidth, clientWidth } = ref.current || NO_NODE;
@@ -92,7 +93,7 @@ const Header = forwardRef(({ children, ...rest }: HeaderProps, ref: any) => {
     >
       <div className="sticky-header" data-header-key={`${uuid}-header`}>
         <div className="row-wrapper" style={{ width }}>
-          <div className="react-fluid-table-header" style={headerStyle}>
+          <div className={cx(["react-fluid-table-header", headerClassname])} style={headerStyle}>
             {columns.map((c, i) => (
               <HeaderCell key={c.key} column={c} width={pixelWidths[i]} />
             ))}

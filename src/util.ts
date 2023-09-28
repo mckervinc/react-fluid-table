@@ -1,6 +1,18 @@
 import { ColumnProps } from "..";
 import { DEFAULT_HEADER_HEIGHT, DEFAULT_ROW_HEIGHT } from "./constants";
 
+/**
+ * combines multiple classNames conditionally
+ * @param classes list of potential className strings
+ * @returns a combined className string
+ */
+export const cx = (classes: any[]) => {
+  return classes
+    .filter(x => !!x && typeof x === "string")
+    .map((x: string) => x.trim())
+    .join(" ");
+};
+
 export const arraysMatch = <T>(arr1: T[], arr2: T[]) => {
   if (arr1.length !== arr2.length) {
     return false;

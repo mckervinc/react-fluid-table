@@ -32,6 +32,7 @@ interface TableState extends ReactContext {
   onSort?: (col: string | null, dir: SortDirection) => void;
   tableStyle?: React.CSSProperties;
   headerStyle?: React.CSSProperties;
+  headerClassname?: string;
 }
 
 const baseState: TableState = {
@@ -56,6 +57,7 @@ const fields = [
   "columns",
   "tableStyle",
   "headerStyle",
+  "headerClassname",
   "stickyFooter",
   "footerComponent"
 ];

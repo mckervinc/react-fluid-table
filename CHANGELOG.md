@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 0.4.5
+
+_2023-09-27_
+
+### Features
+
+- Added the ability to provide a footer using the `footerComponent` property
+- If `footerComponent` is defined, can also provide a `stickyFooter` prop to make the footer sticky.
+- Since the last deploy, upgraded all the dependencies to fix Dependabot alerts
+- Can provide classNames to several different properties to make it more Tailwind friendly
+- The example site is powered by Vite as opposed to create-react-app
+- The example site is now in Typescript
+
 ## 0.4.2
 
 _2020-09-07_

@@ -20,6 +20,7 @@ import { DEFAULT_HEADER_HEIGHT, DEFAULT_ROW_HEIGHT, NO_NODE } from "./constants"
 import {
   arraysMatch,
   calculateColumnWidths,
+  cx,
   findHeaderByUuid,
   findRowByUuidAndKey,
   guessTableHeight,
@@ -42,16 +43,7 @@ interface ListProps<T> extends Omit<TableProps<T>, "columns" | "borders"> {
  */
 const ListComponent = forwardRef(
   (
-    {
-      data,
-      width,
-      height,
-      itemKey,
-      rowHeight,
-      className,
-      headerHeight,
-      ...rest
-    }: ListProps<any>,
+    { data, width, height, itemKey, rowHeight, className, headerHeight, ...rest }: ListProps<any>,
     ref: React.ForwardedRef<TableRef>
   ) => {
     // hooks
@@ -136,7 +128,7 @@ const ListComponent = forwardRef(
 
     const shouldUseRowWidth = useCallback(() => {
       const parentElement = tableRef.current?.parentElement || NO_NODE;
-      setUseRowWidth(parentElement.scrollWidth  <= parentElement.clientWidth);
+      setUseRowWidth(parentElement.scrollWidth <= parentElement.clientWidth);
     }, [tableRef]);
 
     // effects
@@ -236,7 +228,7 @@ const ListComponent = forwardRef(
 
     return (
       <VariableSizeList
-        className={`react-fluid-table ${className || ""}`.trim()}
+        className={cx(["react-fluid-table", className])}
         ref={listRef}
         innerRef={tableRef}
         innerElementType={Header}
@@ -316,6 +308,7 @@ const Table = forwardRef(
       tableWidth,
       tableStyle,
       headerStyle,
+      headerClassname,
       footerComponent,
       borders = false,
       minColumnWidth = 80,
@@ -341,6 +334,7 @@ const Table = forwardRef(
           sortDirection,
           tableStyle,
           headerStyle,
+          headerClassname,
           stickyFooter,
           footerComponent
         }}

@@ -79,6 +79,10 @@ export interface RowRenderProps<T> {
    * the cells for the row
    */
   children: ReactNode;
+  /**
+   * the className for the row-renderer
+   */
+  className?: string;
 }
 
 export interface SubComponentProps<T> {
@@ -217,10 +221,19 @@ export interface TableProps<T> {
    */
   headerStyle?: CSSProperties;
   /**
+   * a className used to customize the header
+   */
+  headerClassname?: string;
+  /**
    * React styles used for customizing each row. Could be an object or
    * a function that takes the index of the row and returns an object.
    */
   rowStyle?: CSSProperties | ((index: number) => CSSProperties);
+  /**
+   * React className used for customizing each row. Could be an object or
+   * a function that takes the index of the row and returns an object.
+   */
+  rowClassname?: string | ((index: number) => string);
   /**
    * generates a unique identifier for the row
    * @param row the row
