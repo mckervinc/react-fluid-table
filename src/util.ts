@@ -37,6 +37,9 @@ export const randomString = (num: number) => {
   return result;
 };
 
+export const findTableByUuid = (uuid: string): HTMLElement | null =>
+  document.querySelector(`[data-table-key='${uuid}']`);
+
 export const findHeaderByUuid = (uuid: string): HTMLElement | null =>
   document.querySelector(`[data-header-key='${uuid}-header']`);
 
@@ -44,9 +47,9 @@ export const findRowByUuidAndKey = (uuid: string, key: string | number): HTMLEle
   document.querySelector(`[data-row-key='${uuid}-${key}']`);
 
 // table utilities
-export const guessTableHeight = (rowHeight?: number) => {
+export const guessTableHeight = (rowHeight: number, size = 10) => {
   const height = Math.max(rowHeight || DEFAULT_ROW_HEIGHT, 10);
-  return height * 10 + DEFAULT_HEADER_HEIGHT;
+  return height * size + DEFAULT_HEADER_HEIGHT;
 };
 
 export const calculateColumnWidths = <T>(

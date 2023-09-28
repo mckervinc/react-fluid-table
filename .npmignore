@@ -34,3 +34,4 @@ rollup.config.js
 .env.test.local
 .env.production.local
 .travis.yml
+.github

@@ -104,6 +104,13 @@ export interface SubComponentProps<T> {
   clearSizeCache: CacheFunction;
 }
 
+export interface FooterProps {
+  /**
+   * exposes the widths of each column to the footer
+   */
+  widths: number[];
+}
+
 export interface ColumnProps<T> {
   /**
    * The unique identifier for a particular column. This is also used as an index
@@ -191,6 +198,14 @@ export interface TableProps<T> {
    */
   tableHeight?: number;
   /**
+   * Specify the minimum height of the table in pixels.
+   */
+  minTableHeight?: number;
+  /**
+   * Specify the maximum height of the table in pixels.
+   */
+  maxTableHeight?: number;
+  /**
    * Specify the width of the table in pixels.
    */
   tableWidth?: number;
@@ -235,6 +250,14 @@ export interface TableProps<T> {
    */
   rowClassname?: string | ((index: number) => string);
   /**
+   * React styles used for customizing the footer.
+   */
+  footerStyle?: CSSProperties;
+  /**
+   * a className used to customize the footer
+   */
+  footerClassname?: string;
+  /**
    * generates a unique identifier for the row
    * @param row the row
    * @returns string or number representing the item key
@@ -248,7 +271,7 @@ export interface TableProps<T> {
   /**
    * optionally add a footer
    */
-  footerComponent?: () => React.ReactNode;
+  footerComponent?: (props: FooterProps) => React.ReactNode;
   /**
    * When a column has `expander`, this component will be rendered under the row.
    */

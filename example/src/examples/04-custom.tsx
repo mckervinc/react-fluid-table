@@ -336,29 +336,29 @@ const columns: ColumnProps<TestData>[] = [
     key: "avatar",
     header: "Profile Photo",
     width: 150,
-    content: ({ row}) => <ProfPic size="small" src={row.avatar} />
+    content: ({ row }) => <ProfPic size="small" src={row.avatar} />
   },
   {
     key: "email",
     header: "Email",
-    content: ({ row}) => <Email email={row.email} />
+    content: ({ row }) => <Email email={row.email} />
   },
   {
     key: "firstName",
     header: "First",
     width: 100,
-    content: ({ row}) => <TextStyle>{row.firstName}</TextStyle>
+    content: ({ row }) => <TextStyle>{row.firstName}</TextStyle>
   },
   {
     key: "lastName",
     header: "Last",
     width: 100,
-    content: ({ row}) => <TextStyle>{row.lastName}</TextStyle>
+    content: ({ row }) => <TextStyle>{row.lastName}</TextStyle>
   },
   {
     key: "country",
     header: "Country",
-    content: ({ row}) =>
+    content: ({ row }) =>
       !countryMap[row.country] ? (
         \`No flag for this country: \${row.country.toUpperCase()}\`
       ) : (

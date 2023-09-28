@@ -90,6 +90,13 @@
   bottom: 0;
   left: 0;
   z-index: 1;
+  overflow-x: auto;
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+.react-fluid-table-footer.sticky::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }
 
 .row-container {
