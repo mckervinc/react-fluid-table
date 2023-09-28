@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 0.4.6
+
+_2023-09-28_
+
+### Features
+
+- added `minTableHeight` and `maxTableHeight`
+- added footer styling with `footerStyle` and `footerClassname`
+- expose column widths to `footerComponent` to help expose widths
+
 ## 0.4.5
 
 _2023-09-27_
