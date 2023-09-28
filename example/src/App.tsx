@@ -11,6 +11,7 @@ import { Example7, Source as Example7Code } from "./examples/07-controlled";
 import { Example8, Source as Example8Code } from "./examples/08-header";
 import { Example9, Source as Example9Code } from "./examples/09-scroll";
 import { Example10, Source as Example10Code } from "./examples/10-footer";
+import { Example11, Source as Example11Code } from "./examples/11-heights";
 
 const router = createHashRouter([
   {
@@ -90,6 +91,14 @@ const router = createHashRouter([
     element: (
       <Page title="Footer" code={Example10Code}>
         <Example10 />
+      </Page>
+    )
+  },
+  {
+    path: "/heights",
+    element: (
+      <Page title="Table Heights" code={Example11Code}>
+        <Example11 />
       </Page>
     )
   },

@@ -1,5 +1,4 @@
 import { ColumnProps } from "..";
-import { DEFAULT_HEADER_HEIGHT, DEFAULT_ROW_HEIGHT } from "./constants";
 
 /**
  * combines multiple classNames conditionally
@@ -47,11 +46,6 @@ export const findRowByUuidAndKey = (uuid: string, key: string | number): HTMLEle
   document.querySelector(`[data-row-key='${uuid}-${key}']`);
 
 // table utilities
-export const guessTableHeight = (rowHeight: number, size = 10) => {
-  const height = Math.max(rowHeight || DEFAULT_ROW_HEIGHT, 10);
-  return height * size + DEFAULT_HEADER_HEIGHT;
-};
-
 export const calculateColumnWidths = <T>(
   element: HTMLElement | null,
   numColumns: number,

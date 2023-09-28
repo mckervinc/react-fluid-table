@@ -23,7 +23,6 @@ import {
   cx,
   findHeaderByUuid,
   findRowByUuidAndKey,
-  guessTableHeight,
   randomString
 } from "./util";
 
@@ -322,8 +321,6 @@ const Table = forwardRef(
     ref: React.ForwardedRef<TableRef>
   ) => {
     // TODO: do all prop validation here
-    const disableHeight = tableHeight !== undefined;
-    const disableWidth = tableWidth !== undefined;
     const [uuid] = useState(`${id || "data-table"}-${randomString(5)}`);
 
     return (
@@ -354,23 +351,21 @@ const Table = forwardRef(
             {...rest}
           />
         ) : (
-          <AutoSizer disableHeight={disableHeight} disableWidth={disableWidth}>
+          <AutoSizer
+            numRows={rest.data.length}
+            tableWidth={tableWidth}
+            tableHeight={tableHeight}
+            rowHeight={rest.rowHeight}
+            minTableHeight={minTableHeight}
+            maxTableHeight={maxTableHeight}
+          >
             {({ height, width }) => {
-              const componentHeight =
-                tableHeight ||
-                (maxTableHeight !== undefined && maxTableHeight >= 0
-                  ? Math.min(
-                      height || guessTableHeight(rest.rowHeight || 0, rest.data.length),
-                      maxTableHeight
-                    )
-                  : height || guessTableHeight(rest.rowHeight || 0));
-
               return (
                 <ListComponent
                   ref={ref}
                   borders={borders}
-                  width={tableWidth || width}
-                  height={Math.max(componentHeight, minTableHeight || 0)}
+                  width={width}
+                  height={height}
                   {...rest}
                 />
               );
