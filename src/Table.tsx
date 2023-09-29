@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState
 } from "react";
@@ -23,7 +24,6 @@ import {
   cx,
   findHeaderByUuid,
   findRowByUuidAndKey,
-  guessTableHeight,
   randomString
 } from "./util";
 
@@ -43,7 +43,17 @@ interface ListProps<T> extends Omit<TableProps<T>, "columns" | "borders"> {
  */
 const ListComponent = forwardRef(
   (
-    { data, width, height, itemKey, rowHeight, className, headerHeight, ...rest }: ListProps<any>,
+    {
+      data,
+      width,
+      height,
+      itemKey,
+      rowHeight,
+      className,
+      headerHeight,
+      footerComponent,
+      ...rest
+    }: ListProps<any>,
     ref: React.ForwardedRef<TableRef>
   ) => {
     // hooks
@@ -57,6 +67,11 @@ const ListComponent = forwardRef(
       useContext(TableContext);
     const [useRowWidth, setUseRowWidth] = useState(true);
     const [defaultSize, setDefaultSize] = useState(rowHeight || DEFAULT_ROW_HEIGHT);
+
+    // constants
+    const hasFooter = useMemo(() => {
+      return !!footerComponent || !!columns.find(c => !!c.footer);
+    }, [footerComponent, columns]);
 
     // functions
     const generateKeyFromRow = useCallback(
@@ -209,6 +224,15 @@ const ListComponent = forwardRef(
       prevRef.current = width;
     }, [width, tableRef, listRef, calculateHeight]);
 
+    // for the footer: set the rows in the context with the data.
+    // this is useful for any aggregate calculations.
+    // NOTE: maybe we should do this for the header too
+    useEffect(() => {
+      if (hasFooter) {
+        dispatch({ type: "updateRows", rows: data });
+      }
+    }, [hasFooter, data, dispatch]);
+
     /* cleanup */
     useEffect(() => {
       return () => {
@@ -322,9 +346,24 @@ const Table = forwardRef(
     ref: React.ForwardedRef<TableRef>
   ) => {
     // TODO: do all prop validation here
-    const disableHeight = tableHeight !== undefined;
-    const disableWidth = tableWidth !== undefined;
     const [uuid] = useState(`${id || "data-table"}-${randomString(5)}`);
+
+    // warn if a minHeight is set without a maxHeight
+    let maxHeight = maxTableHeight;
+    if (!!minTableHeight && minTableHeight > 0 && (!maxTableHeight || maxTableHeight <= 0)) {
+      maxHeight = minTableHeight + 400;
+    }
+
+    // handle warning
+    useEffect(() => {
+      if (!!minTableHeight && minTableHeight > 0 && (!maxTableHeight || maxTableHeight <= 0)) {
+        console.warn(
+          `maxTableHeight was either not present, or is <= 0, but you provided a minTableHeight of ${minTableHeight}px. As a result, the maxTableHeight will be set to ${
+            minTableHeight + 400
+          }px. To avoid this warning, please specify a maxTableHeight.`
+        );
+      }
+    }, [minTableHeight, maxTableHeight]);
 
     return (
       <TableContextProvider
@@ -351,26 +390,26 @@ const Table = forwardRef(
             borders={borders}
             height={tableHeight}
             width={tableWidth}
+            footerComponent={footerComponent}
             {...rest}
           />
         ) : (
-          <AutoSizer disableHeight={disableHeight} disableWidth={disableWidth}>
+          <AutoSizer
+            numRows={rest.data.length}
+            tableWidth={tableWidth}
+            tableHeight={tableHeight}
+            rowHeight={rest.rowHeight}
+            minTableHeight={minTableHeight}
+            maxTableHeight={maxHeight}
+          >
             {({ height, width }) => {
-              const componentHeight =
-                tableHeight ||
-                (maxTableHeight !== undefined && maxTableHeight >= 0
-                  ? Math.min(
-                      height || guessTableHeight(rest.rowHeight || 0, rest.data.length),
-                      maxTableHeight
-                    )
-                  : height || guessTableHeight(rest.rowHeight || 0));
-
               return (
                 <ListComponent
                   ref={ref}
                   borders={borders}
-                  width={tableWidth || width}
-                  height={Math.max(componentHeight, minTableHeight || 0)}
+                  width={width}
+                  height={height}
+                  footerComponent={footerComponent}
                   {...rest}
                 />
               );

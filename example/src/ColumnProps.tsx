@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { InlineCode } from "./components/library/InlineCode";
 
 const StyledTable = styled(Table)`
+  border: 1px solid #ececec;
+
   .react-fluid-table-header {
     background-color: #282a36;
   }
@@ -119,6 +121,17 @@ const data: PropData[] = [
         that cell at the particular row. This will be rendered in place of a cell container, so make
         sure to use the given <code>style</code> prop to get the calculated cell width. If this
         property is defined, then <code>content</code> will be igored.
+      </div>
+    )
+  },
+  {
+    prop: "footer",
+    type: "FooterElement",
+    description: (
+      <div>
+        This property allows you to customize the content inside of a footer cell. The library will create
+        a cell container for you with the proper column widths and resizability. If this field is
+        defined, then this will get rendered inside of the cell container in the footer.
       </div>
     )
   }

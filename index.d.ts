@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode } from "react";
+import { CSSProperties, ForwardedRef, ReactNode } from "react";
 
 declare module "*.svg" {
   const content: string;
@@ -55,7 +55,7 @@ export interface HeaderProps {
   /**
    * required style for the header
    */
-  style: React.CSSProperties;
+  style: CSSProperties;
   /**
    * the direction of the sort, if applicable
    */
@@ -104,11 +104,27 @@ export interface SubComponentProps<T> {
   clearSizeCache: CacheFunction;
 }
 
-export interface FooterProps {
+export interface FooterProps<T> {
   /**
    * exposes the widths of each column to the footer
    */
   widths: number[];
+  rows: T[];
+}
+
+export interface FooterCellProps<T> {
+  /**
+   * the column that the current footer cell is pulling from
+   */
+  column: ColumnProps<T>;
+  /**
+   * the calculated width of the cell
+   */
+  width: number;
+  /**
+   * all the rows in the table. this can be useful for aggregation
+   */
+  rows: T[];
 }
 
 export interface ColumnProps<T> {
@@ -143,17 +159,21 @@ export interface ColumnProps<T> {
    * Marks this cell as an expansion cell. The style is pre-determined, and does the
    * functionalitty of collapsing/expanding a row.
    */
-  expander?: boolean | ((props: ExpanderProps) => React.ReactNode);
+  expander?: boolean | ((props: ExpanderProps) => ReactNode);
   /**
    * Used to render custom content inside of a cell. This is useful for rendering different
    * things inside of the react-fluid-table cell container.
    */
-  content?: string | number | ((props: CellProps<T>) => React.ReactNode);
+  content?: string | number | ((props: CellProps<T>) => ReactNode);
   /**
    * An advanced feature, this is used to render an entire cell, including the cell container.
    * The `content` prop is ignored if this property is enabled.
    */
   cell?: (props: CellProps<T>) => JSX.Element;
+  /**
+   * specifies whether or not to display a footer cell
+   */
+  footer?: (props: FooterCellProps<T>) => ReactNode;
 }
 
 export interface TableRef {
@@ -269,13 +289,15 @@ export interface TableProps<T> {
    */
   stickyFooter?: boolean;
   /**
-   * optionally add a footer
+   * optionally add a footer. NOTE: this overrides the `footer` prop of a
+   * column, so use wisely. This gives the user more control over how the
+   * footer is rendered. Can return any value.
    */
-  footerComponent?: (props: FooterProps) => React.ReactNode;
+  footerComponent?: (props: FooterProps<T>) => ReactNode;
   /**
    * When a column has `expander`, this component will be rendered under the row.
    */
-  subComponent?: (props: SubComponentProps<T>) => React.ReactNode;
+  subComponent?: (props: SubComponentProps<T>) => ReactNode;
   /**
    * The callback that gets called every time a row is clicked.
    */
@@ -288,7 +310,7 @@ export interface TableProps<T> {
   /**
    * a ref for specific table functions
    */
-  ref?: React.ForwardedRef<TableRef>;
+  ref?: ForwardedRef<TableRef>;
 }
 
 /**

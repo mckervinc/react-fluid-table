@@ -1,5 +1,4 @@
 import { ColumnProps } from "..";
-import { DEFAULT_HEADER_HEIGHT, DEFAULT_ROW_HEIGHT } from "./constants";
 
 /**
  * combines multiple classNames conditionally
@@ -43,15 +42,13 @@ export const findTableByUuid = (uuid: string): HTMLElement | null =>
 export const findHeaderByUuid = (uuid: string): HTMLElement | null =>
   document.querySelector(`[data-header-key='${uuid}-header']`);
 
+export const findFooterByUuid = (uuid: string): HTMLElement | null =>
+  document.querySelector(`[data-footer-key='${uuid}-footer']`);
+
 export const findRowByUuidAndKey = (uuid: string, key: string | number): HTMLElement | null =>
   document.querySelector(`[data-row-key='${uuid}-${key}']`);
 
 // table utilities
-export const guessTableHeight = (rowHeight: number, size = 10) => {
-  const height = Math.max(rowHeight || DEFAULT_ROW_HEIGHT, 10);
-  return height * size + DEFAULT_HEADER_HEIGHT;
-};
-
 export const calculateColumnWidths = <T>(
   element: HTMLElement | null,
   numColumns: number,

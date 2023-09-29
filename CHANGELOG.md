@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 0.4.7
+
+_2023-09-28_
+
+### Features
+
+- added a `footer` prop to each `column` object in the `columns` array. allows the user to create footer cell columns.
+- `footerComponent` will still provide a more customizable footer experience
+- hopefully fix issues with the auto-calculation of tables when `minTableHeight` and/or `maxTableHeight` is used.
+- slimmed down some of the opinionated CSS, giving the user more control over header and body styles
+
 ## 0.4.6
 
 _2023-09-28_
