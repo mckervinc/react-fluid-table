@@ -6,6 +6,7 @@ import { findFooterByUuid, findHeaderByUuid } from "./util";
 interface AutoSizerProps {
   numRows: number;
   rowHeight?: number;
+  headerHeight?: number;
   tableWidth?: number;
   tableHeight?: number;
   minTableHeight?: number;
@@ -60,13 +61,22 @@ const findCorrectHeight = ({
   return containerHeight || computedHeight;
 };
 
-const calculateHeight = (rowHeight: number, uuid: string, size: number, hasFooter: boolean) => {
+const calculateHeight = (
+  rowHeight: number,
+  headerHeight: number,
+  uuid: string,
+  size: number,
+  hasFooter: boolean
+) => {
   // get the header, footer and nodes
   const header = findHeaderByUuid(uuid);
   const nodes = [...(header?.nextElementSibling?.children || [])] as HTMLElement[];
   let footerHeight = findFooterByUuid(uuid)?.offsetHeight || 0;
 
   if (!!header && !!nodes.length) {
+    // header height to use
+    const headerOffset = headerHeight > 0 ? headerHeight : header.offsetHeight;
+
     // get border height
     let borders = 0;
     const table = header.parentElement?.parentElement;
@@ -76,12 +86,12 @@ const calculateHeight = (rowHeight: number, uuid: string, size: number, hasFoote
 
     // perform calculation
     if (rowHeight > 0) {
-      return header.offsetHeight + nodes.length * rowHeight + footerHeight + borders;
+      return headerOffset + nodes.length * rowHeight + footerHeight + borders;
     }
 
     let overscan = 0;
     return (
-      header.offsetHeight +
+      headerOffset +
       nodes.reduce((pv, c) => {
         overscan = c.offsetHeight;
         return pv + c.offsetHeight;
@@ -92,14 +102,15 @@ const calculateHeight = (rowHeight: number, uuid: string, size: number, hasFoote
     );
   }
 
-  // try and guess the footer height
+  // try and guess the header and footer height
+  const headerOffset = headerHeight || DEFAULT_HEADER_HEIGHT;
   if (!footerHeight && hasFooter) {
-    footerHeight = DEFAULT_HEADER_HEIGHT;
+    footerHeight = headerOffset;
   }
 
   // if the header and nodes are not specified, guess the height
   const height = Math.max(rowHeight || DEFAULT_ROW_HEIGHT, 10);
-  return height * Math.min(size || 10, 10) + DEFAULT_HEADER_HEIGHT + footerHeight;
+  return height * Math.min(size || 10, 10) + headerOffset + footerHeight;
 };
 
 /**
@@ -115,6 +126,7 @@ const AutoSizer = ({
   tableHeight,
   minTableHeight,
   maxTableHeight,
+  headerHeight,
   children
 }: AutoSizerProps) => {
   // hooks
@@ -137,8 +149,8 @@ const AutoSizer = ({
       return tableHeight;
     }
 
-    return calculateHeight(rowHeight || 0, uuid, numRows, hasFooter);
-  }, [tableHeight, rowHeight, numRows, uuid, hasFooter]);
+    return calculateHeight(rowHeight || 0, headerHeight || 0, uuid, numRows, hasFooter);
+  }, [tableHeight, rowHeight, headerHeight, numRows, uuid, hasFooter]);
 
   // calculate the actual height of the table
   const height = findCorrectHeight({
