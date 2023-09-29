@@ -57,6 +57,7 @@ const ListComponent = forwardRef(
     ref: React.ForwardedRef<TableRef>
   ) => {
     // hooks
+    const heightRef = useRef(-1);
     const timeoutRef = useRef(0);
     const prevRef = useRef(width);
     const cacheRef = useRef<any>({});
@@ -171,6 +172,15 @@ const ListComponent = forwardRef(
 
     // check if we should use the row width when width changes
     useEffect(() => shouldUseRowWidth(), [width]);
+
+    // every time the height changes, clear the height cache
+    useLayoutEffect(() => {
+      if (heightRef.current >= 0 && heightRef.current !== height) {
+        clearSizeCache(-1, true);
+      }
+
+      heightRef.current = height;
+    }, [height]);
 
     // manually alter the height of each row if height is incorrect
     // to help with flicker on resize
