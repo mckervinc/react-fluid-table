@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState
 } from "react";
@@ -42,7 +43,17 @@ interface ListProps<T> extends Omit<TableProps<T>, "columns" | "borders"> {
  */
 const ListComponent = forwardRef(
   (
-    { data, width, height, itemKey, rowHeight, className, headerHeight, ...rest }: ListProps<any>,
+    {
+      data,
+      width,
+      height,
+      itemKey,
+      rowHeight,
+      className,
+      headerHeight,
+      footerComponent,
+      ...rest
+    }: ListProps<any>,
     ref: React.ForwardedRef<TableRef>
   ) => {
     // hooks
@@ -56,6 +67,11 @@ const ListComponent = forwardRef(
       useContext(TableContext);
     const [useRowWidth, setUseRowWidth] = useState(true);
     const [defaultSize, setDefaultSize] = useState(rowHeight || DEFAULT_ROW_HEIGHT);
+
+    // constants
+    const hasFooter = useMemo(() => {
+      return !!footerComponent || !!columns.find(c => !!c.footer);
+    }, [footerComponent, columns]);
 
     // functions
     const generateKeyFromRow = useCallback(
@@ -208,6 +224,15 @@ const ListComponent = forwardRef(
       prevRef.current = width;
     }, [width, tableRef, listRef, calculateHeight]);
 
+    // for the footer: set the rows in the context with the data.
+    // this is useful for any aggregate calculations.
+    // NOTE: maybe we should do this for the header too
+    useEffect(() => {
+      if (hasFooter) {
+        dispatch({ type: "updateRows", rows: data });
+      }
+    }, [hasFooter, data, dispatch]);
+
     /* cleanup */
     useEffect(() => {
       return () => {
@@ -323,6 +348,23 @@ const Table = forwardRef(
     // TODO: do all prop validation here
     const [uuid] = useState(`${id || "data-table"}-${randomString(5)}`);
 
+    // warn if a minHeight is set without a maxHeight
+    let maxHeight = maxTableHeight;
+    if (!!minTableHeight && minTableHeight > 0 && (!maxTableHeight || maxTableHeight <= 0)) {
+      maxHeight = minTableHeight + 400;
+    }
+
+    // handle warning
+    useEffect(() => {
+      if (!!minTableHeight && minTableHeight > 0 && (!maxTableHeight || maxTableHeight <= 0)) {
+        console.warn(
+          `maxTableHeight was either not present, or is <= 0, but you provided a minTableHeight of ${minTableHeight}px. As a result, the maxTableHeight will be set to ${
+            minTableHeight + 400
+          }px. To avoid this warning, please specify a maxTableHeight.`
+        );
+      }
+    }, [minTableHeight, maxTableHeight]);
+
     return (
       <TableContextProvider
         initialState={{
@@ -348,6 +390,7 @@ const Table = forwardRef(
             borders={borders}
             height={tableHeight}
             width={tableWidth}
+            footerComponent={footerComponent}
             {...rest}
           />
         ) : (
@@ -357,7 +400,7 @@ const Table = forwardRef(
             tableHeight={tableHeight}
             rowHeight={rest.rowHeight}
             minTableHeight={minTableHeight}
-            maxTableHeight={maxTableHeight}
+            maxTableHeight={maxHeight}
           >
             {({ height, width }) => {
               return (
@@ -366,6 +409,7 @@ const Table = forwardRef(
                   borders={borders}
                   width={width}
                   height={height}
+                  footerComponent={footerComponent}
                   {...rest}
                 />
               );

@@ -6,6 +6,11 @@ import { TestData, testData } from "../data";
 
 const StyledTable = styled(Table)`
   margin-top: 10px;
+  border: 1px solid #ececec;
+
+  .react-fluid-table-header {
+    background-color: #dedede;
+  }
 `;
 
 const columns: ColumnProps<TestData>[] = [
@@ -123,54 +128,15 @@ const Example11 = () => {
 const Source = `
 const data = [/* ... */];
 
-const Footer = ({ children }) => (
-  <div style={{ backgroundColor: "white" }}>
-    {children}
-  </div>
-);
-
-const SimpleFooter = ({ stickyFooter }) => {
+const AdjustableHeightTable = ({ tableHeight, minTableHeight, maxTableHeignt }) => {
   return (
     <StyledTable
       borders
-      data={data}
+      data={testData}
       columns={columns}
-      tableHeight={400}
-      stickyFooter={stickyFooter}
-      footerStyle={{ backgroundColor: "white" }}
-      footerComponent={() => <Footer>Hello, World</Footer>}
-    />
-  );
-};
-
-const ComplexFooter = ({ stickyFooter }) => {
-  return (
-    <StyledTable
-      borders
-      data={data}
-      columns={columns}
-      tableHeight={400}
-      stickyFooter={stickyFooter}
-      footerStyle={{ backgroundColor: "white" }}
-      footerComponent={({ widths }) => (
-        <Footer>
-          <div style={{ display: "flex" }}>
-            {columns.map((c, i) => {
-              const width = \`\${widths[i]}px\`;
-              const style: React.CSSProperties = {
-                width,
-                minWidth: width,
-                padding: "8px"
-              };
-              return (
-                <div key={c.key} style={style}>
-                  Footer Cell
-                </div>
-              );
-            })}
-          </div>
-        </Footer>
-      )}
+      tableHeight={tableHeight}
+      minTableHeight={minTableHeight}
+      maxTableHeight={maxTableHeight}
     />
   );
 };

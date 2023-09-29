@@ -22,6 +22,11 @@ import { TestData, testData } from "../data";
 
 const StyledTable = styled(Table)`
   margin-top: 10px;
+  border: 1px solid #ececec;
+
+  .react-fluid-table-header {
+    background-color: #dedede;
+  }
 `;
 
 const Background = styled.div`

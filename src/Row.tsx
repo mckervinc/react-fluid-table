@@ -65,7 +65,7 @@ const getRowClassname = (index: number, rowClassname?: string | CSSClassFunction
   return typeof rowClassname === "function" ? rowClassname(index) : rowClassname;
 };
 
-function InnerTableCell<T>({
+const TableCell = React.memo(function <T>({
   row,
   index,
   width,
@@ -118,9 +118,7 @@ function InnerTableCell<T>({
   // custom cell styling
   const CustomCell = column.cell;
   return <CustomCell row={row} index={index} style={style} clearSizeCache={clearSizeCache} />;
-}
-
-const TableCell = React.memo(InnerTableCell);
+});
 
 TableCell.displayName = "TableCell";
 

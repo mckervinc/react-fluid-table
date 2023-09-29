@@ -42,6 +42,9 @@ export const findTableByUuid = (uuid: string): HTMLElement | null =>
 export const findHeaderByUuid = (uuid: string): HTMLElement | null =>
   document.querySelector(`[data-header-key='${uuid}-header']`);
 
+export const findFooterByUuid = (uuid: string): HTMLElement | null =>
+  document.querySelector(`[data-footer-key='${uuid}-footer']`);
+
 export const findRowByUuidAndKey = (uuid: string, key: string | number): HTMLElement | null =>
   document.querySelector(`[data-row-key='${uuid}-${key}']`);
 

@@ -8,6 +8,7 @@ interface Action {
   key?: string | number;
   widths?: number[];
   initialState?: TableState;
+  rows?: any[];
 }
 
 interface ReactContext {
@@ -15,6 +16,7 @@ interface ReactContext {
 }
 
 interface TableState extends ReactContext {
+  rows: any[];
   pixelWidths: number[];
   uuid: string;
   minColumnWidth: number;
@@ -24,7 +26,7 @@ interface TableState extends ReactContext {
   sortColumn: string | null;
   sortDirection: SortDirection;
   stickyFooter: boolean;
-  footerComponent?: (props: FooterProps) => React.ReactNode;
+  footerComponent?: (props: FooterProps<any>) => React.ReactNode;
   expanded: {
     [key: string | number]: boolean;
   };
@@ -42,6 +44,7 @@ const baseState: TableState = {
   expanded: {},
   columns: [],
   pixelWidths: [],
+  rows: [],
   uuid: "",
   minColumnWidth: 80,
   fixedWidth: 0,
@@ -90,6 +93,8 @@ const reducer = (state: TableState, action: Action): TableState => {
       };
     case "updatePixelWidths":
       return { ...state, pixelWidths: action.widths || [] };
+    case "updateRows":
+      return { ...state, rows: action.rows || [] };
     case "refresh":
       return {
         ...state,

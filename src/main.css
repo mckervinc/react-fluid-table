@@ -1,8 +1,3 @@
-.react-fluid-table {
-  background-color: white;
-  border: 1px solid #ececec;
-}
-
 .react-fluid-table .cell,
 .react-fluid-table .header-cell {
   -webkit-box-sizing: border-box;
@@ -37,7 +32,6 @@
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  background-color: #dedede;
 }
 
 .header-cell {

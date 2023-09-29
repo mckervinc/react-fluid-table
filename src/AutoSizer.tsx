@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { TableContext } from "./TableContext";
 import { DEFAULT_HEADER_HEIGHT, DEFAULT_ROW_HEIGHT } from "./constants";
-import { findHeaderByUuid } from "./util";
+import { findFooterByUuid, findHeaderByUuid } from "./util";
 
 interface AutoSizerProps {
   numRows: number;
@@ -40,10 +40,11 @@ const findCorrectHeight = ({
     if (minHeight > 0) {
       curr = Math.max(minHeight, curr);
 
-      // if no maxHeight provided, then treat
-      // the computedHeight as the maxHeight
-      if (!maxHeight && computedHeight > 0) {
-        return Math.max(curr, computedHeight);
+      // if no maxHeight provided, in order to actually
+      // enable the windowed features, we have to heuristically
+      // use the maxHeight as minHeight + 400px;
+      if (!maxHeight) {
+        return Math.min(curr, minHeight + 400);
       }
     }
 
@@ -59,10 +60,11 @@ const findCorrectHeight = ({
   return containerHeight || computedHeight;
 };
 
-const calculateHeight = (rowHeight: number, uuid: string, size: number) => {
-  // get the header and nodes
+const calculateHeight = (rowHeight: number, uuid: string, size: number, hasFooter: boolean) => {
+  // get the header, footer and nodes
   const header = findHeaderByUuid(uuid);
   const nodes = [...(header?.nextElementSibling?.children || [])] as HTMLElement[];
+  let footerHeight = findFooterByUuid(uuid)?.offsetHeight || 0;
 
   if (!!header && !!nodes.length) {
     // get border height
@@ -74,24 +76,30 @@ const calculateHeight = (rowHeight: number, uuid: string, size: number) => {
 
     // perform calculation
     if (rowHeight > 0) {
-      return header.clientHeight + nodes.length * rowHeight + borders;
+      return header.offsetHeight + nodes.length * rowHeight + footerHeight + borders;
     }
 
     let overscan = 0;
     return (
-      header.clientHeight +
+      header.offsetHeight +
       nodes.reduce((pv, c) => {
         overscan = c.offsetHeight;
         return pv + c.offsetHeight;
       }, 0) +
       overscan +
+      footerHeight +
       borders
     );
   }
 
+  // try and guess the footer height
+  if (!footerHeight && hasFooter) {
+    footerHeight = DEFAULT_HEADER_HEIGHT;
+  }
+
   // if the header and nodes are not specified, guess the height
   const height = Math.max(rowHeight || DEFAULT_ROW_HEIGHT, 10);
-  return height * Math.min(size || 10, 10) + DEFAULT_HEADER_HEIGHT;
+  return height * Math.min(size || 10, 10) + DEFAULT_HEADER_HEIGHT + footerHeight;
 };
 
 /**
@@ -112,11 +120,16 @@ const AutoSizer = ({
   // hooks
   const resizeRef = useRef(0);
   const ref = useRef<HTMLDivElement>(null);
-  const { uuid } = useContext(TableContext);
+  const { uuid, footerComponent, columns } = useContext(TableContext);
   const [dimensions, setDimensions] = useState({ containerHeight: 0, containerWidth: 0 });
 
   // variables
   const { containerHeight, containerWidth } = dimensions;
+
+  // check if footer exists
+  const hasFooter = useMemo(() => {
+    return !!footerComponent || !!columns.find(c => !!c.footer);
+  }, [footerComponent, columns]);
 
   // calculate the computed height
   const computedHeight = useMemo(() => {
@@ -124,8 +137,8 @@ const AutoSizer = ({
       return tableHeight;
     }
 
-    return calculateHeight(rowHeight || 0, uuid, numRows);
-  }, [tableHeight, rowHeight, numRows, uuid]);
+    return calculateHeight(rowHeight || 0, uuid, numRows, hasFooter);
+  }, [tableHeight, rowHeight, numRows, uuid, hasFooter]);
 
   // calculate the actual height of the table
   const height = findCorrectHeight({

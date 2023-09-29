@@ -14,14 +14,14 @@ interface HeaderProps {
   style: React.CSSProperties;
 }
 
-function InnerHeaderCell<T>({ column, width }: HeaderCellProps<T>) {
+const HeaderCell = React.memo(function <T>({ column, width }: HeaderCellProps<T>) {
   // hooks
   const { dispatch, sortColumn: col, sortDirection, onSort } = useContext(TableContext);
 
   // constants
   const dir = sortDirection ? (sortDirection.toUpperCase() as SortDirection) : null;
 
-  const style = {
+  const style: React.CSSProperties = {
     cursor: column.sortable ? "pointer" : undefined,
     width: width ? `${width}px` : undefined,
     minWidth: width ? `${width}px` : undefined
@@ -70,9 +70,7 @@ function InnerHeaderCell<T>({ column, width }: HeaderCellProps<T>) {
   const ColumnCell = column.header;
   const headerDir = column.key === col ? dir || null : null;
   return <ColumnCell style={style} onClick={onClick} sortDirection={headerDir} />;
-}
-
-const HeaderCell = React.memo(InnerHeaderCell);
+});
 
 HeaderCell.displayName = "HeaderCell";
 
