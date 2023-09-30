@@ -75,9 +75,10 @@ const TableCell = React.memo(function <T>({
   onExpanderClick
 }: TableCellProps<T>) {
   // cell width
+  const cellWidth = width ? `${width}px` : undefined;
   const style: React.CSSProperties = {
-    width: width ? `${width}px` : undefined,
-    minWidth: width ? `${width}px` : undefined
+    width: cellWidth,
+    minWidth: cellWidth
   };
 
   // expander

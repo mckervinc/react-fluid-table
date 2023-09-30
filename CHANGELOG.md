@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 0.4.10
+
+_2023-09-30_
+
+###
+
+- added ability to specify the `footerHeight`
+- removed some typescript warnings
+- slight performance tweaks
+
 ## 0.4.7
 
 _2023-09-28_

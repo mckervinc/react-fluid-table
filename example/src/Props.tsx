@@ -146,6 +146,16 @@ const data: PropData[] = [
       "This is a fixed height of each row. Subcomponents will not be affected by this value"
   },
   {
+    prop: "headerHeight",
+    type: "number",
+    description: "This is an optional fixed height of the header"
+  },
+  {
+    prop: "footerHeight",
+    type: "number",
+    description: "This is an optional fixed height of the footer"
+  },
+  {
     prop: "minColumnWidth",
     type: "number",
     description: "The default column width for the entire table",
@@ -411,7 +421,8 @@ const Props = () => (
     <Header dividing size="small" color="grey">
       Interfaces
     </Header>
-    <Snippet code={`import { CSSProperties, ForwardedRef, ReactNode } from "react";
+    <Snippet
+      code={`import { CSSProperties, ForwardedRef, ReactNode } from "react";
 
 type SortDirection = "ASC" | "DESC" | null;
 
@@ -648,6 +659,10 @@ interface TableProps<T> {
    */
   headerHeight?: number;
   /**
+   * specify a fixed footer height
+   */
+  footerHeight?: number;
+  /**
    * Enable or disable row borders. Default: \`false\`.
    */
   borders?: boolean;
@@ -716,7 +731,8 @@ interface TableProps<T> {
    */
   ref?: ForwardedRef<TableRef>;
 }
-`} />
+`}
+    />
   </Container>
 );
 

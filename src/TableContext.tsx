@@ -54,7 +54,9 @@ const baseState: TableState = {
   stickyFooter: false
 };
 
-const fields = [
+type TableStateKey = keyof Omit<TableState, "dispatch">;
+
+const fields: TableStateKey[] = [
   "sortColumn",
   "sortDirection",
   "minColumnWidth",
@@ -111,7 +113,6 @@ const getChangedFields = (
 ) => {
   const changedFields = new Set<string>();
   fields.forEach(field => {
-    // @ts-ignore
     if (prevState[field] !== currState[field]) {
       changedFields.add(field);
     }
