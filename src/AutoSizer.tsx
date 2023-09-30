@@ -1,12 +1,13 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { TableContext } from "./TableContext";
-import { DEFAULT_HEADER_HEIGHT, DEFAULT_ROW_HEIGHT } from "./constants";
+import { DEFAULT_FOOTER_HEIGHT, DEFAULT_HEADER_HEIGHT, DEFAULT_ROW_HEIGHT } from "./constants";
 import { findFooterByUuid, findHeaderByUuid } from "./util";
 
 interface AutoSizerProps {
   numRows: number;
   rowHeight?: number;
   headerHeight?: number;
+  footerHeight?: number;
   tableWidth?: number;
   tableHeight?: number;
   minTableHeight?: number;
@@ -64,29 +65,34 @@ const findCorrectHeight = ({
 const calculateHeight = (
   rowHeight: number,
   headerHeight: number,
+  footerHeight: number,
   uuid: string,
   size: number,
   hasFooter: boolean
 ) => {
-  // get the header, footer and nodes
+  // get the header and the rows of the table
   const header = findHeaderByUuid(uuid);
   const nodes = [...(header?.nextElementSibling?.children || [])] as HTMLElement[];
-  let footerHeight = findFooterByUuid(uuid)?.offsetHeight || 0;
 
-  if (!!header && !!nodes.length) {
-    // header height to use
-    const headerOffset = headerHeight > 0 ? headerHeight : header.offsetHeight;
+  // calculate header & footer offsets
+  const headerOffset =
+    headerHeight > 0 ? headerHeight : header?.offsetHeight || DEFAULT_HEADER_HEIGHT;
+  let footerOffset = 0;
+  if (hasFooter) {
+    footerOffset =
+      footerHeight > 0
+        ? footerHeight
+        : findFooterByUuid(uuid)?.offsetHeight || DEFAULT_FOOTER_HEIGHT;
+  }
 
-    // get border height
-    let borders = 0;
-    const table = header.parentElement?.parentElement;
-    if (!!table) {
-      borders = table.offsetHeight - table.clientHeight;
-    }
+  // calculate border offset
+  const table = header?.parentElement?.parentElement;
+  const borderOffset = !!table ? table.offsetHeight - table.clientHeight : 0;
 
-    // perform calculation
+  // if there are rows, let's do the calculation
+  if (!!nodes.length) {
     if (rowHeight > 0) {
-      return headerOffset + nodes.length * rowHeight + footerHeight + borders;
+      return headerOffset + nodes.length * rowHeight + footerOffset + borderOffset;
     }
 
     let overscan = 0;
@@ -97,20 +103,14 @@ const calculateHeight = (
         return pv + c.offsetHeight;
       }, 0) +
       overscan +
-      footerHeight +
-      borders
+      footerOffset +
+      borderOffset
     );
   }
 
-  // try and guess the header and footer height
-  const headerOffset = headerHeight || DEFAULT_HEADER_HEIGHT;
-  if (!footerHeight && hasFooter) {
-    footerHeight = headerOffset;
-  }
-
-  // if the header and nodes are not specified, guess the height
+  // if the nodes are not specified, guess the height
   const height = Math.max(rowHeight || DEFAULT_ROW_HEIGHT, 10);
-  return height * Math.min(size || 10, 10) + headerOffset + footerHeight;
+  return headerOffset + height * Math.min(size || 10, 10) + footerOffset + borderOffset;
 };
 
 /**
@@ -127,21 +127,22 @@ const AutoSizer = ({
   minTableHeight,
   maxTableHeight,
   headerHeight,
+  footerHeight,
   children
 }: AutoSizerProps) => {
   // hooks
   const resizeRef = useRef(0);
   const ref = useRef<HTMLDivElement>(null);
-  const { uuid, footerComponent, columns } = useContext(TableContext);
+  const { uuid, columns, footerComponent } = useContext(TableContext);
   const [dimensions, setDimensions] = useState({ containerHeight: 0, containerWidth: 0 });
 
   // variables
   const { containerHeight, containerWidth } = dimensions;
-
-  // check if footer exists
-  const hasFooter = useMemo(() => {
-    return !!footerComponent || !!columns.find(c => !!c.footer);
-  }, [footerComponent, columns]);
+  const hasFooter = useMemo(
+    () => !!footerComponent || !!columns.find(c => !!c.footer),
+    [columns, footerComponent]
+  );
+  const fixedTableSize = !!tableHeight && tableHeight > 0 && !!tableWidth && tableWidth > 0;
 
   // calculate the computed height
   const computedHeight = useMemo(() => {
@@ -149,8 +150,15 @@ const AutoSizer = ({
       return tableHeight;
     }
 
-    return calculateHeight(rowHeight || 0, headerHeight || 0, uuid, numRows, hasFooter);
-  }, [tableHeight, rowHeight, headerHeight, numRows, uuid, hasFooter]);
+    return calculateHeight(
+      rowHeight || 0,
+      headerHeight || 0,
+      footerHeight || 0,
+      uuid,
+      numRows,
+      hasFooter
+    );
+  }, [tableHeight, rowHeight, headerHeight, footerHeight, numRows, uuid, hasFooter]);
 
   // calculate the actual height of the table
   const height = findCorrectHeight({
@@ -167,7 +175,7 @@ const AutoSizer = ({
   // functions
   const calculateDimensions = useCallback(() => {
     // base cases
-    if (!ref.current?.parentElement) {
+    if (!ref.current?.parentElement || fixedTableSize) {
       return;
     }
 
@@ -184,10 +192,15 @@ const AutoSizer = ({
     const newWidth = Math.max((parent.offsetWidth || 0) - paddingLeft - paddingRight, 0);
 
     // update state
-    if (newHeight !== containerHeight || newWidth !== containerWidth) {
-      setDimensions({ containerHeight: newHeight, containerWidth: newWidth });
-    }
-  }, [containerHeight, containerWidth]);
+    setDimensions(prev => {
+      const { containerHeight: oldHeight, containerWidth: oldWidth } = prev;
+      if (oldHeight !== newHeight || oldWidth !== newWidth) {
+        return { containerHeight: newHeight, containerWidth: newWidth };
+      }
+
+      return prev;
+    });
+  }, [fixedTableSize]);
 
   const onResize = useCallback(() => {
     window.clearTimeout(resizeRef.current);
@@ -196,10 +209,11 @@ const AutoSizer = ({
 
   // effects
   // on mount, calculate the dimensions
-  useEffect(() => calculateDimensions(), []);
+  useEffect(() => calculateDimensions(), [calculateDimensions]);
 
   // on resize, we have to re-calculate the dimensions
   useEffect(() => {
+    window.removeEventListener("resize", onResize);
     window.addEventListener("resize", onResize);
     const m = resizeRef.current;
     return () => {

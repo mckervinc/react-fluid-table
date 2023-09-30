@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   randCatchPhrase,
   randCity,
@@ -115,19 +114,34 @@ const Controlled = ({ data, height, columns: variableColumns }: ControlledProps)
   );
 };
 
+interface ToggleType {
+  data: boolean;
+  height: boolean;
+  columns: boolean;
+}
+
+interface DataType {
+  data: TestData[];
+  height: number;
+  columns: ColumnProps<TestData>[];
+}
+
+type keyM = keyof ToggleType;
+type keyD = keyof DataType;
+
 const viewableTypes = new Set(["string", "number", "boolean"]);
 
 const Example7 = () => {
   // hooks
-  const [toggles, setToggles] = useState({
+  const [toggles, setToggles] = useState<ToggleType>({
     data: false,
     height: false,
     columns: false
   });
 
   // variables
-  const keys = Object.keys(toggles);
-  const props = {
+  const keys: keyM[] = ["data", "height", "columns"];
+  const props: DataType = {
     data: toggles.data ? testData2 : testData,
     height: toggles.height ? 200 : 400,
     columns: toggles.columns
@@ -187,13 +201,10 @@ const Example7 = () => {
                 {"{\n"}
                 {keys.map((key, index) => {
                   const ending = index !== keys.length - 1 ? ",\n" : "\n";
-                  // @ts-ignore
                   const val = viewableTypes.has(typeof props[key]);
                   let color = "rgb(166, 226, 46)";
-                  // @ts-ignore
                   if (typeof props[key] === "number") {
                     color = "rgb(174, 129, 255)";
-                    // @ts-ignore
                   } else if (typeof props[key] === "boolean") {
                     color = "rgb(102, 217, 239)";
                   }
@@ -201,8 +212,11 @@ const Example7 = () => {
                     <React.Fragment key={key}>
                       {`  ${key}: `}
                       <span style={{ color }}>
-                        {/* @ts-ignore */}
-                        {val ? props[key] : toggles[key] ? '"altered"' : '"original"'}
+                        {val
+                          ? (props[key as keyD] as string | number)
+                          : toggles[key]
+                          ? '"altered"'
+                          : '"original"'}
                       </span>
                       {ending}
                     </React.Fragment>

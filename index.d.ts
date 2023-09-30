@@ -244,6 +244,10 @@ export interface TableProps<T> {
    */
   headerHeight?: number;
   /**
+   * specify a fixed footer height
+   */
+  footerHeight?: number;
+  /**
    * Enable or disable row borders. Default: `false`.
    */
   borders?: boolean;

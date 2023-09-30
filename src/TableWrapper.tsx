@@ -1,6 +1,7 @@
 import React, { forwardRef, useContext } from "react";
 import Footer from "./Footer";
 import { TableContext } from "./TableContext";
+import { cx } from "./util";
 
 interface TableWrapperProps {
   style: React.CSSProperties;
@@ -10,7 +11,10 @@ interface TableWrapperProps {
 }
 
 const TableWrapper = forwardRef(
-  ({ style, children, ...rest }: TableWrapperProps, ref: React.ForwardedRef<HTMLDivElement>) => {
+  (
+    { style, children, className, ...rest }: TableWrapperProps,
+    ref: React.ForwardedRef<HTMLDivElement>
+  ) => {
     // hooks
     const { id, tableStyle, uuid } = useContext(TableContext);
 
@@ -21,7 +25,14 @@ const TableWrapper = forwardRef(
     };
 
     return (
-      <div id={id} ref={ref} data-table-key={uuid} style={styles} {...rest}>
+      <div
+        id={id}
+        ref={ref}
+        style={styles}
+        data-table-key={uuid}
+        className={cx(["react-fluid-table", className])}
+        {...rest}
+      >
         {children}
         <Footer />
       </div>

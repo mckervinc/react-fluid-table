@@ -14,9 +14,10 @@ const FooterCell = React.memo(function <T>(props: InnerFooterCellProps<T>) {
 
   // instance
   const { width, column } = props;
+  const cellWidth = width ? `${width}px` : undefined;
   const style: React.CSSProperties = {
-    width: width ? `${width}px` : undefined,
-    minWidth: width ? `${width}px` : undefined,
+    width: cellWidth,
+    minWidth: cellWidth,
     padding: !column.footer ? 0 : undefined
   };
 

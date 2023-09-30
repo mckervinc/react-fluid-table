@@ -19,12 +19,13 @@ const HeaderCell = React.memo(function <T>({ column, width }: HeaderCellProps<T>
   const { dispatch, sortColumn: col, sortDirection, onSort } = useContext(TableContext);
 
   // constants
+  const cellWidth = width ? `${width}px` : undefined;
   const dir = sortDirection ? (sortDirection.toUpperCase() as SortDirection) : null;
 
   const style: React.CSSProperties = {
     cursor: column.sortable ? "pointer" : undefined,
-    width: width ? `${width}px` : undefined,
-    minWidth: width ? `${width}px` : undefined
+    width: cellWidth,
+    minWidth: cellWidth
   };
 
   // function(s)
@@ -61,7 +62,7 @@ const HeaderCell = React.memo(function <T>({ column, width }: HeaderCellProps<T>
       <div className="header-cell" onClick={onClick} style={style}>
         {column.header ? <div className="header-cell-text">{column.header}</div> : null}
         {column.key !== col ? null : (
-          <div className={`header-cell-arrow ${(dir || "").toLowerCase()}`}></div>
+          <div className={cx(["header-cell-arrow", dir?.toLowerCase()])}></div>
         )}
       </div>
     );
