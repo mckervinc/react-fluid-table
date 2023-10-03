@@ -56,11 +56,11 @@ const ListComponent = forwardRef(function (
 ) {
   // hooks
   const timeoutRef = useRef(0);
-  const cacheRef = useRef<any>({});
   const listRef = useRef<any>(null);
   const prevWidthRef = useRef(width);
   const treeRef = useRef(new NumberTree());
   const tableRef = useRef<HTMLDivElement>(null);
+  const cacheRef = useRef<{ [index: number]: number }>({});
   const { dispatch, uuid, columns, minColumnWidth, fixedWidth, remainingCols, pixelWidths } =
     useContext(TableContext);
   const [useRowWidth, setUseRowWidth] = useState(true);
@@ -73,7 +73,7 @@ const ListComponent = forwardRef(function (
 
   // functions
   const generateKeyFromRow = useCallback(
-    (row: any, defaultValue: number) => {
+    function <T>(row: T, defaultValue: number) {
       const generatedKey = itemKey ? itemKey(row) : undefined;
       return generatedKey !== undefined ? generatedKey : defaultValue;
     },
@@ -174,7 +174,7 @@ const ListComponent = forwardRef(function (
           const dataIndex = parseInt(node.dataset.index || "0");
 
           // if the row is incorrect, update the tops going forward
-          const height = cache[dataIndex + 1].size;
+          const height: number = cache[dataIndex + 1].size;
           const computed = calculateHeight(node, dataIndex);
 
           // case 0: the first element, where the top is correct
