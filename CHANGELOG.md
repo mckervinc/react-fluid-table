@@ -1,10 +1,20 @@
 # CHANGELOG
 
+## 0.5.0
+
+_2023-10-02_
+
+### Features
+
+- uses a wrapper library to handle observing the table container for width/height changes
+- initial flicker for variable-row-size tables should be mitigated
+- more typescript specifications
+
 ## 0.4.10
 
 _2023-09-30_
 
-###
+### Features
 
 - added ability to specify the `footerHeight`
 - removed some typescript warnings

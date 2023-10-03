@@ -23,9 +23,9 @@ import { Table } from "react-fluid-table";
 
 const data = _.range(100).map(i => ({
   id: i + 1,
-  firstName: faker.name.firstName(),
-  lastName: faker.name.lastName(),
-  email: faker.internet.email()
+  firstName: randFirstName(),
+  lastName: randLastName(),
+  email: randEmail()
 }));
 
 const columns = [

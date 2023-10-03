@@ -1,4 +1,5 @@
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { useContext, useMemo } from "react";
+import { useResizeDetector } from "react-resize-detector";
 import { TableContext } from "./TableContext";
 import { DEFAULT_FOOTER_HEIGHT, DEFAULT_HEADER_HEIGHT, DEFAULT_ROW_HEIGHT } from "./constants";
 import { findFooterByUuid, findHeaderByUuid } from "./util";
@@ -90,7 +91,7 @@ const calculateHeight = (
   const borderOffset = !!table ? table.offsetHeight - table.clientHeight : 0;
 
   // if there are rows, let's do the calculation
-  if (!!nodes.length) {
+  if (nodes.length) {
     if (rowHeight > 0) {
       return headerOffset + nodes.length * rowHeight + footerOffset + borderOffset;
     }
@@ -116,8 +117,8 @@ const calculateHeight = (
 /**
  * This is a skinny AutoSizer based on react-virtualized-auto-sizer.
  * This removes the `bailout` functionality in order to allow the Table
- * to generate its own height. This also ignores a resize if the
- * dimensions of the window did not actually change (one less render).
+ * to generate its own height. This uses ResizeObserver to observe the
+ * container when it changes in order to provide the correct height
  */
 const AutoSizer = ({
   numRows,
@@ -131,22 +132,22 @@ const AutoSizer = ({
   children
 }: AutoSizerProps) => {
   // hooks
-  const resizeRef = useRef(0);
-  const ref = useRef<HTMLDivElement>(null);
+  const {
+    ref,
+    width: containerWidth,
+    height: containerHeight
+  } = useResizeDetector<HTMLDivElement>();
   const { uuid, columns, footerComponent } = useContext(TableContext);
-  const [dimensions, setDimensions] = useState({ containerHeight: 0, containerWidth: 0 });
 
   // variables
-  const { containerHeight, containerWidth } = dimensions;
   const hasFooter = useMemo(
     () => !!footerComponent || !!columns.find(c => !!c.footer),
     [columns, footerComponent]
   );
-  const fixedTableSize = !!tableHeight && tableHeight > 0 && !!tableWidth && tableWidth > 0;
 
   // calculate the computed height
   const computedHeight = useMemo(() => {
-    if (!!tableHeight && tableHeight > 0) {
+    if (tableHeight && tableHeight > 0) {
       return tableHeight;
     }
 
@@ -163,64 +164,14 @@ const AutoSizer = ({
   // calculate the actual height of the table
   const height = findCorrectHeight({
     computedHeight,
-    containerHeight,
+    containerHeight: containerHeight || 0,
     tableHeight: tableHeight || 0,
     minHeight: minTableHeight || 0,
     maxHeight: maxTableHeight || 0
   });
 
   // get actual width
-  const width = !!tableWidth && tableWidth > 0 ? tableWidth : containerWidth;
-
-  // functions
-  const calculateDimensions = useCallback(() => {
-    // base cases
-    if (!ref.current?.parentElement || fixedTableSize) {
-      return;
-    }
-
-    // get style
-    const parent = ref.current.parentElement;
-    const style = window.getComputedStyle(parent);
-    const paddingLeft = parseInt(style.paddingLeft) || 0;
-    const paddingRight = parseInt(style.paddingRight) || 0;
-    const paddingTop = parseInt(style.paddingTop) || 0;
-    const paddingBottom = parseInt(style.paddingBottom) || 0;
-
-    // find new dimensions
-    const newHeight = Math.max((parent.offsetHeight || 0) - paddingTop - paddingBottom, 0);
-    const newWidth = Math.max((parent.offsetWidth || 0) - paddingLeft - paddingRight, 0);
-
-    // update state
-    setDimensions(prev => {
-      const { containerHeight: oldHeight, containerWidth: oldWidth } = prev;
-      if (oldHeight !== newHeight || oldWidth !== newWidth) {
-        return { containerHeight: newHeight, containerWidth: newWidth };
-      }
-
-      return prev;
-    });
-  }, [fixedTableSize]);
-
-  const onResize = useCallback(() => {
-    window.clearTimeout(resizeRef.current);
-    resizeRef.current = window.setTimeout(calculateDimensions, 40);
-  }, [calculateDimensions]);
-
-  // effects
-  // on mount, calculate the dimensions
-  useEffect(() => calculateDimensions(), [calculateDimensions]);
-
-  // on resize, we have to re-calculate the dimensions
-  useEffect(() => {
-    window.removeEventListener("resize", onResize);
-    window.addEventListener("resize", onResize);
-    const m = resizeRef.current;
-    return () => {
-      window.clearTimeout(m);
-      window.removeEventListener("resize", onResize);
-    };
-  }, [onResize]);
+  const width = tableWidth && tableWidth > 0 ? tableWidth : containerWidth || 0;
 
   return <div ref={ref}>{height || width ? children({ height, width }) : null}</div>;
 };

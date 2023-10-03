@@ -56,11 +56,11 @@ const ListComponent = forwardRef(function (
 ) {
   // hooks
   const timeoutRef = useRef(0);
-  const prevRef = useRef(width);
-  const cacheRef = useRef<any>({});
   const listRef = useRef<any>(null);
+  const prevWidthRef = useRef(width);
   const treeRef = useRef(new NumberTree());
   const tableRef = useRef<HTMLDivElement>(null);
+  const cacheRef = useRef<{ [index: number]: number }>({});
   const { dispatch, uuid, columns, minColumnWidth, fixedWidth, remainingCols, pixelWidths } =
     useContext(TableContext);
   const [useRowWidth, setUseRowWidth] = useState(true);
@@ -73,35 +73,32 @@ const ListComponent = forwardRef(function (
 
   // functions
   const generateKeyFromRow = useCallback(
-    (row: any, defaultValue: number) => {
+    function <T>(row: T, defaultValue: number) {
       const generatedKey = itemKey ? itemKey(row) : undefined;
       return generatedKey !== undefined ? generatedKey : defaultValue;
     },
     [itemKey]
   );
 
-  const clearSizeCache = useCallback(
-    (dataIndex: number, forceUpdate = false) => {
-      if (!listRef.current) {
-        return;
-      }
+  const clearSizeCache = useCallback((dataIndex: number, forceUpdate = false) => {
+    if (!listRef.current) {
+      return;
+    }
 
-      window.clearTimeout(timeoutRef.current);
-      if (forceUpdate) {
-        treeRef.current.clearFromIndex(dataIndex);
-        listRef.current.resetAfterIndex(dataIndex + 1);
-        return;
-      }
+    window.clearTimeout(timeoutRef.current);
+    if (forceUpdate) {
+      treeRef.current.clearFromIndex(dataIndex);
+      listRef.current.resetAfterIndex(dataIndex + 1);
+      return;
+    }
 
-      timeoutRef.current = window.setTimeout(() => {
-        const node = tableRef.current?.children[1].children[0] as HTMLElement;
-        const resetIndex = parseInt(node?.dataset.index || "0") + 1;
-        treeRef.current.clearFromIndex(resetIndex);
-        listRef.current.resetAfterIndex(resetIndex);
-      }, 50);
-    },
-    [listRef, tableRef, timeoutRef, treeRef]
-  );
+    timeoutRef.current = window.setTimeout(() => {
+      const node = tableRef.current?.children[1].children[0] as HTMLElement;
+      const resetIndex = parseInt(node?.dataset.index || "0") + 1;
+      treeRef.current.clearFromIndex(resetIndex);
+      listRef.current.resetAfterIndex(resetIndex);
+    }, 50);
+  }, []);
 
   const calculateHeight = useCallback(
     (queryParam: number | HTMLElement, optionalDataIndex: number | null = null) => {
@@ -114,7 +111,7 @@ const ListComponent = forwardRef(function (
       }
 
       const arr = [...row.children].slice(rowHeight ? 1 : 0) as HTMLElement[];
-      const res = (rowHeight || 0) + arr.reduce((pv, c) => pv + c.offsetHeight, 0);
+      const res = arr.reduce((pv, c) => pv + c.offsetHeight, rowHeight || 0) || defaultSize;
 
       // update the calculated height ref
       cacheRef.current[dataIndex] = res;
@@ -139,7 +136,7 @@ const ListComponent = forwardRef(function (
   const shouldUseRowWidth = useCallback(() => {
     const parentElement = tableRef.current?.parentElement || NO_NODE;
     setUseRowWidth(parentElement.scrollWidth <= parentElement.clientWidth);
-  }, [tableRef]);
+  }, []);
 
   // effects
   /* initializers */
@@ -147,17 +144,6 @@ const ListComponent = forwardRef(function (
   useEffect(() => {
     const widths = tableRef.current || NO_NODE;
     setUseRowWidth(widths.scrollWidth <= widths.clientWidth);
-  }, []);
-
-  // force clear cache to update header size
-  useEffect(() => {
-    clearSizeCache(-1, true);
-    // figure out how to wait for scrollbar to appear
-    // before recalculating. using 100ms heuristic
-    setTimeout(() => {
-      updatePixelWidths();
-      shouldUseRowWidth();
-    }, 100);
   }, []);
 
   /* updates */
@@ -170,7 +156,7 @@ const ListComponent = forwardRef(function (
   // manually alter the height of each row if height is incorrect
   // to help with flicker on resize
   useLayoutEffect(() => {
-    if (prevRef.current !== width) {
+    if (prevWidthRef.current !== width) {
       treeRef.current.clearFromIndex(0);
       setTimeout(() => {
         if (!tableRef.current || !listRef.current) {
@@ -188,7 +174,7 @@ const ListComponent = forwardRef(function (
           const dataIndex = parseInt(node.dataset.index || "0");
 
           // if the row is incorrect, update the tops going forward
-          const height = cache[dataIndex + 1].size;
+          const height: number = cache[dataIndex + 1].size;
           const computed = calculateHeight(node, dataIndex);
 
           // case 0: the first element, where the top is correct
@@ -215,8 +201,8 @@ const ListComponent = forwardRef(function (
       }, 0);
     }
 
-    prevRef.current = width;
-  }, [width, tableRef, listRef, calculateHeight]);
+    prevWidthRef.current = width;
+  }, [width, calculateHeight]);
 
   // for the footer: set the rows in the context with the data.
   // this is useful for any aggregate calculations.
@@ -261,7 +247,7 @@ const ListComponent = forwardRef(function (
       }}
       itemSize={index => {
         if (!index) {
-          if (!!headerHeight && headerHeight > 0) {
+          if (headerHeight && headerHeight > 0) {
             return headerHeight;
           }
 
@@ -340,13 +326,13 @@ const Table = forwardRef(function <T>(
 
   // warn if a minHeight is set without a maxHeight
   let maxHeight = maxTableHeight;
-  if (!!minTableHeight && minTableHeight > 0 && (!maxTableHeight || maxTableHeight <= 0)) {
+  if (minTableHeight && minTableHeight > 0 && (!maxTableHeight || maxTableHeight <= 0)) {
     maxHeight = minTableHeight + 400;
   }
 
   // handle warning
   useEffect(() => {
-    if (!!minTableHeight && minTableHeight > 0 && (!maxTableHeight || maxTableHeight <= 0)) {
+    if (minTableHeight && minTableHeight > 0 && (!maxTableHeight || maxTableHeight <= 0)) {
       console.warn(
         `maxTableHeight was either not present, or is <= 0, but you provided a minTableHeight of ${minTableHeight}px. As a result, the maxTableHeight will be set to ${
           minTableHeight + 400

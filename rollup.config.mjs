@@ -37,7 +37,8 @@ const config = {
     url({ exclude: ["**/*.svg"] }),
     babel({
       extensions,
-      exclude: "node_modules/**"
+      exclude: "node_modules/**",
+      babelHelpers: "bundled"
     }),
     resolve({ extensions }),
     commonjs(),

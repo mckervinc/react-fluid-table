@@ -2,10 +2,10 @@ import React, { SVGProps, useCallback, useContext, useLayoutEffect, useRef } fro
 import { CacheFunction, ColumnProps, RowRenderProps, SubComponentProps } from "../index";
 //@ts-ignore TS2307
 import Minus from "./svg/minus-circle.svg";
+import { ListChildComponentProps } from "react-window";
+import { TableContext } from "./TableContext";
 //@ts-ignore TS2307
 import Plus from "./svg/plus-circle.svg";
-import { TableContext } from "./TableContext";
-import { ListChildComponentProps } from "react-window";
 import { cx } from "./util";
 
 interface TableCellProps<T> {
@@ -197,7 +197,7 @@ function Row<T>({
   const containerHeight = !rowHeight ? undefined : isExpanded && SubComponent ? rowHeight : "100%";
 
   // sub component props
-  const subProps = { row, index, isExpanded, clearSizeCache };
+  const subProps: SubComponentProps<T> = { row, index, isExpanded, clearSizeCache };
 
   // row styling
   const borderBottom = borders ? undefined : "none";
@@ -221,7 +221,7 @@ function Row<T>({
     if (height !== calculateHeight(rowRef.current, index)) {
       clearSizeCache(index);
     }
-  }, [rowRef, index, height, calculateHeight, clearSizeCache, pixelWidths]);
+  }, [index, height, calculateHeight, clearSizeCache, pixelWidths]);
 
   // effects
   // on expansion, clear the cache
@@ -234,7 +234,7 @@ function Row<T>({
     }
 
     expandedCalledRef.current = false;
-  }, [isExpanded, expandedCalledRef, resetHeight, index, clearSizeCache]);
+  }, [isExpanded, resetHeight, index, clearSizeCache]);
 
   return (
     <div

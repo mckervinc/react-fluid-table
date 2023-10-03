@@ -156,7 +156,7 @@ const TableContextProvider = ({ children, initialState }: ProviderProps) => {
       _stateOnMount.current = initialState;
       dispatch({ type: "refresh", initialState: refreshed });
     }
-  }, [_stateOnMount, initialState]);
+  }, [initialState]);
 
   return <TableContext.Provider value={{ ...state, dispatch }}>{children}</TableContext.Provider>;
 };
