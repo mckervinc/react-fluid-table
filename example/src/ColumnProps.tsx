@@ -129,14 +129,16 @@ const data: PropData[] = [
     type: "FooterElement",
     description: (
       <div>
-        This property allows you to customize the content inside of a footer cell. The library will create
-        a cell container for you with the proper column widths and resizability. If this field is
-        defined, then this will get rendered inside of the cell container in the footer.
+        This property allows you to customize the content inside of a footer cell. The library will
+        create a cell container for you with the proper column widths and resizability. If this
+        field is defined, then this will get rendered inside of the cell container in the footer.
       </div>
     )
   }
 ];
 
-const ColumnPropsTable = () => <StyledTable borders data={data} columns={columns} tableHeight={400} />;
+const ColumnPropsTable = () => (
+  <StyledTable borders data={data} columns={columns} tableHeight={400} />
+);
 
 export default ColumnPropsTable;
