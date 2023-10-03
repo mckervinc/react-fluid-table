@@ -137,6 +137,6 @@ const data: PropData[] = [
   }
 ];
 
-const ColumnPropsTable = () => <StyledTable data={data} columns={columns} tableHeight={400} />;
+const ColumnPropsTable = () => <StyledTable borders data={data} columns={columns} tableHeight={400} />;
 
 export default ColumnPropsTable;
