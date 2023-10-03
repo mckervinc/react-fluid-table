@@ -1,10 +1,5 @@
 import { CSSProperties, ForwardedRef, ReactNode } from "react";
 
-declare module "*.svg" {
-  const content: string;
-  export default content;
-}
-
 export type SortDirection = "ASC" | "DESC" | null;
 
 type CacheFunction = (dataIndex: number, forceUpdate?: boolean) => void;

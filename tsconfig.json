@@ -17,6 +17,7 @@
   },
   "include": [
     "index.d.ts",
+    "custom.d.ts",
     "src/**/*"
   ],
   "exclude": [

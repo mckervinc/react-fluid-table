@@ -1,10 +1,8 @@
-import React, { SVGProps, useCallback, useContext, useLayoutEffect, useRef } from "react";
-import { CacheFunction, ColumnProps, RowRenderProps, SubComponentProps } from "../index";
-//@ts-ignore TS2307
-import Minus from "./svg/minus-circle.svg";
+import React, { useCallback, useContext, useLayoutEffect, useRef } from "react";
 import { ListChildComponentProps } from "react-window";
+import { CacheFunction, ColumnProps, RowRenderProps, SubComponentProps } from "../index";
 import { TableContext } from "./TableContext";
-//@ts-ignore TS2307
+import Minus from "./svg/minus-circle.svg";
 import Plus from "./svg/plus-circle.svg";
 import { cx } from "./util";
 
@@ -84,7 +82,7 @@ const TableCell = React.memo(function <T>({
   // expander
   if (column.expander) {
     if (typeof column.expander === "boolean") {
-      const Logo: React.ElementType<SVGProps<SVGSVGElement>> = isExpanded ? Minus : Plus;
+      const Logo = isExpanded ? Minus : Plus;
 
       return (
         <div className="cell" style={style}>
