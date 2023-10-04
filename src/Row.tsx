@@ -10,6 +10,7 @@ interface TableCellProps<T> {
   row: T;
   index: number;
   width?: number;
+  prevWidths: number[];
   column: ColumnProps<T>;
   isExpanded: boolean;
   clearSizeCache: CacheFunction;
@@ -69,14 +70,15 @@ const TableCell = React.memo(function <T>({
   width,
   column,
   isExpanded,
+  prevWidths,
   clearSizeCache,
   onExpanderClick
 }: TableCellProps<T>) {
-  // cell width
-  const cellWidth = width ? `${width}px` : undefined;
+  // cell style
   const style: React.CSSProperties = {
-    width: cellWidth,
-    minWidth: cellWidth
+    width: width || undefined,
+    minWidth: width || undefined,
+    left: column.frozen ? prevWidths.reduce((pv, c) => pv + c, 0) : undefined
   };
 
   // expander
@@ -85,14 +87,20 @@ const TableCell = React.memo(function <T>({
       const Logo = isExpanded ? Minus : Plus;
 
       return (
-        <div className="cell" style={style}>
+        <div className={cx(["cell", column.frozen && "frozen"])} style={style}>
           <Logo className="expander" onClick={onExpanderClick} />
         </div>
       );
     }
 
     const Expander = column.expander;
-    return <Expander style={style} isExpanded={isExpanded} onClick={onExpanderClick} />;
+    return (
+      <Expander
+        style={{ ...style, position: "sticky", zIndex: 1 }}
+        isExpanded={isExpanded}
+        onClick={onExpanderClick}
+      />
+    );
   }
 
   // basic styling
@@ -108,7 +116,7 @@ const TableCell = React.memo(function <T>({
       }
     }
     return (
-      <div className="cell" style={style}>
+      <div className={cx(["cell", column.frozen && "frozen"])} style={style}>
         {content}
       </div>
     );
@@ -116,7 +124,14 @@ const TableCell = React.memo(function <T>({
 
   // custom cell styling
   const CustomCell = column.cell;
-  return <CustomCell row={row} index={index} style={style} clearSizeCache={clearSizeCache} />;
+  return (
+    <CustomCell
+      row={row}
+      index={index}
+      clearSizeCache={clearSizeCache}
+      style={{ ...style, position: "sticky", zIndex: 1 }}
+    />
+  );
 });
 
 TableCell.displayName = "TableCell";
@@ -260,6 +275,7 @@ function Row<T>({
             isExpanded={isExpanded}
             clearSizeCache={clearSizeCache}
             onExpanderClick={onExpanderClick}
+            prevWidths={pixelWidths.slice(0, i)}
           />
         ))}
       </RowContainer>

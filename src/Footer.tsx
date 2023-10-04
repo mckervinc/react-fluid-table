@@ -6,25 +6,26 @@ import { cx, findTableByUuid } from "./util";
 interface InnerFooterCellProps<T> {
   width: number;
   column: ColumnProps<T>;
+  prevWidths: number[];
 }
 
-const FooterCell = React.memo(function <T>(props: InnerFooterCellProps<T>) {
+const FooterCell = React.memo(function <T>({ prevWidths, ...rest }: InnerFooterCellProps<T>) {
   // hooks
   const { rows } = useContext(TableContext);
 
   // instance
-  const { width, column } = props;
-  const cellWidth = width ? `${width}px` : undefined;
+  const { width, column } = rest;
   const style: React.CSSProperties = {
-    width: cellWidth,
-    minWidth: cellWidth,
-    padding: !column.footer ? 0 : undefined
+    width: width || undefined,
+    minWidth: width || undefined,
+    padding: !column.footer ? 0 : undefined,
+    left: column.frozen ? prevWidths.reduce((pv, c) => pv + c, 0) : undefined
   };
 
   const FooterCellComponent = column.footer;
   return (
-    <div className="cell" style={style}>
-      {!!FooterCellComponent && <FooterCellComponent rows={rows} {...props} />}
+    <div className={cx(["cell", column.frozen && "frozen"])} style={style}>
+      {!!FooterCellComponent && <FooterCellComponent rows={rows} {...rest} />}
     </div>
   );
 });
@@ -46,9 +47,8 @@ const Footer = () => {
   const ref = useRef<HTMLDivElement>(null);
 
   // constants
-  const width = pixelWidths.reduce((pv, c) => pv + c, 0);
   const style: React.CSSProperties = {
-    minWidth: stickyFooter ? undefined : `${width}px`,
+    minWidth: stickyFooter ? undefined : pixelWidths.reduce((pv, c) => pv + c, 0),
     ...(footerStyle || {})
   };
 
@@ -109,7 +109,12 @@ const Footer = () => {
       >
         <div className="row-container">
           {columns.map((c, i) => (
-            <FooterCell key={c.key} column={c} width={pixelWidths[i]} />
+            <FooterCell
+              key={c.key}
+              column={c}
+              width={pixelWidths[i]}
+              prevWidths={pixelWidths.slice(0, i)}
+            />
           ))}
         </div>
       </div>

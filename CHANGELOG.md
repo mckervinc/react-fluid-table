@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.5.1
+
+_2023-10-04_
+
+### Features
+
+- adds the ability to freeze columns by adding the `frozen` property
+
 ## 0.5.0
 
 _2023-10-02_

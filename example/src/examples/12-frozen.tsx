@@ -5,12 +5,14 @@ const columns: ColumnProps<TestData>[] = [
   {
     key: "id",
     header: "ID",
-    width: 50
+    width: 50,
+    frozen: true
   },
   {
     key: "firstName",
     header: "First",
-    width: 120
+    width: 120,
+    frozen: true
   },
   {
     key: "lastName",
@@ -24,31 +26,19 @@ const columns: ColumnProps<TestData>[] = [
   }
 ];
 
-const Example1 = () => <Table data={testData} columns={columns} />;
+const Example12 = () => <Table data={testData} columns={columns} tableWidth={400} />;
 
 const Source = `
-interface TestData {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-}
-
-const data: TestData[] = _.range(3000).map(i => ({
-  id: i + 1,
-  firstName: randFirstName(),
-  lastName: randLastName(),
-  email: randEmail()
-}));
+const data = [/* ... */];
 
 const columns: ColumnProps<TestData>[] = [
-  { key: "id", header: "ID", width: 50 },
-  { key: "firstName", header: "First", width: 120 },
+  { key: "id", header: "ID", width: 50, frozen: true },
+  { key: "firstName", header: "First", width: 120, frozen: true },
   { key: "lastName", header: "Last", width: 120 },
   { key: "email", header: "Email", width: 250 }
 ];
 
-const Example = () => <Table data={data} columns={columns} />;
+const Example = () => <Table data={data} columns={columns} tableWidth={400} />;
 `;
 
-export { Example1, Source };
+export { Example12, Source };

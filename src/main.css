@@ -10,6 +10,13 @@
   padding: 8px;
 }
 
+.react-fluid-table .cell.frozen,
+.react-fluid-table .header-cell.frozen {
+  position: -webkit-sticky;
+  position: sticky;
+  z-index: 1;
+}
+
 .react-fluid-table-container {
   will-change: height;
 }
