@@ -2564,9 +2564,9 @@ postcss-value-parser@^4.0.2:
   integrity sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==
 
 postcss@^8.4.23, postcss@^8.4.27:
-  version "8.4.30"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.30.tgz#0e0648d551a606ef2192a26da4cabafcc09c1aa7"
-  integrity sha512-7ZEao1g4kd68l97aWG/etQKPKq07us0ieSZ2TnFDk11i0ZfDW2AwKHYU8qv4MZKqN2fdBfg+7q0ES06UA73C1g==
+  version "8.4.31"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.31.tgz#92b451050a9f914da6755af352bdc0192508656d"
+  integrity sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==
   dependencies:
     nanoid "^3.3.6"
     picocolors "^1.0.0"
@@ -2627,8 +2627,10 @@ react-fast-compare@^3.0.1:
   integrity sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==
 
 "react-fluid-table@link:..":
-  version "0.0.0"
-  uid ""
+  version "0.5.1"
+  dependencies:
+    react-resize-detector "^9.1.0"
+    react-window "^1.8.9"
 
 react-is@^16.13.1, react-is@^16.6.3:
   version "16.13.1"
@@ -2652,6 +2654,13 @@ react-refresh@^0.14.0:
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.14.0.tgz#4e02825378a5f227079554d4284889354e5f553e"
   integrity sha512-wViHqhAd8OHeLS/IRMJjTSDHF3U9eWi62F/MledQGPdJGDhodXJ9PBLNGr6WWL7qlH12Mt3TyTpbS+hGXMjCzQ==
+
+react-resize-detector@^9.1.0:
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/react-resize-detector/-/react-resize-detector-9.1.0.tgz#45ea7176e57f1a568abd0e3eafcbfd3532fb284e"
+  integrity sha512-vGFbfkIZp4itJqR4yl+GhjrZHtdlQvou1r10ek0yZUMkizKbPdekKTpPb003IV3b8E5BJFThVG0oocjE3lNsug==
+  dependencies:
+    lodash "^4.17.21"
 
 react-router-dom@^6.16.0:
   version "6.16.0"
