@@ -10,7 +10,7 @@ interface TableCellProps<T> {
   row: T;
   index: number;
   width?: number;
-  prevWidths: number[];
+  prevWidth: number;
   column: ColumnProps<T>;
   isExpanded: boolean;
   clearSizeCache: CacheFunction;
@@ -70,7 +70,7 @@ const TableCell = React.memo(function <T>({
   width,
   column,
   isExpanded,
-  prevWidths,
+  prevWidth,
   clearSizeCache,
   onExpanderClick
 }: TableCellProps<T>) {
@@ -78,7 +78,7 @@ const TableCell = React.memo(function <T>({
   const style: React.CSSProperties = {
     width: width || undefined,
     minWidth: width || undefined,
-    left: column.frozen ? prevWidths.reduce((pv, c) => pv + c, 0) : undefined
+    left: column.frozen ? prevWidth : undefined
   };
 
   // expander
@@ -275,7 +275,7 @@ function Row<T>({
             isExpanded={isExpanded}
             clearSizeCache={clearSizeCache}
             onExpanderClick={onExpanderClick}
-            prevWidths={pixelWidths.slice(0, i)}
+            prevWidth={c.frozen ? pixelWidths.slice(0, i).reduce((pv, c) => pv + c, 0) : 0}
           />
         ))}
       </RowContainer>

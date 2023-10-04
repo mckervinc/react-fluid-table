@@ -7,7 +7,7 @@ import { cx } from "./util";
 interface HeaderCellProps<T> {
   width: number;
   column: ColumnProps<T>;
-  prevWidths: number[];
+  prevWidth: number;
 }
 
 interface HeaderProps {
@@ -15,7 +15,7 @@ interface HeaderProps {
   style: React.CSSProperties;
 }
 
-const HeaderCell = React.memo(function <T>({ column, width, prevWidths }: HeaderCellProps<T>) {
+const HeaderCell = React.memo(function <T>({ column, width, prevWidth }: HeaderCellProps<T>) {
   // hooks
   const { dispatch, sortColumn: col, sortDirection, onSort } = useContext(TableContext);
 
@@ -26,7 +26,7 @@ const HeaderCell = React.memo(function <T>({ column, width, prevWidths }: Header
     cursor: column.sortable ? "pointer" : undefined,
     width: width || undefined,
     minWidth: width || undefined,
-    left: column.frozen ? prevWidths.reduce((pv, c) => pv + c, 0) : undefined
+    left: column.frozen ? prevWidth : undefined
   };
 
   // function(s)
@@ -112,7 +112,7 @@ const Header = forwardRef(({ children, ...rest }: HeaderProps, ref: any) => {
                 key={c.key}
                 column={c}
                 width={pixelWidths[i]}
-                prevWidths={pixelWidths.slice(0, i)}
+                prevWidth={c.frozen ? pixelWidths.slice(0, i).reduce((pv, c) => pv + c, 0) : 0}
               />
             ))}
           </div>

@@ -6,10 +6,10 @@ import { cx, findTableByUuid } from "./util";
 interface InnerFooterCellProps<T> {
   width: number;
   column: ColumnProps<T>;
-  prevWidths: number[];
+  prevWidth: number;
 }
 
-const FooterCell = React.memo(function <T>({ prevWidths, ...rest }: InnerFooterCellProps<T>) {
+const FooterCell = React.memo(function <T>({ prevWidth, ...rest }: InnerFooterCellProps<T>) {
   // hooks
   const { rows } = useContext(TableContext);
 
@@ -19,7 +19,7 @@ const FooterCell = React.memo(function <T>({ prevWidths, ...rest }: InnerFooterC
     width: width || undefined,
     minWidth: width || undefined,
     padding: !column.footer ? 0 : undefined,
-    left: column.frozen ? prevWidths.reduce((pv, c) => pv + c, 0) : undefined
+    left: column.frozen ? prevWidth : undefined
   };
 
   const FooterCellComponent = column.footer;
@@ -113,7 +113,7 @@ const Footer = () => {
               key={c.key}
               column={c}
               width={pixelWidths[i]}
-              prevWidths={pixelWidths.slice(0, i)}
+              prevWidth={c.frozen ? pixelWidths.slice(0, i).reduce((pv, c) => pv + c, 0) : 0}
             />
           ))}
         </div>
