@@ -10,6 +10,9 @@ dist
 .rpt2_cache
 stats.html
 
+# IDE
+.vscode
+
 # misc
 .DS_Store
 .env
