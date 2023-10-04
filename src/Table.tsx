@@ -61,10 +61,10 @@ const ListComponent = forwardRef(function (
   const treeRef = useRef(new NumberTree());
   const tableRef = useRef<HTMLDivElement>(null);
   const cacheRef = useRef<{ [index: number]: number }>({});
+  const defaultSizeRef = useRef(rowHeight || DEFAULT_ROW_HEIGHT);
   const { dispatch, uuid, columns, minColumnWidth, fixedWidth, remainingCols, pixelWidths } =
     useContext(TableContext);
   const [useRowWidth, setUseRowWidth] = useState(true);
-  const [defaultSize, setDefaultSize] = useState(rowHeight || DEFAULT_ROW_HEIGHT);
 
   // constants
   const hasFooter = useMemo(() => {
@@ -107,17 +107,18 @@ const ListComponent = forwardRef(function (
       const row = typeof queryParam === "number" ? findRowByUuidAndKey(uuid, key) : queryParam;
 
       if (!row) {
-        return cacheRef.current[dataIndex] || defaultSize;
+        return cacheRef.current[dataIndex] || defaultSizeRef.current;
       }
 
       const arr = [...row.children].slice(rowHeight ? 1 : 0) as HTMLElement[];
-      const res = arr.reduce((pv, c) => pv + c.offsetHeight, rowHeight || 0) || defaultSize;
+      const res =
+        arr.reduce((pv, c) => pv + c.offsetHeight, rowHeight || 0) || defaultSizeRef.current;
 
       // update the calculated height ref
       cacheRef.current[dataIndex] = res;
       return res;
     },
-    [uuid, data, rowHeight, defaultSize, generateKeyFromRow]
+    [uuid, data, rowHeight, generateKeyFromRow]
   );
 
   const updatePixelWidths = useCallback(() => {
@@ -275,10 +276,7 @@ const ListComponent = forwardRef(function (
           }
         });
 
-        const median = treeRef.current.getMedian();
-        if (median && defaultSize !== median) {
-          setDefaultSize(median);
-        }
+        defaultSizeRef.current = treeRef.current.getMedian();
       }}
       itemData={{
         rows: data,

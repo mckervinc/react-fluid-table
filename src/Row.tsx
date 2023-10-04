@@ -209,7 +209,7 @@ function Row<T>({
   const onExpanderClick = useCallback(() => {
     dispatch({ type: "updateExpanded", key: generateKeyFromRow(row, index) });
     expandedCalledRef.current = true;
-  }, [dispatch, row, index, generateKeyFromRow, expandedCalledRef]);
+  }, [dispatch, row, index, generateKeyFromRow]);
 
   const resetHeight = useCallback(() => {
     if (!rowRef.current || !pixelWidths.length) {
