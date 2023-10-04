@@ -107,11 +107,13 @@ const Example10 = () => {
             ) : (
               <div style={{ display: "flex" }}>
                 {columns.map((c, i) => {
-                  const width = `${widths[i]}px`;
+                  const width = widths[i];
                   const style: React.CSSProperties = {
                     width,
                     minWidth: width,
-                    padding: "8px"
+                    padding: "8px",
+                    position: c.frozen ? "sticky" : undefined,
+                    left: c.frozen ? widths.slice(0, i).reduce((pv, c) => pv + c, 0) : undefined
                   };
                   return (
                     <div key={c.key} style={style}>
@@ -296,11 +298,13 @@ const ComplexFooter = ({ stickyFooter }) => {
         <Footer>
           <div style={{ display: "flex" }}>
             {columns.map((c, i) => {
-              const width = \`\${widths[i]}px\`;
+              const width = widths[i];
               const style: React.CSSProperties = {
                 width,
                 minWidth: width,
-                padding: "8px"
+                padding: "8px",
+                position: c.frozen ? "sticky" : undefined,
+                left: c.frozen ? widths.slice(0, i).reduce((pv, c) => pv + c, 0) : undefined
               };
               return (
                 <div key={c.key} style={style}>

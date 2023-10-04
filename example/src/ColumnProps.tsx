@@ -89,6 +89,16 @@ const data: PropData[] = [
     description: "This sets the maximum pixel width of the column exactly"
   },
   {
+    prop: "sortable",
+    type: "boolean",
+    description: "This determines if a column is sortable"
+  },
+  {
+    prop: "frozen",
+    type: "boolean",
+    description: "This determines if a column is frozen"
+  },
+  {
     prop: "expander",
     type: "boolean | ExpanderElement",
     description: (

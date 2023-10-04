@@ -151,6 +151,10 @@ export interface ColumnProps<T> {
    */
   sortable?: boolean;
   /**
+   * Determines whether or not the column is frozen during horizontal scrolling.
+   */
+  frozen?: boolean;
+  /**
    * Marks this cell as an expansion cell. The style is pre-determined, and does the
    * functionalitty of collapsing/expanding a row.
    */

@@ -21,6 +21,10 @@ const Content = styled.div`
   box-shadow: 0 2px 8px #bbb;
 `;
 
+const BaseSegment = styled(Segment)`
+  flex-grow: 1;
+`;
+
 const Title = ({ title }: { title: string }) => (
   <Container>
     <Header size="huge">{title}</Header>
@@ -28,9 +32,9 @@ const Title = ({ title }: { title: string }) => (
 );
 
 const Wrapper = ({ children }: { children: React.ReactNode }) => (
-  <Segment basic>
+  <BaseSegment basic>
     <Content>{children}</Content>
-  </Segment>
+  </BaseSegment>
 );
 
 const Application = styled(Sidebar.Pushable)`
@@ -45,10 +49,19 @@ const PageContent = styled(Sidebar.Pusher)`
     overflow-y: auto;
   }
 
+  @media screen and (min-width: 769px) {
+    display: flex;
+    flex-direction: column;
+  }
+
   @media screen and (max-width: 768px) {
     width: 100%;
     transform: translate3d(0, 0, 0) !important;
   }
+`;
+
+const SnippetWrapper = styled.div`
+  flex: 1 1;
 `;
 
 const Banner = styled.code`
@@ -101,6 +114,9 @@ const LinkContainer = () => (
     </Menu.Item>
     <Menu.Item as={Link} to="/footer">
       Footer
+    </Menu.Item>
+    <Menu.Item as={Link} to="/frozen">
+      Frozen
     </Menu.Item>
     <Menu.Item as={Link} to="/props">
       Table Props
@@ -161,7 +177,11 @@ const Page = ({ title, code, children }: PageProps) => {
       <PageContent id="pusher">
         {!!title && <Title title={title} />}
         <Wrapper>{children}</Wrapper>
-        {!!code && <Snippet code={code} />}
+        {!!code && (
+          <SnippetWrapper>
+            <Snippet code={code} />
+          </SnippetWrapper>
+        )}
       </PageContent>
     </Application>
   );

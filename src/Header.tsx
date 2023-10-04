@@ -7,6 +7,7 @@ import { cx } from "./util";
 interface HeaderCellProps<T> {
   width: number;
   column: ColumnProps<T>;
+  prevWidth: number;
 }
 
 interface HeaderProps {
@@ -14,18 +15,18 @@ interface HeaderProps {
   style: React.CSSProperties;
 }
 
-const HeaderCell = React.memo(function <T>({ column, width }: HeaderCellProps<T>) {
+const HeaderCell = React.memo(function <T>({ column, width, prevWidth }: HeaderCellProps<T>) {
   // hooks
   const { dispatch, sortColumn: col, sortDirection, onSort } = useContext(TableContext);
 
   // constants
-  const cellWidth = width ? `${width}px` : undefined;
   const dir = sortDirection ? (sortDirection.toUpperCase() as SortDirection) : null;
 
   const style: React.CSSProperties = {
     cursor: column.sortable ? "pointer" : undefined,
-    width: cellWidth,
-    minWidth: cellWidth
+    width: width || undefined,
+    minWidth: width || undefined,
+    left: column.frozen ? prevWidth : undefined
   };
 
   // function(s)
@@ -59,7 +60,11 @@ const HeaderCell = React.memo(function <T>({ column, width }: HeaderCellProps<T>
 
   if (!column.header || typeof column.header === "string") {
     return (
-      <div className="header-cell" onClick={onClick} style={style}>
+      <div
+        className={cx(["header-cell", column.frozen && "frozen"])}
+        onClick={onClick}
+        style={style}
+      >
         {column.header ? <div className="header-cell-text">{column.header}</div> : null}
         {column.key !== col ? null : (
           <div className={cx(["header-cell-arrow", dir?.toLowerCase()])}></div>
@@ -70,7 +75,13 @@ const HeaderCell = React.memo(function <T>({ column, width }: HeaderCellProps<T>
 
   const ColumnCell = column.header;
   const headerDir = column.key === col ? dir || null : null;
-  return <ColumnCell style={style} onClick={onClick} sortDirection={headerDir} />;
+  return (
+    <ColumnCell
+      onClick={onClick}
+      sortDirection={headerDir}
+      style={{ ...style, position: "sticky", zIndex: 1 }}
+    />
+  );
 });
 
 HeaderCell.displayName = "HeaderCell";
@@ -82,6 +93,9 @@ const Header = forwardRef(({ children, ...rest }: HeaderProps, ref: any) => {
   // variables
   const { scrollWidth, clientWidth } = ref.current || NO_NODE;
   const width = scrollWidth <= clientWidth ? "100%" : undefined;
+  const stickyStyle: React.CSSProperties = {
+    zIndex: columns.find(c => c.frozen) ? 2 : undefined
+  };
 
   return (
     <div
@@ -90,11 +104,16 @@ const Header = forwardRef(({ children, ...rest }: HeaderProps, ref: any) => {
       data-container-key={`${uuid}-container`}
       {...rest}
     >
-      <div className="sticky-header" data-header-key={`${uuid}-header`}>
+      <div className="sticky-header" data-header-key={`${uuid}-header`} style={stickyStyle}>
         <div className="row-wrapper" style={{ width }}>
           <div className={cx(["react-fluid-table-header", headerClassname])} style={headerStyle}>
             {columns.map((c, i) => (
-              <HeaderCell key={c.key} column={c} width={pixelWidths[i]} />
+              <HeaderCell
+                key={c.key}
+                column={c}
+                width={pixelWidths[i]}
+                prevWidth={c.frozen ? pixelWidths.slice(0, i).reduce((pv, c) => pv + c, 0) : 0}
+              />
             ))}
           </div>
         </div>
