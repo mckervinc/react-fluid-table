@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from "react";
 import { ColumnProps, Table } from "react-fluid-table";
 import { Button, Form, Icon, Input } from "semantic-ui-react";
@@ -116,7 +117,7 @@ const Example11 = () => {
       <StyledTable
         borders
         data={testData.slice(0, size)}
-        columns={columns}
+        columns={columns as unknown as any[]}
         tableHeight={tableHeight}
         minTableHeight={minTableHeight}
         maxTableHeight={maxTableHeight}
