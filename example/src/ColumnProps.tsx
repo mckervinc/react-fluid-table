@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { Table } from "react-fluid-table";
 import styled from "styled-components";
@@ -148,7 +149,7 @@ const data: PropData[] = [
 ];
 
 const ColumnPropsTable = () => (
-  <StyledTable borders data={data} columns={columns} tableHeight={400} />
+  <StyledTable borders data={data} columns={columns as unknown as any[]} tableHeight={400} />
 );
 
 export default ColumnPropsTable;
