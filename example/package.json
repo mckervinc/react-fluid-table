@@ -7,35 +7,36 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "start": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ngneat/falso": "^7.1.1",
+    "@ngneat/falso": "^7.2.0",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-fluid-table": "link:..",
-    "react-router-dom": "^6.16.0",
+    "react-router-dom": "^6.23.1",
     "react-syntax-highlighter": "^15.5.0",
     "semantic-ui-css": "^2.5.0",
-    "semantic-ui-react": "^2.1.4",
-    "styled-components": "^6.0.8"
+    "semantic-ui-react": "^2.1.5",
+    "styled-components": "^6.1.11"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.199",
+    "@types/lodash": "^4.17.4",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
-    "@types/react-syntax-highlighter": "^15.5.7",
+    "@types/react-syntax-highlighter": "^15.5.13",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
-    "@vitejs/plugin-react": "^4.0.3",
-    "eslint": "^8.45.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.3",
-    "typescript": "^5.0.2",
-    "vite": "^4.4.5"
+    "@vitejs/plugin-react": "^4.3.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.7",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11"
   },
   "volta": {
     "node": "18.17.0",

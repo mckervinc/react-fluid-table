@@ -5,10 +5,11 @@ import { ColumnProps } from "..";
  * @param classes list of potential className strings
  * @returns a combined className string
  */
-export const cx = (classes: any[]) => {
-  return classes
-    .filter(x => !!x && typeof x === "string")
-    .map((x: string) => x.trim())
+export const cx = (...args: (string | number | null | boolean | undefined)[]) => {
+  return args
+    .flat()
+    .filter((x): x is Exclude<typeof x, null | undefined> => !!x)
+    .map(x => x.toString().trim())
     .join(" ");
 };
 

@@ -4,7 +4,7 @@ export type SortDirection = "ASC" | "DESC" | null;
 
 type CacheFunction = (dataIndex: number, forceUpdate?: boolean) => void;
 
-export interface ExpanderProps {
+export type ExpanderProps = {
   /**
    * whether or not the row is expanded
    */
@@ -19,9 +19,9 @@ export interface ExpanderProps {
    * required style for the expander
    */
   style: CSSProperties;
-}
+};
 
-export interface CellProps<T> {
+export type CellProps<T> = {
   /**
    * the data for the row
    */
@@ -38,9 +38,9 @@ export interface CellProps<T> {
    * optional custom styles for each cell
    */
   style?: CSSProperties;
-}
+};
 
-export interface HeaderProps {
+export type HeaderProps = {
   /**
    * the onclick handler for the header cell
    * @param e mouse event
@@ -55,9 +55,9 @@ export interface HeaderProps {
    * the direction of the sort, if applicable
    */
   sortDirection: SortDirection;
-}
+};
 
-export interface RowRenderProps<T> {
+export type RowRenderProps<T> = {
   /**
    * the data for the row
    */
@@ -78,9 +78,9 @@ export interface RowRenderProps<T> {
    * the className for the row-renderer
    */
   className?: string;
-}
+};
 
-export interface SubComponentProps<T> {
+export type SubComponentProps<T> = {
   /**
    * the data for the row
    */
@@ -97,17 +97,17 @@ export interface SubComponentProps<T> {
    * an optional function that can be used to clear the size cache
    */
   clearSizeCache: CacheFunction;
-}
+};
 
-export interface FooterProps<T> {
+export type FooterProps<T> = {
   /**
    * exposes the widths of each column to the footer
    */
   widths: number[];
   rows: T[];
-}
+};
 
-export interface FooterCellProps<T> {
+export type FooterCellProps<T> = {
   /**
    * the column that the current footer cell is pulling from
    */
@@ -120,9 +120,9 @@ export interface FooterCellProps<T> {
    * all the rows in the table. this can be useful for aggregation
    */
   rows: T[];
-}
+};
 
-export interface ColumnProps<T> {
+export type ColumnProps<T> = {
   /**
    * The unique identifier for a particular column. This is also used as an index
    * to get the particular value out of the row in order to display.
@@ -163,7 +163,7 @@ export interface ColumnProps<T> {
    * Used to render custom content inside of a cell. This is useful for rendering different
    * things inside of the react-fluid-table cell container.
    */
-  content?: string | number | ((props: CellProps<T>) => ReactNode);
+  content?: string | number | ((props: CellProps<T>) => ReactNode | JSX.Element);
   /**
    * An advanced feature, this is used to render an entire cell, including the cell container.
    * The `content` prop is ignored if this property is enabled.
@@ -173,14 +173,14 @@ export interface ColumnProps<T> {
    * specifies whether or not to display a footer cell
    */
   footer?: (props: FooterCellProps<T>) => ReactNode;
-}
+};
 
-export interface TableRef {
+export type TableRef = {
   scrollTo: (scrollOffset: number) => void;
   scrollToItem: (index: number, align?: string) => void;
-}
+};
 
-export interface TableProps<T> {
+export type TableProps<T> = {
   // required props
   /**
    * A list of rows that are to be displayed in the table.
@@ -273,6 +273,16 @@ export interface TableProps<T> {
    */
   rowClassname?: string | ((index: number) => string);
   /**
+   * React styles used for customizing each row container. Could be an object or
+   * a function that takes the index of the row and returns an object.
+   */
+  rowContainerStyle?: CSSProperties | ((index: number) => CSSProperties);
+  /**
+   * React className used for customizing each row container. Could be an object or
+   * a function that takes the index of the row and returns an object.
+   */
+  rowContainerClassname?: string | ((index: number) => string);
+  /**
    * React styles used for customizing the footer.
    */
   footerStyle?: CSSProperties;
@@ -314,7 +324,7 @@ export interface TableProps<T> {
    * a ref for specific table functions
    */
   ref?: ForwardedRef<TableRef>;
-}
+};
 
 /**
  * A virtualized table build on top of `react-window`.

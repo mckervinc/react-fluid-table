@@ -26,16 +26,16 @@ import {
   randomString
 } from "./util";
 
-interface Data<T> {
+type Data<T> = {
   rows: T[];
   [key: string]: any;
-}
+};
 
-interface ListProps<T> extends Omit<TableProps<T>, "columns" | "borders"> {
+type ListProps<T> = Omit<TableProps<T>, "columns" | "borders"> & {
   height: number;
   width: number;
   borders: boolean;
-}
+};
 
 /**
  * The main table component
@@ -320,17 +320,27 @@ const Table = forwardRef(function <T>(
   ref: React.ForwardedRef<TableRef>
 ) {
   // TODO: do all prop validation here
+  const warned = useRef(false);
   const [uuid] = useState(`${id || "data-table"}-${randomString(5)}`);
 
   // warn if a minHeight is set without a maxHeight
-  let maxHeight = maxTableHeight;
-  if (minTableHeight && minTableHeight > 0 && (!maxTableHeight || maxTableHeight <= 0)) {
-    maxHeight = minTableHeight + 400;
-  }
+  const maxHeight = useMemo(() => {
+    if (minTableHeight && minTableHeight > 0 && (!maxTableHeight || maxTableHeight <= 0)) {
+      return minTableHeight + 400;
+    }
+
+    return maxTableHeight;
+  }, [minTableHeight, maxTableHeight]);
 
   // handle warning
   useEffect(() => {
-    if (minTableHeight && minTableHeight > 0 && (!maxTableHeight || maxTableHeight <= 0)) {
+    if (
+      minTableHeight &&
+      minTableHeight > 0 &&
+      (!maxTableHeight || maxTableHeight <= 0) &&
+      !warned.current
+    ) {
+      warned.current = true;
       console.warn(
         `maxTableHeight was either not present, or is <= 0, but you provided a minTableHeight of ${minTableHeight}px. As a result, the maxTableHeight will be set to ${
           minTableHeight + 400

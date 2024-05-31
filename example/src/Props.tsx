@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { Table as BaseTable, ColumnProps } from "react-fluid-table";
 import { Divider, Header, Icon, List } from "semantic-ui-react";
@@ -5,6 +6,16 @@ import styled from "styled-components";
 import ColumnPropsTable from "./ColumnProps";
 import { Snippet } from "./Snippet";
 import { InlineCode } from "./components/library/InlineCode";
+
+interface PropData {
+  prop: string;
+  type: string;
+  description: string;
+  required?: boolean;
+  content?: () => React.ReactNode;
+  expandedType?: () => React.ReactNode;
+  default?: string | number;
+}
 
 const Container = styled.div`
   padding: 1em;
@@ -38,16 +49,6 @@ const Item = styled(List.Item)`
   width: 100%;
 `;
 
-interface PropData {
-  prop: string;
-  type: string;
-  description: string;
-  required?: boolean;
-  content?: () => React.ReactNode;
-  expandedType?: () => React.ReactNode;
-  default?: string | number;
-}
-
 const columns: ColumnProps<PropData>[] = [
   {
     key: "prop",
@@ -77,7 +78,7 @@ const columns: ColumnProps<PropData>[] = [
     key: "default",
     header: "Default",
     width: 100,
-    content: ({ row }: { row: PropData }) => (row.default ? <code>{row.default}</code> : null)
+    content: ({ row }) => (row.default ? <code>{row.default}</code> : null)
   },
   {
     key: "description",
@@ -218,6 +219,18 @@ const data: PropData[] = [
       "Add custom css className to each row element. One can also pass in a function that takes in the row number in order to provide custom styling for particular rows."
   },
   {
+    prop: "rowContainerStyle",
+    type: "object | (index: number) => object",
+    description:
+      "Add custom css styles to each row container element. One can also pass in a function that takes in the row number in order to provide custom styling for particular rows."
+  },
+  {
+    prop: "rowContainerClassname",
+    type: "string | (index: number) => string",
+    description:
+      "Add custom css className to each row container element. One can also pass in a function that takes in the row number in order to provide custom styling for particular rows."
+  },
+  {
     prop: "subComponent",
     type: "Element",
     description: "The element that is rendered on a table with row expansion"
@@ -337,7 +350,7 @@ const Props = () => (
         </Header.Subheader>
       </Header.Content>
     </Header>
-    <Table borders data={data} columns={columns} tableHeight={500} />
+    <Table borders data={data} columns={columns as unknown as any[]} tableHeight={500} />
     <Divider section />
     <Header dividing color="red">
       Required Props
@@ -692,6 +705,16 @@ interface TableProps<T> {
    * a function that takes the index of the row and returns an object.
    */
   rowClassname?: string | ((index: number) => string);
+  /**
+   * React styles used for customizing each row container. Could be an object or
+   * a function that takes the index of the row and returns an object.
+   */
+  rowContainerStyle?: CSSProperties | ((index: number) => CSSProperties);
+  /**
+   * React className used for customizing each row container. Could be an object or
+   * a function that takes the index of the row and returns an object.
+   */
+  rowContainerClassname?: string | ((index: number) => string);
   /**
    * React styles used for customizing the footer.
    */

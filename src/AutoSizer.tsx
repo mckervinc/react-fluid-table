@@ -4,7 +4,7 @@ import { TableContext } from "./TableContext";
 import { DEFAULT_FOOTER_HEIGHT, DEFAULT_HEADER_HEIGHT, DEFAULT_ROW_HEIGHT } from "./constants";
 import { findFooterByUuid, findHeaderByUuid } from "./util";
 
-interface AutoSizerProps {
+type AutoSizerProps = {
   numRows: number;
   rowHeight?: number;
   headerHeight?: number;
@@ -14,15 +14,15 @@ interface AutoSizerProps {
   minTableHeight?: number;
   maxTableHeight?: number;
   children: ({ height, width }: { height: number; width: number }) => React.ReactNode;
-}
+};
 
-interface Heights {
+type Heights = {
   tableHeight: number;
   containerHeight: number;
   computedHeight: number;
   minHeight: number;
   maxHeight: number;
-}
+};
 
 const findCorrectHeight = ({
   tableHeight,

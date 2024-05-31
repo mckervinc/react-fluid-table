@@ -16,12 +16,17 @@ const TableWrapper = forwardRef(
     ref: React.ForwardedRef<HTMLDivElement>
   ) => {
     // hooks
-    const { id, tableStyle, uuid } = useContext(TableContext);
+    const { id, tableStyle, uuid, pixelWidths } = useContext(TableContext);
 
     // variables
+    const width =
+      !isNaN(Number(style.width)) && !style.width
+        ? pixelWidths.reduce((pv, c) => pv + c, 0)
+        : style.width;
     const styles: React.CSSProperties = {
       ...(tableStyle || {}),
-      ...style
+      ...style,
+      width
     };
 
     return (
@@ -30,7 +35,7 @@ const TableWrapper = forwardRef(
         ref={ref}
         style={styles}
         data-table-key={uuid}
-        className={cx(["react-fluid-table", className])}
+        className={cx("react-fluid-table", className)}
         {...rest}
       >
         {children}

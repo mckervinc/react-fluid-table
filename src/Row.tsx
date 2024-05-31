@@ -1,4 +1,11 @@
-import React, { useCallback, useContext, useLayoutEffect, useRef } from "react";
+import React, {
+  CSSProperties,
+  memo,
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useRef
+} from "react";
 import { ListChildComponentProps } from "react-window";
 import { CacheFunction, ColumnProps, RowRenderProps, SubComponentProps } from "../index";
 import { TableContext } from "./TableContext";
@@ -6,7 +13,7 @@ import Minus from "./svg/minus-circle.svg";
 import Plus from "./svg/plus-circle.svg";
 import { cx } from "./util";
 
-interface TableCellProps<T> {
+type TableCellProps<T> = {
   row: T;
   index: number;
   width?: number;
@@ -15,24 +22,26 @@ interface TableCellProps<T> {
   isExpanded: boolean;
   clearSizeCache: CacheFunction;
   onExpanderClick: (event?: React.MouseEvent<Element, MouseEvent>) => void;
-}
+};
 
-interface RowContainerProps<T> {
+type RowContainerProps<T> = {
   row: T;
   index: number;
   className?: string;
   children: React.ReactNode;
-  containerStyle: React.CSSProperties;
+  containerStyle: CSSProperties;
   onRowClick: (event: React.MouseEvent<Element, MouseEvent>, data: { index: number }) => void;
   rowRenderer: (props: RowRenderProps<T>) => JSX.Element;
-}
+};
 
 interface RowProps<T> extends Omit<ListChildComponentProps<T>, "data"> {
   row: T;
   borders: boolean;
   rowHeight: number;
   rowClassname: string | ((index: number) => string);
-  rowStyle: React.CSSProperties | ((index: number) => React.CSSProperties);
+  rowStyle: CSSProperties | ((index: number) => CSSProperties);
+  rowContainerClassname: string | ((index: number) => string);
+  rowContainerStyle: CSSProperties | ((index: number) => CSSProperties);
   useRowWidth: boolean;
   clearSizeCache: CacheFunction;
   calculateHeight: (
@@ -45,10 +54,10 @@ interface RowProps<T> extends Omit<ListChildComponentProps<T>, "data"> {
   rowRenderer: (props: RowRenderProps<T>) => JSX.Element;
 }
 
-type CSSFunction = (index: number) => React.CSSProperties;
-type CSSClassFunction = (index: number) => string;
-
-const getRowStyle = (index: number, rowStyle?: React.CSSProperties | CSSFunction) => {
+const getRowStyle = (
+  index: number,
+  rowStyle?: CSSProperties | ((index: number) => CSSProperties)
+) => {
   if (!rowStyle) {
     return {};
   }
@@ -56,7 +65,7 @@ const getRowStyle = (index: number, rowStyle?: React.CSSProperties | CSSFunction
   return typeof rowStyle === "function" ? rowStyle(index) : rowStyle;
 };
 
-const getRowClassname = (index: number, rowClassname?: string | CSSClassFunction) => {
+const getRowClassname = (index: number, rowClassname?: string | ((index: number) => string)) => {
   if (!rowClassname) {
     return undefined;
   }
@@ -64,7 +73,7 @@ const getRowClassname = (index: number, rowClassname?: string | CSSClassFunction
   return typeof rowClassname === "function" ? rowClassname(index) : rowClassname;
 };
 
-const TableCell = React.memo(function <T>({
+const TableCell = memo(function <T>({
   row,
   index,
   width,
@@ -75,7 +84,7 @@ const TableCell = React.memo(function <T>({
   onExpanderClick
 }: TableCellProps<T>) {
   // cell style
-  const style: React.CSSProperties = {
+  const style: CSSProperties = {
     width: width || undefined,
     minWidth: width || undefined,
     left: column.frozen ? prevWidth : undefined
@@ -87,7 +96,7 @@ const TableCell = React.memo(function <T>({
       const Logo = isExpanded ? Minus : Plus;
 
       return (
-        <div className={cx(["cell", column.frozen && "frozen"])} style={style}>
+        <div className={cx("cell", column.frozen && "frozen")} style={style}>
           <Logo className="expander" onClick={onExpanderClick} />
         </div>
       );
@@ -116,7 +125,7 @@ const TableCell = React.memo(function <T>({
       }
     }
     return (
-      <div className={cx(["cell", column.frozen && "frozen"])} style={style}>
+      <div className={cx("cell", column.frozen && "frozen")} style={style}>
         {content}
       </div>
     );
@@ -168,7 +177,7 @@ function RowContainer<T>({
 
   return (
     <div
-      className={cx(["row-container", className])}
+      className={cx("row-container", className)}
       style={containerStyle}
       onClick={onContainerClick}
     >
@@ -186,6 +195,8 @@ function Row<T>({
   rowHeight,
   onRowClick,
   rowClassname,
+  rowContainerStyle,
+  rowContainerClassname,
   useRowWidth,
   rowRenderer,
   clearSizeCache,
@@ -211,14 +222,6 @@ function Row<T>({
 
   // sub component props
   const subProps: SubComponentProps<T> = { row, index, isExpanded, clearSizeCache };
-
-  // row styling
-  const borderBottom = borders ? undefined : "none";
-  const containerStyle: React.CSSProperties = {
-    height: containerHeight,
-    ...getRowStyle(index, rowStyle)
-  };
-  const containerClassname = getRowClassname(index, rowClassname);
 
   // function(s)
   const onExpanderClick = useCallback(() => {
@@ -252,18 +255,26 @@ function Row<T>({
   return (
     <div
       ref={rowRef}
-      className="react-fluid-table-row"
+      className={cx("react-fluid-table-row", getRowClassname(index, rowContainerClassname))}
       data-index={index}
       data-row-key={rowKey}
-      style={{ ...style, borderBottom, width: useRowWidth ? style.width : undefined }}
+      style={{
+        ...getRowStyle(index, rowContainerStyle),
+        ...style,
+        borderBottom: borders ? undefined : "none",
+        width: useRowWidth ? style.width : undefined
+      }}
     >
       <RowContainer
         row={row}
         index={index}
         onRowClick={onRowClick}
         rowRenderer={rowRenderer}
-        className={containerClassname}
-        containerStyle={containerStyle}
+        className={getRowClassname(index, rowClassname)}
+        containerStyle={{
+          height: containerHeight,
+          ...getRowStyle(index, rowStyle)
+        }}
       >
         {columns.map((c, i) => (
           <TableCell

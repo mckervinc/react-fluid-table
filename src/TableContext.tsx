@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useReducer, useRef } from "react";
 import { ColumnProps, FooterProps, SortDirection } from "../index";
 
-interface Action {
+type Action = {
   type: string;
   col?: string | null;
   dir?: SortDirection;
@@ -9,13 +9,10 @@ interface Action {
   widths?: number[];
   initialState?: TableState;
   rows?: any[];
-}
+};
 
-interface ReactContext {
+type TableState = {
   dispatch: React.Dispatch<Action>;
-}
-
-interface TableState extends ReactContext {
   rows: any[];
   pixelWidths: number[];
   uuid: string;
@@ -37,7 +34,7 @@ interface TableState extends ReactContext {
   headerClassname?: string;
   footerStyle?: React.CSSProperties;
   footerClassname?: string;
-}
+};
 
 const baseState: TableState = {
   dispatch: () => {},
@@ -71,7 +68,7 @@ const fields: TableStateKey[] = [
   "footerComponent"
 ];
 
-const TableContext = createContext<TableState>(baseState);
+const TableContext = createContext(baseState);
 
 function findColumnWidthConstants<T>(columns: ColumnProps<T>[]) {
   return columns.reduce(
@@ -84,23 +81,26 @@ function findColumnWidthConstants<T>(columns: ColumnProps<T>[]) {
 }
 
 const reducer = (state: TableState, action: Action): TableState => {
-  switch (action.type) {
+  // instance
+  const { type, col = null, dir = null, key = "", widths = [], rows = [], initialState } = action;
+
+  // switch
+  switch (type) {
     case "updateSortedColumn":
-      return { ...state, sortColumn: action.col || null, sortDirection: action.dir || null };
+      return { ...state, sortColumn: col, sortDirection: dir };
     case "updateExpanded":
-      const key = action.key || "";
       return {
         ...state,
         expanded: { ...state.expanded, [key]: !state.expanded[key] }
       };
     case "updatePixelWidths":
-      return { ...state, pixelWidths: action.widths || [] };
+      return { ...state, pixelWidths: widths };
     case "updateRows":
-      return { ...state, rows: action.rows || [] };
+      return { ...state, rows };
     case "refresh":
       return {
         ...state,
-        ...action.initialState
+        ...initialState
       };
     default:
       return state;

@@ -24,7 +24,7 @@ const FooterCell = React.memo(function <T>({ prevWidth, ...rest }: InnerFooterCe
 
   const FooterCellComponent = column.footer;
   return (
-    <div className={cx(["cell", column.frozen && "frozen"])} style={style}>
+    <div className={cx("cell", column.frozen && "frozen")} style={style}>
       {!!FooterCellComponent && <FooterCellComponent rows={rows} {...rest} />}
     </div>
   );
@@ -104,7 +104,7 @@ const Footer = () => {
         ref={ref}
         style={{ border: !hasFooter ? "none" : undefined, ...style }}
         data-footer-key={`${uuid}-footer`}
-        className={cx(["react-fluid-table-footer", stickyFooter && "sticky", footerClassname])}
+        className={cx("react-fluid-table-footer", stickyFooter && "sticky", footerClassname)}
         onScroll={e => onScroll(e.target as HTMLDivElement, findTableByUuid(uuid))}
       >
         <div className="row-container">
@@ -126,7 +126,7 @@ const Footer = () => {
       ref={ref}
       style={style}
       data-footer-key={`${uuid}-footer`}
-      className={cx(["react-fluid-table-footer", stickyFooter && "sticky", footerClassname])}
+      className={cx("react-fluid-table-footer", stickyFooter && "sticky", footerClassname)}
       onScroll={e => onScroll(e.target as HTMLDivElement, findTableByUuid(uuid))}
     >
       <FooterComponent rows={rows} widths={pixelWidths} />

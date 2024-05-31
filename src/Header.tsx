@@ -4,16 +4,16 @@ import { TableContext } from "./TableContext";
 import { NO_NODE } from "./constants";
 import { cx } from "./util";
 
-interface HeaderCellProps<T> {
+type HeaderCellProps<T> = {
   width: number;
   column: ColumnProps<T>;
   prevWidth: number;
-}
+};
 
-interface HeaderProps {
+type HeaderProps = {
   children: React.ReactNode;
   style: React.CSSProperties;
-}
+};
 
 const HeaderCell = React.memo(function <T>({ column, width, prevWidth }: HeaderCellProps<T>) {
   // hooks
@@ -60,14 +60,10 @@ const HeaderCell = React.memo(function <T>({ column, width, prevWidth }: HeaderC
 
   if (!column.header || typeof column.header === "string") {
     return (
-      <div
-        className={cx(["header-cell", column.frozen && "frozen"])}
-        onClick={onClick}
-        style={style}
-      >
+      <div className={cx("header-cell", column.frozen && "frozen")} onClick={onClick} style={style}>
         {column.header ? <div className="header-cell-text">{column.header}</div> : null}
         {column.key !== col ? null : (
-          <div className={cx(["header-cell-arrow", dir?.toLowerCase()])}></div>
+          <div className={cx("header-cell-arrow", dir?.toLowerCase())}></div>
         )}
       </div>
     );
@@ -106,7 +102,7 @@ const Header = forwardRef(({ children, ...rest }: HeaderProps, ref: any) => {
     >
       <div className="sticky-header" data-header-key={`${uuid}-header`} style={stickyStyle}>
         <div className="row-wrapper" style={{ width }}>
-          <div className={cx(["react-fluid-table-header", headerClassname])} style={headerStyle}>
+          <div className={cx("react-fluid-table-header", headerClassname)} style={headerStyle}>
             {columns.map((c, i) => (
               <HeaderCell
                 key={c.key}
