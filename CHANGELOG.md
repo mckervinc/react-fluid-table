@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.5.2
+
+_2024-05-30_
+
+### Features
+
+- adds `rowContainerStyle` vs. `roeContainerClassname`
+
 ## 0.5.1
 
 _2023-10-04_
