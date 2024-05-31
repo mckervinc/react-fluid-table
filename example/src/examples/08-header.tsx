@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import _ from "lodash";
 import React, { useState } from "react";
 import { ColumnProps, HeaderProps, SortDirection, Table } from "react-fluid-table";
@@ -19,7 +20,7 @@ const HeaderCell = ({ name, sortDirection, style, onClick }: HeaderCellProps) =>
     <Arrow size="small" name={`chevron ${sortDirection === "ASC" ? "up" : "down"}`} />
   );
 
-  const cellStyle = {
+  const cellStyle: any = {
     background: sortDirection ? "rgb(39, 40, 34)" : undefined,
     ...style
   };

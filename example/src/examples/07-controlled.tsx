@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   randCatchPhrase,
   randCity,
@@ -104,7 +105,7 @@ const Controlled = ({ data, height, columns: variableColumns }: ControlledProps)
     <StyledTable
       borders
       data={rows}
-      columns={variableColumns}
+      columns={variableColumns as unknown as any[]}
       tableHeight={height}
       rowHeight={35}
       onSort={onSort}

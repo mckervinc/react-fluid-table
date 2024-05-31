@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from "react";
 import { ColumnProps, FooterProps, Table } from "react-fluid-table";
 import { Checkbox, Form, Grid, Icon, Input, Radio } from "semantic-ui-react";
@@ -192,11 +193,11 @@ const Example10 = () => {
       <StyledTable
         borders
         data={testData.slice(0, 30)}
-        columns={columns}
+        columns={columns as unknown as any[]}
         stickyFooter={sticky}
         tableHeight={400}
         footerStyle={{ backgroundColor: "white" }}
-        footerComponent={InnerFooter}
+        footerComponent={InnerFooter as unknown as any}
       />
     </>
   );

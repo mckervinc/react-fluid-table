@@ -172,7 +172,7 @@ export type ColumnProps<T> = {
   /**
    * specifies whether or not to display a footer cell
    */
-  footer?: (props: FooterCellProps<T>) => ReactNode;
+  footer?: (props: FooterCellProps<T>) => ReactNode | JSX.Element;
 };
 
 export type TableRef = {
@@ -310,7 +310,7 @@ export type TableProps<T> = {
   /**
    * When a column has `expander`, this component will be rendered under the row.
    */
-  subComponent?: (props: SubComponentProps<T>) => ReactNode;
+  subComponent?: (props: SubComponentProps<T>) => ReactNode | JSX.Element;
   /**
    * The callback that gets called every time a row is clicked.
    */
