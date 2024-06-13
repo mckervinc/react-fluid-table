@@ -1,4 +1,5 @@
 import { RouterProvider, createHashRouter } from "react-router-dom";
+import "react-fluid-table/dist/index.css";
 import Page from "./Page";
 import Props from "./Props";
 import { Example1, Source as Example1Code } from "./examples/01-base";

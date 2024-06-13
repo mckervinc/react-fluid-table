@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 0.5.4
+
+_2024-06-13_
+
+### Features
+
+- **BREAKING:** decouples the CSS. Now, at the top of your file, add this:
+```jsx
+import "react-fluid-table/dist/index.css";
+```
+
 ## 0.5.3
 
 _2024-06-13_

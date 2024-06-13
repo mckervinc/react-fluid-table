@@ -19,6 +19,7 @@ npm i react-fluid-table
 ## Usage
 
 ```jsx
+import "react-fluid-table/dist/index.css"; // this only needs to be imported once
 import { Table } from "react-fluid-table";
 
 const data = _.range(100).map(i => ({

@@ -1,12 +1,12 @@
-.rft .rft-cell,
-.rft .rft-header-cell {
+.rft-cell,
+.rft-header-cell {
   box-sizing: border-box;
   display: flex;
   padding: 8px;
 }
 
-.rft .rft-cell.frozen,
-.rft .rft-header-cell.frozen {
+.rft-cell.frozen,
+.rft-header-cell.frozen {
   position: sticky;
   z-index: 1;
 }

@@ -30,7 +30,10 @@ const config = {
   ],
   plugins: [
     postcss({
-      plugins: []
+      plugins: [],
+      minimize: true,
+      include: "**/main.css",
+      extract: resolve("dist/main.css")
     }),
     svgr(),
     external(),
