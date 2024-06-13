@@ -2,8 +2,6 @@ import { CSSProperties, ForwardedRef, ReactNode } from "react";
 
 export type SortDirection = "ASC" | "DESC" | null;
 
-type CacheFunction = (dataIndex: number, forceUpdate?: boolean) => void;
-
 export type ExpanderProps<T> = {
   /**
    * the data for the row
@@ -41,7 +39,7 @@ export type CellProps<T> = {
   /**
    * an optional function that can be used to clear the size cache
    */
-  clearSizeCache: CacheFunction;
+  clearSizeCache: (dataIndex: number, forceUpdate?: boolean) => void;
   /**
    * optional custom styles for each cell
    */
@@ -104,7 +102,7 @@ export type SubComponentProps<T> = {
   /**
    * an optional function that can be used to clear the size cache
    */
-  clearSizeCache: CacheFunction;
+  clearSizeCache: (dataIndex: number, forceUpdate?: boolean) => void;
 };
 
 export type FooterProps<T> = {
@@ -299,9 +297,10 @@ export type TableProps<T> = {
    */
   footerClassname?: string;
   /**
-   * set expanded rows
+   * set expanded rows. Could be an object or a function that takes the index of
+   * the row and returns a boolean.
    */
-  expandedRows?: { [x: number]: boolean };
+  expandedRows?: { [x: number]: boolean } | ((index: number) => boolean);
   /**
    * called when a row is expanded
    * @param value information about the row that is expanded/shrunk
@@ -338,6 +337,10 @@ export type TableProps<T> = {
    * more row customization options.
    */
   rowRenderer?: (props: RowRenderProps<T>) => JSX.Element;
+  /**
+   * advanced: this may help address flicker when toggling all rows
+   */
+  forceReset?: boolean;
   /**
    * a ref for specific table functions
    */

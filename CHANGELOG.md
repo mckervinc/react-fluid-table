@@ -8,6 +8,7 @@ _2024-06-13_
 
 - adds `row` and `index` as properties when using `expander`
 - adds `onExpandRow` to allow row expansion to be controlled
+- adds ability to calculate `expanded` by using a function
 
 ## 0.5.2
 

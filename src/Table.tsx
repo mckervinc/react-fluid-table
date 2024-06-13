@@ -94,7 +94,7 @@ const ListComponent = forwardRef(function (
 
     timeoutRef.current = window.setTimeout(() => {
       const node = tableRef.current?.children[1].children[0] as HTMLElement;
-      const resetIndex = parseInt(node?.dataset.index || "0") + 1;
+      const resetIndex = Number(node?.dataset.index || "0") + 1;
       tree.clearFromIndex(resetIndex);
       listRef.current.resetAfterIndex(resetIndex);
     }, 50);
@@ -172,7 +172,7 @@ const ListComponent = forwardRef(function (
 
         // manually change the `top` and `height` for visible rows
         elements.forEach((node, i) => {
-          const dataIndex = parseInt(node.dataset.index || "0");
+          const dataIndex = Number(node.dataset.index || "0");
 
           // if the row is incorrect, update the tops going forward
           const height: number = cache[dataIndex + 1].size;
@@ -180,7 +180,7 @@ const ListComponent = forwardRef(function (
 
           // case 0: the first element, where the top is correct
           if (i === 0) {
-            prevTop = parseInt(node.style.top);
+            prevTop = Number(node.style.top);
             prevHeight = computed;
 
             if (height !== computed) {
@@ -267,7 +267,7 @@ const ListComponent = forwardRef(function (
         // add calculated height to tree
         [...tableRef.current.children[1].children].forEach(e => {
           const node = e as HTMLDivElement;
-          const dataIndex = parseInt(node.dataset.index || "0");
+          const dataIndex = Number(node.dataset.index || "0");
           if (!tree.hasIndex(dataIndex)) {
             tree.insert({
               index: dataIndex,
@@ -314,7 +314,7 @@ const Table = forwardRef(function <T>(
     footerClassname,
     maxTableHeight,
     minTableHeight,
-    expandedRows = {},
+    expandedRows,
     borders = false,
     minColumnWidth = 80,
     stickyFooter = false,
@@ -358,7 +358,6 @@ const Table = forwardRef(function <T>(
         uuid,
         columns,
         minColumnWidth,
-        expanded: expandedRows,
         onSort,
         sortColumn: sortColumn || null,
         sortDirection: sortDirection || null,
@@ -368,7 +367,9 @@ const Table = forwardRef(function <T>(
         stickyFooter,
         footerComponent,
         footerClassname,
-        footerStyle
+        footerStyle,
+        expanded: typeof expandedRows === "function" ? expandedRows : undefined,
+        expandedCache: expandedRows && typeof expandedRows !== "function" ? expandedRows : {}
       }}
     >
       <AutoSizer

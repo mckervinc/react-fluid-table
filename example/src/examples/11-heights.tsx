@@ -64,7 +64,7 @@ const Example11 = () => {
             type="number"
             value={tableHeight.toString()}
             onChange={e => {
-              setTableHeight(/-?\d+/.test(e.target.value) ? parseInt(e.target.value) : 0);
+              setTableHeight(/-?\d+/.test(e.target.value) ? Number(e.target.value) : 0);
             }}
           />
         </Form.Field>
@@ -75,7 +75,7 @@ const Example11 = () => {
             type="number"
             value={minTableHeight.toString()}
             onChange={e => {
-              setMinTableHeight(/-?\d+/.test(e.target.value) ? parseInt(e.target.value) : 0);
+              setMinTableHeight(/-?\d+/.test(e.target.value) ? Number(e.target.value) : 0);
             }}
           />
         </Form.Field>
@@ -86,7 +86,7 @@ const Example11 = () => {
             type="number"
             value={maxTableHeight.toString()}
             onChange={e => {
-              setMaxTableHeight(/-?\d+/.test(e.target.value) ? parseInt(e.target.value) : 0);
+              setMaxTableHeight(/-?\d+/.test(e.target.value) ? Number(e.target.value) : 0);
             }}
           />
         </Form.Field>

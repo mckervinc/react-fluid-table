@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useContext, useLayoutEffect, useRef } from "react";
 import { ListChildComponentProps } from "react-window";
-import { CacheFunction, ColumnProps, RowRenderProps, SubComponentProps } from "../index";
+import { ColumnProps, RowRenderProps, SubComponentProps } from "../index";
 import { TableContext } from "./TableContext";
 import Minus from "./svg/minus-circle.svg";
 import Plus from "./svg/plus-circle.svg";
@@ -13,7 +13,7 @@ type TableCellProps<T> = {
   prevWidth: number;
   column: ColumnProps<T>;
   isExpanded: boolean;
-  clearSizeCache: CacheFunction;
+  clearSizeCache: (dataIndex: number, forceUpdate?: boolean) => void;
   onExpanderClick: (
     event: React.MouseEvent<Element, MouseEvent> | undefined,
     isExpanded: boolean
@@ -39,7 +39,8 @@ interface RowProps<T> extends Omit<ListChildComponentProps<T>, "data"> {
   rowContainerClassname: string | ((index: number) => string);
   rowContainerStyle: React.CSSProperties | ((index: number) => React.CSSProperties);
   useRowWidth: boolean;
-  clearSizeCache: CacheFunction;
+  forceReset?: boolean;
+  clearSizeCache: (dataIndex: number, forceUpdate?: boolean) => void;
   calculateHeight: (
     queryParam: number | HTMLElement | null,
     optionalDataIndex?: number | null
@@ -196,6 +197,7 @@ function Row<T>({
   rowContainerStyle,
   rowContainerClassname,
   useRowWidth,
+  forceReset,
   rowRenderer,
   onExpandRow,
   clearSizeCache,
@@ -206,7 +208,8 @@ function Row<T>({
   // hooks
   const expandedCalledRef = useRef(false);
   const rowRef = useRef<HTMLDivElement>(null);
-  const { dispatch, uuid, columns, expanded, pixelWidths } = useContext(TableContext);
+  const { dispatch, uuid, columns, expanded, expandedCache, pixelWidths } =
+    useContext(TableContext);
 
   // variables
   const { height } = style;
@@ -216,7 +219,7 @@ function Row<T>({
   const rowKey = `${uuid}-${key}`;
 
   // expanded
-  const isExpanded = !!expanded[key];
+  const isExpanded = expanded ? expanded(index) : !!expandedCache[key];
   const containerHeight = !rowHeight ? undefined : isExpanded && SubComponent ? rowHeight : "100%";
 
   // sub component props
@@ -249,14 +252,14 @@ function Row<T>({
   // on expansion, clear the cache
   // every time isExpanded/pixelWidth changes, check the height
   useLayoutEffect(() => {
-    if (!expandedCalledRef.current) {
+    if (!expandedCalledRef.current && !forceReset) {
       resetHeight();
     } else {
       clearSizeCache(index, true);
     }
 
     expandedCalledRef.current = false;
-  }, [isExpanded, resetHeight, index, clearSizeCache]);
+  }, [isExpanded, resetHeight, index, clearSizeCache, forceReset]);
 
   return (
     <div

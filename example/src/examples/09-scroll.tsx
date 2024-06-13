@@ -45,10 +45,10 @@ const Example9 = () => {
   const [scrollToOffset, setScrollToOffset] = useState("");
   const [scrollToNumber, setScrollToNumber] = useState("");
   const scrollToIndex = useCallback(() => {
-    ref.current?.scrollToItem(parseInt(scrollToNumber));
+    ref.current?.scrollToItem(Number(scrollToNumber));
   }, [scrollToNumber]);
   const scrollToPixel = useCallback(() => {
-    ref.current?.scrollTo(parseInt(scrollToOffset));
+    ref.current?.scrollTo(Number(scrollToOffset));
   }, [scrollToOffset]);
 
   return (
@@ -93,10 +93,10 @@ const Example = () => {
   const [scrollToOffset, setScrollToOffset] = useState("");
   const [scrollToNumber, setScrollToNumber] = useState("");
   const scrollToIndex = useCallback(() => {
-    ref.current.scrollToItem(parseInt(scrollToNumber));
+    ref.current.scrollToItem(Number(scrollToNumber));
   }, [scrollToNumber]);
   const scrollToPixel = useCallback(() => {
-    ref.current.scrollTo(parseInt(scrollToOffset));
+    ref.current.scrollTo(Number(scrollToOffset));
   }, [scrollToOffset]);
 
   return (

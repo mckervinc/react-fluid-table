@@ -26,7 +26,8 @@ type TableState<T> = {
   sortDirection: SortDirection;
   stickyFooter: boolean;
   footerComponent?: (props: FooterProps<any>) => React.ReactNode;
-  expanded: {
+  expanded?: (index: number) => boolean;
+  expandedCache: {
     [key: string | number]: boolean;
   };
   id?: string;
@@ -40,7 +41,7 @@ type TableState<T> = {
 
 const baseState: TableState<any> = {
   dispatch: () => {},
-  expanded: {},
+  expandedCache: {},
   columns: [],
   pixelWidths: [],
   rows: [],
@@ -60,6 +61,7 @@ const fields: (keyof InitialState<any>)[] = [
   "onSort",
   "columns",
   "expanded",
+  "expandedCache",
   "tableStyle",
   "headerStyle",
   "headerClassname",
@@ -92,7 +94,7 @@ function reducer<T>(state: TableState<T>, action: Action<T>): TableState<T> {
     case "updateExpanded":
       return {
         ...state,
-        expanded: { ...state.expanded, [key]: !state.expanded[key] }
+        expandedCache: { ...state.expandedCache, [key]: !state.expandedCache[key] }
       };
     case "updatePixelWidths":
       return { ...state, pixelWidths: widths };
