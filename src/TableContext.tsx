@@ -1,19 +1,21 @@
 import React, { createContext, useEffect, useReducer, useRef } from "react";
 import { ColumnProps, FooterProps, SortDirection } from "../index";
 
-type Action = {
+type InitialState<T> = Omit<TableState<T>, "dispatch">;
+
+type Action<T> = {
   type: string;
   col?: string | null;
   dir?: SortDirection;
   key?: string | number;
   widths?: number[];
-  initialState?: TableState;
-  rows?: any[];
+  initialState?: Partial<InitialState<T>>;
+  rows?: T[];
 };
 
-type TableState = {
-  dispatch: React.Dispatch<Action>;
-  rows: any[];
+type TableState<T> = {
+  dispatch: React.Dispatch<Action<T>>;
+  rows: T[];
   pixelWidths: number[];
   uuid: string;
   minColumnWidth: number;
@@ -36,7 +38,7 @@ type TableState = {
   footerClassname?: string;
 };
 
-const baseState: TableState = {
+const baseState: TableState<any> = {
   dispatch: () => {},
   expanded: {},
   columns: [],
@@ -51,14 +53,13 @@ const baseState: TableState = {
   stickyFooter: false
 };
 
-type TableStateKey = keyof Omit<TableState, "dispatch">;
-
-const fields: TableStateKey[] = [
+const fields: (keyof InitialState<any>)[] = [
   "sortColumn",
   "sortDirection",
   "minColumnWidth",
   "onSort",
   "columns",
+  "expanded",
   "tableStyle",
   "headerStyle",
   "headerClassname",
@@ -80,7 +81,7 @@ function findColumnWidthConstants<T>(columns: ColumnProps<T>[]) {
   );
 }
 
-const reducer = (state: TableState, action: Action): TableState => {
+function reducer<T>(state: TableState<T>, action: Action<T>): TableState<T> {
   // instance
   const { type, col = null, dir = null, key = "", widths = [], rows = [], initialState } = action;
 
@@ -105,13 +106,13 @@ const reducer = (state: TableState, action: Action): TableState => {
     default:
       return state;
   }
-};
+}
 
-const getChangedFields = (
-  prevState: Omit<TableState, "dispatch">,
-  currState: Omit<TableState, "dispatch">
-) => {
-  const changedFields = new Set<string>();
+function getChangedFields<T>(
+  prevState: Partial<InitialState<T>>,
+  currState: Partial<InitialState<T>>
+) {
+  const changedFields = new Set<keyof InitialState<T>>();
   fields.forEach(field => {
     if (prevState[field] !== currState[field]) {
       changedFields.add(field);
@@ -119,20 +120,20 @@ const getChangedFields = (
   });
 
   return changedFields;
-};
-
-interface ProviderProps {
-  children: React.ReactNode;
-  initialState: any;
 }
 
-const TableContextProvider = ({ children, initialState }: ProviderProps) => {
+type ProviderProps<T> = {
+  children: React.ReactNode;
+  initialState: Partial<InitialState<T>>;
+};
+
+function TableContextProvider<T>({ children, initialState }: ProviderProps<T>) {
   // hooks
   const _stateOnMount = useRef(initialState);
   const [state, dispatch] = useReducer(reducer, {
     ...baseState,
     ...initialState,
-    ...findColumnWidthConstants(initialState.columns)
+    ...findColumnWidthConstants(initialState.columns as ColumnProps<T>[])
   });
 
   // if certain props change, update throughout package.
@@ -141,17 +142,15 @@ const TableContextProvider = ({ children, initialState }: ProviderProps) => {
   useEffect(() => {
     const changedFields = getChangedFields(_stateOnMount.current, initialState);
     if (changedFields.size) {
-      let refreshed: any = {};
-      changedFields.forEach(field => {
-        // @ts-ignore
-        refreshed[field] = initialState[field];
-      });
+      const refreshed = [...changedFields].reduce(
+        (pv, c) => ({ ...pv, [c]: initialState[c] }),
+        {}
+      ) as InitialState<T>;
 
       if (refreshed.columns) {
-        refreshed = {
-          ...refreshed,
-          ...findColumnWidthConstants(refreshed.columns)
-        };
+        const { fixedWidth, remainingCols } = findColumnWidthConstants(refreshed.columns);
+        refreshed.fixedWidth = fixedWidth;
+        refreshed.remainingCols = remainingCols;
       }
       _stateOnMount.current = initialState;
       dispatch({ type: "refresh", initialState: refreshed });
@@ -159,6 +158,6 @@ const TableContextProvider = ({ children, initialState }: ProviderProps) => {
   }, [initialState]);
 
   return <TableContext.Provider value={{ ...state, dispatch }}>{children}</TableContext.Provider>;
-};
+}
 
 export { TableContext, TableContextProvider };

@@ -28,8 +28,8 @@ const HeaderCell = ({ name, sortDirection, style, onClick }: HeaderCellProps) =>
   const textStyle = { color: sortDirection ? "rgb(249, 38, 114)" : "black" };
 
   return (
-    <div className="header-cell" onClick={onClick} style={cellStyle}>
-      <div className="header-cell-text" style={textStyle}>
+    <div className="rft-header-cell" onClick={onClick} style={cellStyle}>
+      <div className="rft-header-cell-text" style={textStyle}>
         {name}
       </div>
       {icon}
@@ -96,8 +96,8 @@ const HeaderCell = ({ name, sortDirection, style, onClick }) => {
   const textStyle = { color: !!sortDirection ? "rgb(249, 38, 114)" : "black" };
 
   return (
-    <div className="header-cell" onClick={onClick} style={cellStyle}>
-      <div className="header-cell-text" style={textStyle}>
+    <div className="rft-header-cell" onClick={onClick} style={cellStyle}>
+      <div className="rft-header-cell-text" style={textStyle}>
         {name}
       </div>
       {icon}

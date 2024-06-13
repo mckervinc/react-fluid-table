@@ -1,23 +1,21 @@
-.react-fluid-table .cell,
-.react-fluid-table .header-cell {
+.rft .rft-cell,
+.rft .rft-header-cell {
   box-sizing: border-box;
   display: flex;
   padding: 8px;
 }
 
-.react-fluid-table .cell.frozen,
-.react-fluid-table .header-cell.frozen {
-  position: -webkit-sticky;
+.rft .rft-cell.frozen,
+.rft .rft-header-cell.frozen {
   position: sticky;
   z-index: 1;
 }
 
-.react-fluid-table-container {
+.rft-container {
   will-change: height;
 }
 
-.sticky-header {
-  position: -webkit-sticky;
+.rft-sticky-header {
   position: sticky;
   top: 0;
   left: 0;
@@ -25,26 +23,26 @@
   z-index: 1;
 }
 
-.row-wrapper {
+.rft-row-wrapper {
   display: inline-block;
 }
 
-.react-fluid-table-header {
+.rft-header {
   display: flex;
 }
 
-.header-cell {
+.rft-header-cell {
   align-items: baseline;
 }
 
-.header-cell-text {
+.rft-header-cell-text {
   font-weight: bold;
   color: #7d7d7d;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.header-cell-arrow {
+.rft-header-cell-arrow {
   width: 0;
   height: 0;
   margin-left: 4px;
@@ -52,29 +50,28 @@
   border-right: 5px solid transparent;
 }
 
-.header-cell-arrow.asc {
+.rft-header-cell-arrow.asc {
   border-bottom: 10px solid #7d7d7d;
 }
 
-.header-cell-arrow.desc {
+.rft-header-cell-arrow.desc {
   border-top: 10px solid #7d7d7d;
 }
 
-.react-fluid-table-row {
+.rft-row {
   border-bottom: 1px solid #ececec;
 }
 
-.react-fluid-table-row:last-child {
+.rft-row:last-child {
   border-bottom: none;
 }
 
-.react-fluid-table-footer {
+.rft-footer {
   width: 100%;
   border-top: 1px solid #ececec;
 }
 
-.react-fluid-table-footer.sticky {
-  position: -webkit-sticky;
+.rft-footer.sticky {
   position: sticky;
   bottom: 0;
   left: 0;
@@ -83,26 +80,26 @@
   scrollbar-width: none; /* Firefox */
 }
 
-.react-fluid-table-footer.sticky::-webkit-scrollbar {
+.rft-footer.sticky::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
 
-.row-container {
+.rft-row-container {
   display: flex;
 }
 
-.cell {
+.rft-cell {
   align-items: center;
   position: relative;
   overflow: hidden;
 }
 
-.expander {
+.rft-expander {
   cursor: pointer;
   height: 1em;
   width: 1em;
 }
 
-.hidden {
+.rft-hidden {
   display: none;
 }

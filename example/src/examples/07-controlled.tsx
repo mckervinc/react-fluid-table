@@ -24,7 +24,7 @@ const StyledTable = styled(Table)`
   margin-top: 10px;
   border: 1px solid #ececec;
 
-  .react-fluid-table-header {
+  .rft-header {
     background-color: #dedede;
   }
 `;

@@ -58,13 +58,13 @@ const ListComponent = forwardRef(function (
   const timeoutRef = useRef(0);
   const listRef = useRef<any>(null);
   const prevWidthRef = useRef(width);
-  const treeRef = useRef(new NumberTree());
+  const [tree] = useState(new NumberTree());
   const tableRef = useRef<HTMLDivElement>(null);
+  const [useRowWidth, setUseRowWidth] = useState(true);
   const cacheRef = useRef<{ [index: number]: number }>({});
   const defaultSizeRef = useRef(rowHeight || DEFAULT_ROW_HEIGHT);
   const { dispatch, uuid, columns, minColumnWidth, fixedWidth, remainingCols, pixelWidths } =
     useContext(TableContext);
-  const [useRowWidth, setUseRowWidth] = useState(true);
 
   // constants
   const hasFooter = useMemo(() => {
@@ -87,7 +87,7 @@ const ListComponent = forwardRef(function (
 
     window.clearTimeout(timeoutRef.current);
     if (forceUpdate) {
-      treeRef.current.clearFromIndex(dataIndex);
+      tree.clearFromIndex(dataIndex);
       listRef.current.resetAfterIndex(dataIndex + 1);
       return;
     }
@@ -95,7 +95,7 @@ const ListComponent = forwardRef(function (
     timeoutRef.current = window.setTimeout(() => {
       const node = tableRef.current?.children[1].children[0] as HTMLElement;
       const resetIndex = parseInt(node?.dataset.index || "0") + 1;
-      treeRef.current.clearFromIndex(resetIndex);
+      tree.clearFromIndex(resetIndex);
       listRef.current.resetAfterIndex(resetIndex);
     }, 50);
   }, []);
@@ -158,8 +158,8 @@ const ListComponent = forwardRef(function (
   // to help with flicker on resize
   useLayoutEffect(() => {
     if (prevWidthRef.current !== width) {
-      treeRef.current.clearFromIndex(0);
-      setTimeout(() => {
+      tree.clearFromIndex(0);
+      window.setTimeout(() => {
         if (!tableRef.current || !listRef.current) {
           return;
         }
@@ -221,7 +221,7 @@ const ListComponent = forwardRef(function (
         window.clearTimeout(timeoutRef.current);
       }
     };
-  }, [timeoutRef]);
+  }, []);
 
   /* misc */
   // provide access to window functions
@@ -241,7 +241,7 @@ const ListComponent = forwardRef(function (
       height={height}
       width={width}
       itemCount={data.length + 1}
-      itemKey={(index: number, data: Data<any>) => {
+      itemKey={function <T>(index: number, data: Data<T>) {
         if (!index) return `${uuid}-header`;
         const row = data.rows[index - 1];
         return generateKeyFromRow(row, index);
@@ -268,15 +268,15 @@ const ListComponent = forwardRef(function (
         [...tableRef.current.children[1].children].forEach(e => {
           const node = e as HTMLDivElement;
           const dataIndex = parseInt(node.dataset.index || "0");
-          if (!treeRef.current.hasIndex(dataIndex)) {
-            treeRef.current.insert({
+          if (!tree.hasIndex(dataIndex)) {
+            tree.insert({
               index: dataIndex,
               height: calculateHeight(node, dataIndex)
             });
           }
         });
 
-        defaultSizeRef.current = treeRef.current.getMedian();
+        defaultSizeRef.current = tree.getMedian();
       }}
       itemData={{
         rows: data,
@@ -295,6 +295,8 @@ const ListComponent = forwardRef(function (
 
 ListComponent.displayName = "ListComponent";
 
+let warned = false;
+
 const Table = forwardRef(function <T>(
   {
     id,
@@ -312,6 +314,7 @@ const Table = forwardRef(function <T>(
     footerClassname,
     maxTableHeight,
     minTableHeight,
+    expandedRows = {},
     borders = false,
     minColumnWidth = 80,
     stickyFooter = false,
@@ -320,7 +323,6 @@ const Table = forwardRef(function <T>(
   ref: React.ForwardedRef<TableRef>
 ) {
   // TODO: do all prop validation here
-  const warned = useRef(false);
   const [uuid] = useState(`${id || "data-table"}-${randomString(5)}`);
 
   // warn if a minHeight is set without a maxHeight
@@ -338,9 +340,9 @@ const Table = forwardRef(function <T>(
       minTableHeight &&
       minTableHeight > 0 &&
       (!maxTableHeight || maxTableHeight <= 0) &&
-      !warned.current
+      !warned
     ) {
-      warned.current = true;
+      warned = true;
       console.warn(
         `maxTableHeight was either not present, or is <= 0, but you provided a minTableHeight of ${minTableHeight}px. As a result, the maxTableHeight will be set to ${
           minTableHeight + 400
@@ -356,9 +358,10 @@ const Table = forwardRef(function <T>(
         uuid,
         columns,
         minColumnWidth,
+        expanded: expandedRows,
         onSort,
-        sortColumn,
-        sortDirection,
+        sortColumn: sortColumn || null,
+        sortDirection: sortDirection || null,
         tableStyle,
         headerStyle,
         headerClassname,

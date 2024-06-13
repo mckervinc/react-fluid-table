@@ -3,11 +3,11 @@ import { ColumnProps } from "..";
 import { TableContext } from "./TableContext";
 import { cx, findTableByUuid } from "./util";
 
-interface InnerFooterCellProps<T> {
+type InnerFooterCellProps<T> = {
   width: number;
   column: ColumnProps<T>;
   prevWidth: number;
-}
+};
 
 const FooterCell = React.memo(function <T>({ prevWidth, ...rest }: InnerFooterCellProps<T>) {
   // hooks
@@ -22,10 +22,9 @@ const FooterCell = React.memo(function <T>({ prevWidth, ...rest }: InnerFooterCe
     left: column.frozen ? prevWidth : undefined
   };
 
-  const FooterCellComponent = column.footer;
   return (
     <div className={cx("cell", column.frozen && "frozen")} style={style}>
-      {!!FooterCellComponent && <FooterCellComponent rows={rows} {...rest} />}
+      {!!column.footer && <column.footer rows={rows} {...rest} />}
     </div>
   );
 });
@@ -39,7 +38,7 @@ const Footer = () => {
     columns,
     stickyFooter,
     pixelWidths,
-    footerStyle,
+    footerStyle = {},
     footerClassname,
     footerComponent: FooterComponent
   } = useContext(TableContext);
@@ -49,7 +48,7 @@ const Footer = () => {
   // constants
   const style: React.CSSProperties = {
     minWidth: stickyFooter ? undefined : pixelWidths.reduce((pv, c) => pv + c, 0),
-    ...(footerStyle || {})
+    ...footerStyle
   };
 
   // functions
@@ -104,10 +103,10 @@ const Footer = () => {
         ref={ref}
         style={{ border: !hasFooter ? "none" : undefined, ...style }}
         data-footer-key={`${uuid}-footer`}
-        className={cx("react-fluid-table-footer", stickyFooter && "sticky", footerClassname)}
+        className={cx("rft-footer", stickyFooter && "sticky", footerClassname)}
         onScroll={e => onScroll(e.target as HTMLDivElement, findTableByUuid(uuid))}
       >
-        <div className="row-container">
+        <div className="rft-row-container">
           {columns.map((c, i) => (
             <FooterCell
               key={c.key}
@@ -126,7 +125,7 @@ const Footer = () => {
       ref={ref}
       style={style}
       data-footer-key={`${uuid}-footer`}
-      className={cx("react-fluid-table-footer", stickyFooter && "sticky", footerClassname)}
+      className={cx("rft-footer", stickyFooter && "sticky", footerClassname)}
       onScroll={e => onScroll(e.target as HTMLDivElement, findTableByUuid(uuid))}
     >
       <FooterComponent rows={rows} widths={pixelWidths} />

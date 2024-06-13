@@ -1,6 +1,6 @@
 {
   "name": "react-fluid-table",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "A React table inspired by react-window",
   "author": "Mckervin Ceme <mckervinc@live.com>",
   "license": "MIT",
@@ -79,7 +79,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "react-resize-detector": "^9.1.1",
+    "react-resize-detector": "^11.0.1",
     "react-window": "^1.8.10"
   },
   "volta": {

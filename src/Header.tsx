@@ -60,22 +60,26 @@ const HeaderCell = React.memo(function <T>({ column, width, prevWidth }: HeaderC
 
   if (!column.header || typeof column.header === "string") {
     return (
-      <div className={cx("header-cell", column.frozen && "frozen")} onClick={onClick} style={style}>
-        {column.header ? <div className="header-cell-text">{column.header}</div> : null}
+      <div
+        style={style}
+        onClick={onClick}
+        className={cx("rft-header-cell", column.frozen && "frozen")}
+      >
+        {column.header ? <div className="rft-header-cell-text">{column.header}</div> : null}
         {column.key !== col ? null : (
-          <div className={cx("header-cell-arrow", dir?.toLowerCase())}></div>
+          <div className={cx("rft-header-cell-arrow", dir?.toLowerCase())}></div>
         )}
       </div>
     );
   }
 
-  const ColumnCell = column.header;
   const headerDir = column.key === col ? dir || null : null;
+  const frozenStyle: React.CSSProperties = column.frozen ? { position: "sticky", zIndex: 1 } : {};
   return (
-    <ColumnCell
+    <column.header
       onClick={onClick}
       sortDirection={headerDir}
-      style={{ ...style, position: "sticky", zIndex: 1 }}
+      style={{ ...style, ...frozenStyle }}
     />
   );
 });
@@ -87,22 +91,17 @@ const Header = forwardRef(({ children, ...rest }: HeaderProps, ref: any) => {
   const { uuid, columns, pixelWidths, headerStyle, headerClassname } = useContext(TableContext);
 
   // variables
-  const { scrollWidth, clientWidth } = ref.current || NO_NODE;
+  const { scrollWidth, clientWidth } = (ref.current || NO_NODE) as HTMLDivElement;
   const width = scrollWidth <= clientWidth ? "100%" : undefined;
   const stickyStyle: React.CSSProperties = {
     zIndex: columns.find(c => c.frozen) ? 2 : undefined
   };
 
   return (
-    <div
-      ref={ref}
-      className="react-fluid-table-container"
-      data-container-key={`${uuid}-container`}
-      {...rest}
-    >
-      <div className="sticky-header" data-header-key={`${uuid}-header`} style={stickyStyle}>
-        <div className="row-wrapper" style={{ width }}>
-          <div className={cx("react-fluid-table-header", headerClassname)} style={headerStyle}>
+    <div ref={ref} className="rft-container" data-container-key={`${uuid}-container`} {...rest}>
+      <div className="rft-sticky-header" data-header-key={`${uuid}-header`} style={stickyStyle}>
+        <div className="rft-row-wrapper" style={{ width }}>
+          <div className={cx("rft-header", headerClassname)} style={headerStyle}>
             {columns.map((c, i) => (
               <HeaderCell
                 key={c.key}
@@ -114,7 +113,7 @@ const Header = forwardRef(({ children, ...rest }: HeaderProps, ref: any) => {
           </div>
         </div>
       </div>
-      <div className="row-wrapper">{children}</div>
+      <div className="rft-row-wrapper">{children}</div>
     </div>
   );
 });

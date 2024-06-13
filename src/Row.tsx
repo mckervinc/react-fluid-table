@@ -1,11 +1,4 @@
-import React, {
-  CSSProperties,
-  memo,
-  useCallback,
-  useContext,
-  useLayoutEffect,
-  useRef
-} from "react";
+import React, { memo, useCallback, useContext, useLayoutEffect, useRef } from "react";
 import { ListChildComponentProps } from "react-window";
 import { CacheFunction, ColumnProps, RowRenderProps, SubComponentProps } from "../index";
 import { TableContext } from "./TableContext";
@@ -21,7 +14,10 @@ type TableCellProps<T> = {
   column: ColumnProps<T>;
   isExpanded: boolean;
   clearSizeCache: CacheFunction;
-  onExpanderClick: (event?: React.MouseEvent<Element, MouseEvent>) => void;
+  onExpanderClick: (
+    event: React.MouseEvent<Element, MouseEvent> | undefined,
+    isExpanded: boolean
+  ) => void;
 };
 
 type RowContainerProps<T> = {
@@ -29,7 +25,7 @@ type RowContainerProps<T> = {
   index: number;
   className?: string;
   children: React.ReactNode;
-  containerStyle: CSSProperties;
+  containerStyle: React.CSSProperties;
   onRowClick: (event: React.MouseEvent<Element, MouseEvent>, data: { index: number }) => void;
   rowRenderer: (props: RowRenderProps<T>) => JSX.Element;
 };
@@ -39,9 +35,9 @@ interface RowProps<T> extends Omit<ListChildComponentProps<T>, "data"> {
   borders: boolean;
   rowHeight: number;
   rowClassname: string | ((index: number) => string);
-  rowStyle: CSSProperties | ((index: number) => CSSProperties);
+  rowStyle: React.CSSProperties | ((index: number) => React.CSSProperties);
   rowContainerClassname: string | ((index: number) => string);
-  rowContainerStyle: CSSProperties | ((index: number) => CSSProperties);
+  rowContainerStyle: React.CSSProperties | ((index: number) => React.CSSProperties);
   useRowWidth: boolean;
   clearSizeCache: CacheFunction;
   calculateHeight: (
@@ -51,12 +47,13 @@ interface RowProps<T> extends Omit<ListChildComponentProps<T>, "data"> {
   generateKeyFromRow: (row: T, defaultValue: number) => string | number;
   onRowClick: (event: React.MouseEvent<Element, MouseEvent>, data: { index: number }) => void;
   subComponent?: (props: SubComponentProps<T>) => React.ReactNode;
+  onExpandRow?: (value: { row: T; index: number; isExpanded: boolean }) => void;
   rowRenderer: (props: RowRenderProps<T>) => JSX.Element;
 }
 
 const getRowStyle = (
   index: number,
-  rowStyle?: CSSProperties | ((index: number) => CSSProperties)
+  rowStyle?: React.CSSProperties | ((index: number) => React.CSSProperties)
 ) => {
   if (!rowStyle) {
     return {};
@@ -84,7 +81,7 @@ const TableCell = memo(function <T>({
   onExpanderClick
 }: TableCellProps<T>) {
   // cell style
-  const style: CSSProperties = {
+  const style: React.CSSProperties = {
     width: width || undefined,
     minWidth: width || undefined,
     left: column.frozen ? prevWidth : undefined
@@ -96,49 +93,50 @@ const TableCell = memo(function <T>({
       const Logo = isExpanded ? Minus : Plus;
 
       return (
-        <div className={cx("cell", column.frozen && "frozen")} style={style}>
-          <Logo className="expander" onClick={onExpanderClick} />
+        <div className={cx("rft-cell", column.frozen && "frozen")} style={style}>
+          <Logo className="rft-expander" onClick={e => onExpanderClick(e, !isExpanded)} />
         </div>
       );
     }
 
-    const Expander = column.expander;
+    const frozenStyle: React.CSSProperties = column.frozen ? { position: "sticky", zIndex: 2 } : {};
     return (
-      <Expander
-        style={{ ...style, position: "sticky", zIndex: 1 }}
+      <column.expander
+        row={row}
+        index={index}
         isExpanded={isExpanded}
-        onClick={onExpanderClick}
+        onClick={e => onExpanderClick(e, !isExpanded)}
+        style={{ ...style, ...frozenStyle }}
       />
     );
   }
 
   // basic styling
   if (!column.cell) {
-    // @ts-ignore
-    let content: React.ReactNode = row[column.key] || null;
+    let content = (row[column.key as keyof T] || null) as React.ReactNode;
     if (column.content) {
       if (typeof column.content === "string" || typeof column.content === "number") {
         content = column.content;
       } else {
-        const Content = column.content;
-        content = <Content row={row} index={index} clearSizeCache={clearSizeCache} />;
+        content = <column.content row={row} index={index} clearSizeCache={clearSizeCache} />;
       }
     }
+
     return (
-      <div className={cx("cell", column.frozen && "frozen")} style={style}>
+      <div className={cx("rft-cell", column.frozen && "frozen")} style={style}>
         {content}
       </div>
     );
   }
 
   // custom cell styling
-  const CustomCell = column.cell;
+  const frozenStyle: React.CSSProperties = column.frozen ? { position: "sticky", zIndex: 2 } : {};
   return (
-    <CustomCell
+    <column.cell
       row={row}
       index={index}
       clearSizeCache={clearSizeCache}
-      style={{ ...style, position: "sticky", zIndex: 1 }}
+      style={{ ...style, ...frozenStyle }}
     />
   );
 });
@@ -177,7 +175,7 @@ function RowContainer<T>({
 
   return (
     <div
-      className={cx("row-container", className)}
+      className={cx("rft-row-container", className)}
       style={containerStyle}
       onClick={onContainerClick}
     >
@@ -199,6 +197,7 @@ function Row<T>({
   rowContainerClassname,
   useRowWidth,
   rowRenderer,
+  onExpandRow,
   clearSizeCache,
   calculateHeight,
   generateKeyFromRow,
@@ -224,10 +223,17 @@ function Row<T>({
   const subProps: SubComponentProps<T> = { row, index, isExpanded, clearSizeCache };
 
   // function(s)
-  const onExpanderClick = useCallback(() => {
-    dispatch({ type: "updateExpanded", key: generateKeyFromRow(row, index) });
-    expandedCalledRef.current = true;
-  }, [dispatch, row, index, generateKeyFromRow]);
+  const onExpanderClick = useCallback(
+    (_: React.MouseEvent<Element, MouseEvent> | undefined, isExpanded: boolean) => {
+      if (onExpandRow) {
+        onExpandRow({ row, index, isExpanded });
+      } else {
+        dispatch({ type: "updateExpanded", key: generateKeyFromRow(row, index) });
+      }
+      expandedCalledRef.current = true;
+    },
+    [dispatch, row, index, generateKeyFromRow, onExpandRow]
+  );
 
   const resetHeight = useCallback(() => {
     if (!rowRef.current || !pixelWidths.length) {
@@ -255,7 +261,7 @@ function Row<T>({
   return (
     <div
       ref={rowRef}
-      className={cx("react-fluid-table-row", getRowClassname(index, rowContainerClassname))}
+      className={cx("rft-row", getRowClassname(index, rowContainerClassname))}
       data-index={index}
       data-row-key={rowKey}
       style={{
@@ -291,7 +297,7 @@ function Row<T>({
         ))}
       </RowContainer>
       {!SubComponent ? null : (
-        <div className={isExpanded ? undefined : "hidden"}>
+        <div className={isExpanded ? undefined : "rft-hidden"}>
           <SubComponent {...subProps} />
         </div>
       )}

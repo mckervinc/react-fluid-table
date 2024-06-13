@@ -27,12 +27,12 @@ const Container = styled.div`
 const Table = styled(BaseTable)`
   border: 1px solid #ececec;
 
-  .react-fluid-table-header {
+  .rft-header {
     background-color: #282a36;
   }
 
-  .cell,
-  .header-cell {
+  .rft-cell,
+  .rft-header-cell {
     border-right: 1px solid #ececec;
 
     :last-child {
@@ -40,7 +40,7 @@ const Table = styled(BaseTable)`
     }
   }
 
-  .header-cell-text {
+  .rft-header-cell-text {
     color: #ff79c5;
   }
 `;

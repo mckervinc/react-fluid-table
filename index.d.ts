@@ -4,7 +4,15 @@ export type SortDirection = "ASC" | "DESC" | null;
 
 type CacheFunction = (dataIndex: number, forceUpdate?: boolean) => void;
 
-export type ExpanderProps = {
+export type ExpanderProps<T> = {
+  /**
+   * the data for the row
+   */
+  row: T;
+  /**
+   * the index of the row
+   */
+  index: number;
   /**
    * whether or not the row is expanded
    */
@@ -158,7 +166,7 @@ export type ColumnProps<T> = {
    * Marks this cell as an expansion cell. The style is pre-determined, and does the
    * functionalitty of collapsing/expanding a row.
    */
-  expander?: boolean | ((props: ExpanderProps) => ReactNode);
+  expander?: boolean | ((props: ExpanderProps<T>) => ReactNode);
   /**
    * Used to render custom content inside of a cell. This is useful for rendering different
    * things inside of the react-fluid-table cell container.
@@ -290,6 +298,16 @@ export type TableProps<T> = {
    * a className used to customize the footer
    */
   footerClassname?: string;
+  /**
+   * set expanded rows
+   */
+  expandedRows?: { [x: number]: boolean };
+  /**
+   * called when a row is expanded
+   * @param value information about the row that is expanded/shrunk
+   * @returns
+   */
+  onExpandRow?: (value: { row: T; index: number; isExpanded: boolean }) => void;
   /**
    * generates a unique identifier for the row
    * @param row the row
