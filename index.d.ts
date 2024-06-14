@@ -331,7 +331,11 @@ export type TableProps<T> = {
   /**
    * The callback that gets called every time a row is clicked.
    */
-  onRowClick?: (event: React.MouseEvent<Element, MouseEvent>, data: { index: number }) => void;
+  onRowClick?: (data: {
+    row: T;
+    index: number;
+    event: React.MouseEvent<Element, MouseEvent>;
+  }) => void;
   /**
    * Custom component to wrap a table row. This provides another way of providing
    * more row customization options.

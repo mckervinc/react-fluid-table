@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.5.5
+
+_2024-06-13_
+
+### Features
+
+- Update `onRowClick` signature to include the event in one argument
+
 ## 0.5.4
 
 _2024-06-13_

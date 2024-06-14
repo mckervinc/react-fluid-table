@@ -26,7 +26,11 @@ type RowContainerProps<T> = {
   className?: string;
   children: React.ReactNode;
   containerStyle: React.CSSProperties;
-  onRowClick: (event: React.MouseEvent<Element, MouseEvent>, data: { index: number }) => void;
+  onRowClick: (data: {
+    row: T;
+    index: number;
+    event: React.MouseEvent<Element, MouseEvent>;
+  }) => void;
   rowRenderer: (props: RowRenderProps<T>) => JSX.Element;
 };
 
@@ -46,7 +50,11 @@ interface RowProps<T> extends Omit<ListChildComponentProps<T>, "data"> {
     optionalDataIndex?: number | null
   ) => number;
   generateKeyFromRow: (row: T, defaultValue: number) => string | number;
-  onRowClick: (event: React.MouseEvent<Element, MouseEvent>, data: { index: number }) => void;
+  onRowClick: (data: {
+    row: T;
+    index: number;
+    event: React.MouseEvent<Element, MouseEvent>;
+  }) => void;
   subComponent?: (props: SubComponentProps<T>) => React.ReactNode;
   onExpandRow?: (value: { row: T; index: number; isExpanded: boolean }) => void;
   rowRenderer: (props: RowRenderProps<T>) => JSX.Element;
@@ -156,10 +164,10 @@ function RowContainer<T>({
   const onContainerClick = useCallback(
     (event: React.MouseEvent<Element, MouseEvent>) => {
       if (onRowClick) {
-        onRowClick(event, { index });
+        onRowClick({ row, index, event });
       }
     },
-    [index, onRowClick]
+    [row, index, onRowClick]
   );
 
   if (RowRenderer) {
