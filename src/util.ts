@@ -13,18 +13,26 @@ export const cx = (...args: (string | number | null | boolean | undefined)[]) =>
     .join(" ");
 };
 
-export const arraysMatch = <T>(arr1: T[], arr2: T[]) => {
-  if (arr1.length !== arr2.length) {
-    return false;
+export const arraysMatch = <T>(arr1: T[] | null | undefined, arr2: T[] | null | undefined) => {
+  if (arr1 == null && arr2 == null) {
+    return true;
   }
 
-  for (var i = 0; i < arr1.length; i++) {
-    if (arr1[i] !== arr2[i]) {
+  if (arr1 != null && arr2 != null) {
+    if (arr1.length !== arr2.length) {
       return false;
     }
+
+    for (var i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== arr2[i]) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
-  return true;
+  return false;
 };
 
 export const randomString = (num: number) => {

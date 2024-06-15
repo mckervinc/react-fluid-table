@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.5.7
+
+_2024-06-14_
+
+### Bugfix
+
+- `arrayMatch` is now null-safe
+
 ## 0.5.6
 
 _2024-06-14_

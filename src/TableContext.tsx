@@ -171,7 +171,7 @@ function TableContextProvider<T>({ children, initialState }: ProviderProps<T>) {
           (refreshed.minColumnWidth || _stateOnMount.current.minColumnWidth) ?? 80,
           refreshed.columns
         );
-        if (!arraysMatch(widths, _stateOnMount.current.pixelWidths!)) {
+        if (!arraysMatch(widths, _stateOnMount.current.pixelWidths)) {
           refreshed.pixelWidths = widths;
         }
       }
