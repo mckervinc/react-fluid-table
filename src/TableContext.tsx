@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useReducer, useRef } from "react";
 import { ColumnProps, FooterProps, SortDirection } from "../index";
+import { arraysMatch, calculateColumnWidths, findTableByUuid } from "./util";
 
 type InitialState<T> = Omit<TableState<T>, "dispatch">;
 
@@ -138,22 +139,44 @@ function TableContextProvider<T>({ children, initialState }: ProviderProps<T>) {
     ...findColumnWidthConstants(initialState.columns as ColumnProps<T>[])
   });
 
+  // effects
+  // every time the pixelWidths change, keep track of them
+  useEffect(() => {
+    _stateOnMount.current.pixelWidths = state.pixelWidths;
+  }, [state.pixelWidths]);
+
   // if certain props change, update throughout package.
   // allows the user to control props such as sortColumn,
   // columns, etc.
   useEffect(() => {
     const changedFields = getChangedFields(_stateOnMount.current, initialState);
     if (changedFields.size) {
+      // find the different state
       const refreshed = [...changedFields].reduce(
         (pv, c) => ({ ...pv, [c]: initialState[c] }),
         {}
       ) as InitialState<T>;
 
+      // if the columns change, we have to update a bunch of width properties
       if (refreshed.columns) {
         const { fixedWidth, remainingCols } = findColumnWidthConstants(refreshed.columns);
         refreshed.fixedWidth = fixedWidth;
         refreshed.remainingCols = remainingCols;
+
+        // we also might need to update the pixelWidths
+        const widths = calculateColumnWidths(
+          findTableByUuid(_stateOnMount.current.uuid || ""),
+          remainingCols,
+          fixedWidth,
+          (refreshed.minColumnWidth || _stateOnMount.current.minColumnWidth) ?? 80,
+          refreshed.columns
+        );
+        if (!arraysMatch(widths, _stateOnMount.current.pixelWidths!)) {
+          refreshed.pixelWidths = widths;
+        }
       }
+
+      // update the state ref & dispatch
       _stateOnMount.current = initialState;
       dispatch({ type: "refresh", initialState: refreshed });
     }

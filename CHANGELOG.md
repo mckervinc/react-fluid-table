@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.5.6
+
+_2024-06-14_
+
+### Bugfix
+
+- Whenever `columns` changes, the `pixelWidths` are re-calculated
+
 ## 0.5.5
 
 _2024-06-13_
