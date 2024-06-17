@@ -1,10 +1,9 @@
-import Navigation from "@/Navigation";
-import { Snippet } from "@/Snippet";
+import Navigation from "@/components/Navigation";
+import { Snippet } from "@/components/Snippet";
 import { faGithubAlt } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { Outlet } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 const links = (
   <>
@@ -72,7 +71,7 @@ const Layout = () => {
   const [title, setTitle] = useState("");
   const [source, setSource] = useState("");
   return (
-    <div className="h-screen w-screen md:flex">
+    <div className="h-screen w-screen text-[0.875rem] md:flex">
       {/* Desktop Nav */}
       <div className="h-full w-[260px] overflow-y-auto bg-[#1b1c1d] max-md:hidden [&>*:last]:border-b-0 [&>*]:border-b [&>*]:border-solid [&>*]:border-b-[#2d2e2f]">
         {links}
