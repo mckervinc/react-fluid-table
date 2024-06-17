@@ -36,8 +36,6 @@
 }
 
 .rft-header-cell-text {
-  font-weight: bold;
-  color: #7d7d7d;
   overflow: hidden;
   text-overflow: ellipsis;
 }

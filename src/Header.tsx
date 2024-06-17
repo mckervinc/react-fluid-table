@@ -86,7 +86,7 @@ const HeaderCell = React.memo(function <T>({ column, width, prevWidth }: HeaderC
 
 HeaderCell.displayName = "HeaderCell";
 
-const Header = forwardRef(({ children, ...rest }: HeaderProps, ref: any) => {
+const Header = forwardRef(({ children, ...rest }: HeaderProps, ref: React.ForwardedRef<HTMLDivElement>) => {
   // hooks
   const {
     uuid,
@@ -98,7 +98,7 @@ const Header = forwardRef(({ children, ...rest }: HeaderProps, ref: any) => {
   } = useContext(TableContext);
 
   // variables
-  const { scrollWidth, clientWidth } = (ref.current || NO_NODE) as HTMLDivElement;
+  const { scrollWidth, clientWidth } = ((ref as any).current || NO_NODE) as HTMLDivElement;
   const width = scrollWidth <= clientWidth ? "100%" : undefined;
   const stickyStyle: React.CSSProperties = {
     zIndex: columns.find(c => c.frozen) ? 2 : undefined

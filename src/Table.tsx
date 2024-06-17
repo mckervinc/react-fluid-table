@@ -397,6 +397,7 @@ const Table = forwardRef(function <T>(
               borders={borders}
               width={width}
               height={height}
+              headerHeight={headerHeight}
               footerComponent={footerComponent}
               {...rest}
             />

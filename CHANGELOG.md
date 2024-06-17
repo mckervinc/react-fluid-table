@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 0.6.1
+
+_2024-06-17_
+
+### Bugfix
+
+- `headerHeight` is now passed down appropriately
+- less opinionated header styles
+
 ## 0.6.0
 
 _2024-06-74_
