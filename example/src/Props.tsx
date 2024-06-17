@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { ColumnProps, Table } from "react-fluid-table";
 import ColumnPropsTable from "./ColumnProps";
-import { Snippet } from "./Snippet";
+import { Snippet } from "./components/Snippet";
 import { InlineCode } from "./components/library/InlineCode";
 
 type PropData = {
