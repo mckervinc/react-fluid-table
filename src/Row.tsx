@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useContext, useLayoutEffect, useRef } from "react";
 import { ListChildComponentProps } from "react-window";
-import { ColumnProps, RowRenderProps, SubComponentProps } from "../index";
+import { ClearCacheOptions, ColumnProps, RowRenderProps, SubComponentProps } from "../index";
 import { TableContext } from "./TableContext";
 import Minus from "./svg/minus-circle.svg";
 import Plus from "./svg/plus-circle.svg";
@@ -13,7 +13,7 @@ type TableCellProps<T> = {
   prevWidth: number;
   column: ColumnProps<T>;
   isExpanded: boolean;
-  clearSizeCache: (dataIndex: number, forceUpdate?: boolean) => void;
+  clearSizeCache: (dataIndex: number, options?: ClearCacheOptions) => void;
   onExpanderClick: (
     event: React.MouseEvent<Element, MouseEvent> | undefined,
     isExpanded: boolean
@@ -44,7 +44,7 @@ interface RowProps<T> extends Omit<ListChildComponentProps<T>, "data"> {
   rowContainerStyle: React.CSSProperties | ((index: number) => React.CSSProperties);
   useRowWidth: boolean;
   forceReset?: boolean;
-  clearSizeCache: (dataIndex: number, forceUpdate?: boolean) => void;
+  clearSizeCache: (dataIndex: number, options?: ClearCacheOptions) => void;
   calculateHeight: (
     queryParam: number | HTMLElement | null,
     optionalDataIndex?: number | null
@@ -263,7 +263,7 @@ function Row<T>({
     if (!expandedCalledRef.current && !forceReset) {
       resetHeight();
     } else {
-      clearSizeCache(index, true);
+      clearSizeCache(index, { forceUpdate: true });
     }
 
     expandedCalledRef.current = false;

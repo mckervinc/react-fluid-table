@@ -1,5 +1,6 @@
 import { ColumnProps, Table } from "react-fluid-table";
 import { TestData, testData } from "../data";
+import { useSource, useTitle } from "@/hooks/useTitle";
 
 const columns: ColumnProps<TestData>[] = [
   {
@@ -26,8 +27,6 @@ const columns: ColumnProps<TestData>[] = [
   }
 ];
 
-const Example12 = () => <Table data={testData} columns={columns} tableWidth={400} />;
-
 const Source = `
 const data = [/* ... */];
 
@@ -40,5 +39,13 @@ const columns: ColumnProps<TestData>[] = [
 
 const Example = () => <Table data={data} columns={columns} tableWidth={400} />;
 `;
+
+const Example12 = () => {
+  // hooks
+  useTitle("Frozen");
+  useSource(Source);
+
+  return <Table data={testData} columns={columns} tableWidth={400} />;
+};
 
 export { Example12, Source };

@@ -10,7 +10,7 @@ import React, {
   useState
 } from "react";
 import { VariableSizeList } from "react-window";
-import { TableProps, TableRef } from "../index";
+import { ClearCacheOptions, TableProps, TableRef } from "../index";
 import AutoSizer from "./AutoSizer";
 import Header from "./Header";
 import NumberTree from "./NumberTree";
@@ -80,25 +80,31 @@ const ListComponent = forwardRef(function (
     [itemKey]
   );
 
-  const clearSizeCache = useCallback((dataIndex: number, forceUpdate = false) => {
-    if (!listRef.current) {
-      return;
-    }
+  const clearSizeCache = useCallback(
+    (
+      dataIndex: number,
+      { forceUpdate, timeout }: ClearCacheOptions = { forceUpdate: false, timeout: 50 }
+    ) => {
+      if (!listRef.current) {
+        return;
+      }
 
-    window.clearTimeout(timeoutRef.current);
-    if (forceUpdate) {
-      tree.clearFromIndex(dataIndex);
-      listRef.current.resetAfterIndex(dataIndex + 1);
-      return;
-    }
+      window.clearTimeout(timeoutRef.current);
+      if (forceUpdate) {
+        tree.clearFromIndex(dataIndex);
+        listRef.current.resetAfterIndex(dataIndex + 1);
+        return;
+      }
 
-    timeoutRef.current = window.setTimeout(() => {
-      const node = tableRef.current?.children[1].children[0] as HTMLElement;
-      const resetIndex = Number(node?.dataset.index || "0") + 1;
-      tree.clearFromIndex(resetIndex);
-      listRef.current.resetAfterIndex(resetIndex);
-    }, 50);
-  }, []);
+      timeoutRef.current = window.setTimeout(() => {
+        const node = tableRef.current?.children[1].children[0] as HTMLElement;
+        const resetIndex = Number(node?.dataset.index || "0") + 1;
+        tree.clearFromIndex(resetIndex);
+        listRef.current.resetAfterIndex(resetIndex);
+      }, timeout);
+    },
+    []
+  );
 
   const calculateHeight = useCallback(
     (queryParam: number | HTMLElement, optionalDataIndex: number | null = null) => {
@@ -308,6 +314,7 @@ const Table = forwardRef(function <T>(
     tableWidth,
     tableStyle,
     headerStyle,
+    headerHeight,
     headerClassname,
     footerComponent,
     footerStyle,
@@ -363,6 +370,7 @@ const Table = forwardRef(function <T>(
         sortDirection: sortDirection || null,
         tableStyle,
         headerStyle,
+        headerHeight,
         headerClassname,
         stickyFooter,
         footerComponent,
@@ -379,7 +387,7 @@ const Table = forwardRef(function <T>(
         rowHeight={rest.rowHeight}
         minTableHeight={minTableHeight}
         maxTableHeight={maxHeight}
-        headerHeight={rest.headerHeight}
+        headerHeight={headerHeight}
         footerHeight={rest.footerHeight}
       >
         {({ height, width }) => {

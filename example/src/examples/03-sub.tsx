@@ -1,8 +1,8 @@
 import _ from "lodash";
 import { useState } from "react";
 import { ColumnProps, SortDirection, Table } from "react-fluid-table";
-import styled from "styled-components";
 import { TestData, testData } from "../data";
+import { useSource, useTitle } from "@/hooks/useTitle";
 
 const columns: ColumnProps<TestData>[] = [
   {
@@ -35,39 +35,6 @@ const columns: ColumnProps<TestData>[] = [
     width: 250
   }
 ];
-
-const Custom = styled.div`
-  height: 100px;
-  background-color: lightblue;
-`;
-
-const Example3 = () => {
-  const [data, setData] = useState(testData);
-
-  const onSort = (col: string | null, dir: SortDirection) => {
-    if (!col || !dir) {
-      setData(testData);
-    } else {
-      const direction = dir === "ASC" ? "asc" : "desc";
-      setData(_.orderBy(data, [col], [direction]));
-    }
-  };
-
-  return (
-    <Table
-      borders
-      data={data}
-      columns={columns}
-      tableHeight={400}
-      rowHeight={35}
-      itemKey={row => row.id}
-      onSort={onSort}
-      subComponent={({ row }) => <Custom>{`Row ${row.id} is expanded`}</Custom>}
-      sortColumn="id"
-      sortDirection="ASC"
-    />
-  );
-};
 
 const Source = `
 const testData = [/* ... */];
@@ -108,4 +75,36 @@ const Example = () => {
 };
 `;
 
-export { Example3, Source };
+const Example3 = () => {
+  useTitle("Table with Subcomponent");
+  useSource(Source);
+  const [data, setData] = useState(testData);
+
+  const onSort = (col: string | null, dir: SortDirection) => {
+    if (!col || !dir) {
+      setData(testData);
+    } else {
+      const direction = dir === "ASC" ? "asc" : "desc";
+      setData(_.orderBy(data, [col], [direction]));
+    }
+  };
+
+  return (
+    <Table
+      borders
+      data={data}
+      columns={columns}
+      tableHeight={400}
+      rowHeight={35}
+      itemKey={row => row.id}
+      onSort={onSort}
+      subComponent={({ row }) => (
+        <div className="h-[100px] bg-[lightblue]">{`Row ${row.id} is expanded`}</div>
+      )}
+      sortColumn="id"
+      sortDirection="ASC"
+    />
+  );
+};
+
+export { Example3 };

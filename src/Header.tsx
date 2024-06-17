@@ -88,7 +88,14 @@ HeaderCell.displayName = "HeaderCell";
 
 const Header = forwardRef(({ children, ...rest }: HeaderProps, ref: any) => {
   // hooks
-  const { uuid, columns, pixelWidths, headerStyle, headerClassname } = useContext(TableContext);
+  const {
+    uuid,
+    columns,
+    pixelWidths,
+    headerStyle = {},
+    headerHeight,
+    headerClassname
+  } = useContext(TableContext);
 
   // variables
   const { scrollWidth, clientWidth } = (ref.current || NO_NODE) as HTMLDivElement;
@@ -101,7 +108,13 @@ const Header = forwardRef(({ children, ...rest }: HeaderProps, ref: any) => {
     <div ref={ref} className="rft-container" data-container-key={`${uuid}-container`} {...rest}>
       <div className="rft-sticky-header" data-header-key={`${uuid}-header`} style={stickyStyle}>
         <div className="rft-row-wrapper" style={{ width }}>
-          <div className={cx("rft-header", headerClassname)} style={headerStyle}>
+          <div
+            className={cx("rft-header", headerClassname)}
+            style={{
+              ...headerStyle,
+              height: headerHeight && headerHeight > 0 ? `${headerHeight}px` : undefined
+            }}
+          >
             {columns.map((c, i) => (
               <HeaderCell
                 key={c.key}

@@ -1,54 +1,14 @@
-import { useRef, useState } from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { faReact } from "@fortawesome/free-brands-svg-icons";
+import { faCopy } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useRef, useState } from "react";
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import tsx from "react-syntax-highlighter/dist/esm/languages/prism/tsx";
 import okaidia from "react-syntax-highlighter/dist/esm/styles/prism/okaidia";
-import { Icon, Menu, Popup } from "semantic-ui-react";
-import styled from "styled-components";
 import { copy } from "./util";
 
 SyntaxHighlighter.registerLanguage("tsx", tsx);
-
-const Container = styled.div`
-  position: relative;
-  font-size: 0.85714286em;
-`;
-
-const Highligher = styled(SyntaxHighlighter)`
-  margin-bottom: 0 !important;
-  border-radius: 0 !important;
-`;
-
-const Group = styled(Menu)`
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  &&& {
-    background: transparent;
-  }
-`;
-
-const MenuItem = styled(Menu.Item)`
-  color: rgba(255, 255, 255, 0.7) !important;
-  :hover {
-    color: rgb(248, 248, 243) !important;
-  }
-
-  &&& {
-    padding: 0 0.57142857em;
-  }
-`;
-
-const Alert = styled(Popup)`
-  &&& {
-    margin: 0;
-    color: #2185d0;
-    border: none;
-    background-color: #dff0ff;
-    box-shadow:
-      0 0 0 1px #2185d0 inset,
-      0 0 0 0 transparent;
-  }
-`;
 
 interface SnippetProps {
   code: string;
@@ -59,49 +19,44 @@ interface SnippetProps {
 const Snippet = ({ code, copy: showCopy = true, edit = false }: SnippetProps) => {
   const ref = useRef(0);
   const [open, setOpen] = useState(false);
-  const onOpen = () => {
-    if (ref.current) {
-      window.clearTimeout(ref.current);
-    }
 
-    setOpen(true);
-    copy(code);
-    ref.current = window.setTimeout(() => {
-      setOpen(false);
-    }, 1000);
-  };
+  useEffect(() => {
+    if (open) {
+      window.clearTimeout(ref.current);
+      copy(code);
+      ref.current = window.setTimeout(() => {
+        setOpen(false);
+      }, 1000);
+    }
+  }, [open]);
 
   return (
-    <Container>
-      <Group borderless>
+    <div className="relative text-[0.85714286em]">
+      <div className="absolute right-3.5 top-3.5 my-4 flex border border-solid border-[rgba(34,36,38,.15)] bg-transparent text-base text-[rgba(255,255,255,0.7)] shadow-[0_1px_2px_0_rgba(34,36,38,.15)]">
         {!showCopy ? null : (
-          <Alert
-            basic
-            on="click"
-            position="bottom center"
-            content="copied to clipboard"
-            trigger={
-              <MenuItem as="a" className="item">
-                <Icon name="copy" />
-                Copy
-              </MenuItem>
-            }
-            open={open}
-            onOpen={onOpen}
-            onClose={() => setOpen(false)}
-          />
+          <>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <div className="flex cursor-pointer items-center gap-x-1 px-2 hover:text-[#f8f8f3]">
+                  <FontAwesomeIcon icon={faCopy} />
+                  <span>Copy</span>
+                </div>
+              </PopoverTrigger>
+              <PopoverContent>copied to clipboard</PopoverContent>
+            </Popover>
+          </>
         )}
         {!edit ? null : (
-          <MenuItem as="a" className="item">
-            <Icon name="react" />
-            Edit
-          </MenuItem>
+          <a className="flex cursor-pointer items-center gap-x-1 px-2 hover:text-[#f8f8f3]">
+            <FontAwesomeIcon icon={faReact} />
+            <span>Edit</span>
+          </a>
         )}
-      </Group>
-      <Highligher language="tsx" style={okaidia}>
+      </div>
+      <SyntaxHighlighter language="tsx" style={okaidia} className="!mb-0 !rounded-none">
         {code.trim()}
-      </Highligher>
-    </Container>
+      </SyntaxHighlighter>
+    </div>
   );
 };
 

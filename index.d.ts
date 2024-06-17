@@ -27,6 +27,11 @@ export type ExpanderProps<T> = {
   style: CSSProperties;
 };
 
+export type ClearCacheOptions = {
+  forceUpdate?: boolean;
+  timeout?: number;
+};
+
 export type CellProps<T> = {
   /**
    * the data for the row
@@ -39,7 +44,7 @@ export type CellProps<T> = {
   /**
    * an optional function that can be used to clear the size cache
    */
-  clearSizeCache: (dataIndex: number, forceUpdate?: boolean) => void;
+  clearSizeCache: (dataIndex: number, options?: ClearCacheOptions) => void;
   /**
    * optional custom styles for each cell
    */
@@ -102,7 +107,7 @@ export type SubComponentProps<T> = {
   /**
    * an optional function that can be used to clear the size cache
    */
-  clearSizeCache: (dataIndex: number, forceUpdate?: boolean) => void;
+  clearSizeCache: (dataIndex: number, options?: ClearCacheOptions) => void;
 };
 
 export type FooterProps<T> = {

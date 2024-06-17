@@ -35,7 +35,7 @@ export const testData: TestData[] = _.range(3000).map(i => ({
   firstName: randFirstName(),
   lastName: randLastName(),
   email: randEmail(),
-  avatar: randImg({ width: 20, height: 20 }),
+  avatar: randImg({ width: 134, height: 134 }),
   country: randCountryCode().toLowerCase(),
   words: randCatchPhrase(),
   sentence: randSentence(),

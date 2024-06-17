@@ -35,6 +35,7 @@ type TableState<T> = {
   onSort?: (col: string | null, dir: SortDirection) => void;
   tableStyle?: React.CSSProperties;
   headerStyle?: React.CSSProperties;
+  headerHeight?: number;
   headerClassname?: string;
   footerStyle?: React.CSSProperties;
   footerClassname?: string;
@@ -65,6 +66,7 @@ const fields: (keyof InitialState<any>)[] = [
   "expandedCache",
   "tableStyle",
   "headerStyle",
+  "headerHeight",
   "headerClassname",
   "footerStyle",
   "footerClassname",

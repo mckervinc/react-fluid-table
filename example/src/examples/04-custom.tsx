@@ -1,31 +1,7 @@
+import { useSource, useTitle } from "@/hooks/useTitle";
 import { ColumnProps, Table } from "react-fluid-table";
-import { Flag, FlagNameValues, Image, Input } from "semantic-ui-react";
-import styled from "styled-components";
 import { TestData, testData } from "../data";
-
-const TextStyle = styled.div`
-  font-family: Helvetica;
-  font-size: 14px;
-  font-weight: 300;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: black;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
-const EmailInput = styled(Input)`
-  width: 100%;
-`;
-
-const ProfPic = styled(Image)`
-  &&& {
-    width: 100%;
-    height: 134px;
-  }
-`;
+import { Input } from "@/components/ui/input";
 
 const countries = [
   { name: "Afghanistan", countryCode: "af" },
@@ -274,10 +250,64 @@ const countries = [
   { name: "Zimbabwe", countryCode: "zw" }
 ];
 
-const countryMap = countries.reduce(
-  (pv, c) => ({ ...pv, [c.countryCode]: c.name }),
-  {} as { [x: string]: string }
-);
+const countryMap = countries.reduce((pv, c) => ({ ...pv, [c.countryCode]: c.name }), {} as { [x: string]: string });
+
+const columns: ColumnProps<TestData>[] = [
+  {
+    key: "id",
+    header: "ID",
+    width: 50
+  },
+  {
+    key: "avatar",
+    header: "Profile Photo",
+    width: 150,
+    content: ({ row }) => <img src={row.avatar} className="h-[134px] w-full" />
+  },
+  {
+    key: "email",
+    header: "Email",
+    content: ({ row }) => <Input defaultValue={row.email} className="w-full" />
+  },
+  {
+    key: "firstName",
+    header: "First",
+    width: 100,
+    content: ({ row }) => (
+      <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-light leading-[normal] text-black">
+        {row.firstName}
+      </div>
+    )
+  },
+  {
+    key: "lastName",
+    header: "Last",
+    width: 100,
+    content: ({ row }) => (
+      <div className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-light leading-[normal] text-black">
+        {row.lastName}
+      </div>
+    )
+  },
+  {
+    key: "country",
+    header: "Country",
+    content: ({ row }) => {
+      const code = row.country.toUpperCase();
+      return !countryMap[row.country] ? (
+        <span>{`No flag for this country: ${code}`}</span>
+      ) : (
+        <div className="flex items-center gap-x-4">
+          <div className={`flag:${code}`} />
+          <span>{countryMap[row.country]}</span>
+        </div>
+      );
+    }
+  }
+];
+
+const Source = `
+const data = [/* ... */];
 
 const columns: ColumnProps<TestData>[] = [
   {
@@ -300,60 +330,21 @@ const columns: ColumnProps<TestData>[] = [
     key: "firstName",
     header: "First",
     width: 100,
-    content: ({ row }) => <TextStyle>{row.firstName}</TextStyle>
+    content: ({ row }) => (
+      <div className="text-sm font-light leading-[normal] text-black whitespace-nowrap overflow-hidden text-ellipsis">
+        {row.firstName}
+      </div>
+    )
   },
   {
     key: "lastName",
     header: "Last",
     width: 100,
-    content: ({ row }) => <TextStyle>{row.lastName}</TextStyle>
-  },
-  {
-    key: "country",
-    header: "Country",
-    content: ({ row }) =>
-      !countryMap[row.country] ? (
-        `No flag for this country: ${row.country.toUpperCase()}`
-      ) : (
-        <>
-          <Flag name={row.country as FlagNameValues} />
-          {countryMap[row.country]}
-        </>
-      )
-  }
-];
-
-const Example4 = () => (
-  <Table borders data={testData} columns={columns} tableHeight={400} rowHeight={150} />
-);
-
-const Source = `
-const data = [/* ... */];
-
-const columns: ColumnProps<TestData>[] = [
-  { key: "id", header: "ID", width: 50 },
-  {
-    key: "avatar",
-    header: "Profile Photo",
-    width: 150,
-    content: ({ row }) => <ProfPic size="small" src={row.avatar} />
-  },
-  {
-    key: "email",
-    header: "Email",
-    content: ({ row }) => <Email email={row.email} />
-  },
-  {
-    key: "firstName",
-    header: "First",
-    width: 100,
-    content: ({ row }) => <TextStyle>{row.firstName}</TextStyle>
-  },
-  {
-    key: "lastName",
-    header: "Last",
-    width: 100,
-    content: ({ row }) => <TextStyle>{row.lastName}</TextStyle>
+    content: ({ row }) => (
+      <div className="text-sm font-light leading-[normal] text-black whitespace-nowrap overflow-hidden text-ellipsis">
+        {row.lastName}
+      </div>
+    )
   },
   {
     key: "country",
@@ -363,7 +354,7 @@ const columns: ColumnProps<TestData>[] = [
         \`No flag for this country: \${row.country.toUpperCase()}\`
       ) : (
         <>
-          <Flag name={row.country} />
+          <Flag name={row.country as FlagNameValues} />
           {countryMap[row.country]}
         </>
       )
@@ -381,4 +372,10 @@ const Example = () => (
 );
 `;
 
-export { Example4, Source };
+const Example4 = () => {
+  useTitle("Cell Content");
+  useSource(Source);
+  return <Table borders data={testData} columns={columns} tableHeight={400} rowHeight={150} />;
+};
+
+export { Example4 };

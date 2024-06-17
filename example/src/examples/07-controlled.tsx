@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Col } from "@/components/ui/col";
+import { Row } from "@/components/ui/row";
+import { Switch } from "@/components/ui/switch";
 import {
   randCatchPhrase,
   randCity,
@@ -16,25 +19,8 @@ import {
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { ColumnProps, SortDirection, Table } from "react-fluid-table";
-import { Checkbox, Form, Grid } from "semantic-ui-react";
-import styled from "styled-components";
 import { TestData, testData } from "../data";
-
-const StyledTable = styled(Table)`
-  margin-top: 10px;
-  border: 1px solid #ececec;
-
-  .rft-header {
-    background-color: #dedede;
-  }
-`;
-
-const Background = styled.div`
-  background: rgb(39, 40, 34);
-  border-radius: 5px;
-  padding: 5px 10px;
-  color: rgb(248, 248, 242);
-`;
+import { useSource, useTitle } from "@/hooks/useTitle";
 
 const columns: ColumnProps<TestData>[] = [
   {
@@ -79,11 +65,11 @@ const testData2: TestData[] = _.range(3000).map(i => ({
   zipCode: randZipCode()
 }));
 
-interface ControlledProps {
+type ControlledProps = {
   data: TestData[];
   height: number;
   columns: ColumnProps<TestData>[];
-}
+};
 
 const Controlled = ({ data, height, columns: variableColumns }: ControlledProps) => {
   const [rows, setRows] = useState<TestData[]>([]);
@@ -102,7 +88,7 @@ const Controlled = ({ data, height, columns: variableColumns }: ControlledProps)
   }, [data]);
 
   return (
-    <StyledTable
+    <Table
       borders
       data={rows}
       columns={variableColumns as unknown as any[]}
@@ -111,6 +97,8 @@ const Controlled = ({ data, height, columns: variableColumns }: ControlledProps)
       onSort={onSort}
       sortColumn="firstName"
       sortDirection="ASC"
+      className="border border-solid border-[#ececec]"
+      headerClassname="bg-[#dedede]"
     />
   );
 };
@@ -131,108 +119,6 @@ type keyM = keyof ToggleType;
 type keyD = keyof DataType;
 
 const viewableTypes = new Set(["string", "number", "boolean"]);
-
-const Example7 = () => {
-  // hooks
-  const [toggles, setToggles] = useState<ToggleType>({
-    data: false,
-    height: false,
-    columns: false
-  });
-
-  // variables
-  const keys: keyM[] = ["data", "height", "columns"];
-  const props: DataType = {
-    data: toggles.data ? testData2 : testData,
-    height: toggles.height ? 200 : 400,
-    columns: toggles.columns
-      ? [...columns, { key: "address", header: "Address", sortable: true }]
-      : columns
-  };
-
-  // functions
-  const onToggle = (key: string) => {
-    if (key === "data" || key === "height" || key === "columns") {
-      setToggles({
-        ...toggles,
-        [key]: !toggles[key]
-      });
-    }
-  };
-
-  return (
-    <>
-      <Grid stackable columns={2}>
-        <Grid.Row>
-          <Grid.Column width={8}>
-            <Form>
-              <h4>Select properties to control</h4>
-              <Form.Field>
-                <Checkbox
-                  toggle
-                  label="data - changes data source"
-                  value={toggles.data.toString()}
-                  checked={toggles.data}
-                  onChange={() => onToggle("data")}
-                />
-              </Form.Field>
-              <Form.Field>
-                <Checkbox
-                  toggle
-                  label="height - changes tableHeight"
-                  value={toggles.height.toString()}
-                  checked={toggles.height}
-                  onChange={() => onToggle("height")}
-                />
-              </Form.Field>
-              <Form.Field>
-                <Checkbox
-                  toggle
-                  label="columns - adds an address column"
-                  checked={toggles.columns}
-                  onChange={() => onToggle("columns")}
-                />
-              </Form.Field>
-            </Form>
-          </Grid.Column>
-          <Grid.Column width={8}>
-            <h4>Controlled Props:</h4>
-            <Background>
-              <pre>
-                {"{\n"}
-                {keys.map((key, index) => {
-                  const ending = index !== keys.length - 1 ? ",\n" : "\n";
-                  const val = viewableTypes.has(typeof props[key]);
-                  let color = "rgb(166, 226, 46)";
-                  if (typeof props[key] === "number") {
-                    color = "rgb(174, 129, 255)";
-                  } else if (typeof props[key] === "boolean") {
-                    color = "rgb(102, 217, 239)";
-                  }
-                  return (
-                    <React.Fragment key={key}>
-                      {`  ${key}: `}
-                      <span style={{ color }}>
-                        {val
-                          ? (props[key as keyD] as string | number)
-                          : toggles[key]
-                          ? '"altered"'
-                          : '"original"'}
-                      </span>
-                      {ending}
-                    </React.Fragment>
-                  );
-                })}
-                {"}"}
-              </pre>
-            </Background>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-      <Controlled {...props} />
-    </>
-  );
-};
 
 const Source = `
 const Controlled = ({ data, columns: variableColumns }) => {
@@ -265,5 +151,86 @@ const Controlled = ({ data, columns: variableColumns }) => {
   );
 };
 `;
+
+const Example7 = () => {
+  // hooks
+  useTitle("Controlled Props");
+  useSource(Source);
+  const [toggles, setToggles] = useState<ToggleType>({
+    data: false,
+    height: false,
+    columns: false
+  });
+
+  // variables
+  const keys: keyM[] = ["data", "height", "columns"];
+  const props: DataType = {
+    data: toggles.data ? testData2 : testData,
+    height: toggles.height ? 200 : 400,
+    columns: toggles.columns ? [...columns, { key: "address", header: "Address", sortable: true }] : columns
+  };
+
+  return (
+    <>
+      <Row className="mb-2.5">
+        <Col md={6}>
+          <form>
+            <div>Select properties to control</div>
+            <div className="flex gap-x-4">
+              <div>
+                <Switch checked={toggles.data} onCheckedChange={v => setToggles(prev => ({ ...prev, data: v }))} />
+              </div>
+              <div>data - changes data source</div>
+            </div>
+            <div className="flex gap-x-4">
+              <div>
+                <Switch checked={toggles.height} onCheckedChange={v => setToggles(prev => ({ ...prev, height: v }))} />
+              </div>
+              <div>height - changes tableHeight</div>
+            </div>
+            <div className="flex gap-x-4">
+              <div>
+                <Switch
+                  checked={toggles.columns}
+                  onCheckedChange={v => setToggles(prev => ({ ...prev, columns: v }))}
+                />
+              </div>
+              <div>columns - adds an address column</div>
+            </div>
+          </form>
+        </Col>
+        <Col md={6}>
+          <h4>Controlled Props:</h4>
+          <div className="bg-[#272822] px-2 py-1 text-[#f8f8f2]">
+            <pre>
+              {"{\n"}
+              {keys.map((key, index) => {
+                const ending = index !== keys.length - 1 ? ",\n" : "\n";
+                const val = viewableTypes.has(typeof props[key]);
+                let color = "rgb(166, 226, 46)";
+                if (typeof props[key] === "number") {
+                  color = "rgb(174, 129, 255)";
+                } else if (typeof props[key] === "boolean") {
+                  color = "rgb(102, 217, 239)";
+                }
+                return (
+                  <React.Fragment key={key}>
+                    {`  ${key}: `}
+                    <span style={{ color }}>
+                      {val ? (props[key as keyD] as string | number) : toggles[key] ? '"altered"' : '"original"'}
+                    </span>
+                    {ending}
+                  </React.Fragment>
+                );
+              })}
+              {"}"}
+            </pre>
+          </div>
+        </Col>
+      </Row>
+      <Controlled {...props} />
+    </>
+  );
+};
 
 export { Example7, Source };

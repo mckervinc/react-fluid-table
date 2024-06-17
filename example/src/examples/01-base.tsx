@@ -1,5 +1,6 @@
 import { ColumnProps, Table } from "react-fluid-table";
 import { TestData, testData } from "../data";
+import { useSource, useTitle } from "@/hooks/useTitle";
 
 const columns: ColumnProps<TestData>[] = [
   {
@@ -24,15 +25,13 @@ const columns: ColumnProps<TestData>[] = [
   }
 ];
 
-const Example1 = () => <Table data={testData} columns={columns} />;
-
 const Source = `
-interface TestData {
+type TestData = {
   id: number;
   firstName: string;
   lastName: string;
   email: string;
-}
+};
 
 const data: TestData[] = _.range(3000).map(i => ({
   id: i + 1,
@@ -51,4 +50,10 @@ const columns: ColumnProps<TestData>[] = [
 const Example = () => <Table data={data} columns={columns} />;
 `;
 
-export { Example1, Source };
+const Example1 = () => {
+  useTitle("Basic Table");
+  useSource(Source);
+  return <Table data={testData} columns={columns} />;
+};
+
+export { Example1 };
