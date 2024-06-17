@@ -1,50 +1,38 @@
-import React, { useState } from "react";
-import { Icon } from "semantic-ui-react";
-import styled from "styled-components";
-
-const StyledNav = styled.nav`
-  position: sticky;
-  top: 0;
-  width: 100%;
-  background-color: #1b1c1d;
-  color: rgba(255, 255, 255, 0.9);
-  padding: 1rem 10px;
-
-  @media screen and (min-width: 769px) {
-    display: none;
-  }
-`;
-
-const Toggle = styled(Icon)`
-  cursor: pointer;
-  display: block;
-`;
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const Navigation = ({ children }: { children?: React.ReactNode }) => {
+  // hooks
   const [isOpen, setIsOpen] = useState(false);
+  const { pathname } = useLocation();
+  const prev = useRef(pathname);
 
-  const onClick = () => {
-    setIsOpen(!isOpen);
-    const elem = document.getElementById("pusher");
-    const side = document.getElementById("sidebar");
-    if (!elem || !side) {
-      return;
+  // effects
+  useEffect(() => {
+    if (prev.current !== pathname) {
+      setIsOpen(false);
     }
 
-    if (isOpen) {
-      side.style.overflow = "";
-      elem.style.overflow = "";
-    } else {
-      side.style.overflow = "hidden";
-      elem.style.overflow = "hidden";
-    }
-  };
+    prev.current = pathname;
+  }, [pathname]);
+
+  useEffect(() => {
+    document.body.style.overflowY = isOpen ? "hidden" : "";
+  }, [isOpen]);
 
   return (
-    <StyledNav>
-      <Toggle name={isOpen ? "times" : "bars"} onClick={onClick} />
-      {!isOpen ? null : <div>{children}</div>}
-    </StyledNav>
+    <nav className="fixed left-0 top-0 z-20 h-screen w-full overflow-y-auto bg-[#1b1c1d] px-2.5 py-4 text-[rgba(255,255,255,0.9)] md:hidden">
+      <div>
+        <FontAwesomeIcon
+          icon={isOpen ? faTimes : faBars}
+          className="cursor-pointer"
+          onClick={() => setIsOpen(prev => !prev)}
+        />
+      </div>
+      {!isOpen ? null : <>{children}</>}
+    </nav>
   );
 };
 

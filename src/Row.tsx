@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useContext, useLayoutEffect, useRef } from "react";
 import { ListChildComponentProps } from "react-window";
-import { ColumnProps, RowRenderProps, SubComponentProps } from "../index";
+import { ClearCacheOptions, ColumnProps, RowRenderProps, SubComponentProps } from "../index";
 import { TableContext } from "./TableContext";
 import Minus from "./svg/minus-circle.svg";
 import Plus from "./svg/plus-circle.svg";
@@ -13,7 +13,7 @@ type TableCellProps<T> = {
   prevWidth: number;
   column: ColumnProps<T>;
   isExpanded: boolean;
-  clearSizeCache: (dataIndex: number, forceUpdate?: boolean) => void;
+  clearSizeCache: (dataIndex: number, options?: ClearCacheOptions) => void;
   onExpanderClick: (
     event: React.MouseEvent<Element, MouseEvent> | undefined,
     isExpanded: boolean
@@ -44,7 +44,7 @@ interface RowProps<T> extends Omit<ListChildComponentProps<T>, "data"> {
   rowContainerStyle: React.CSSProperties | ((index: number) => React.CSSProperties);
   useRowWidth: boolean;
   forceReset?: boolean;
-  clearSizeCache: (dataIndex: number, forceUpdate?: boolean) => void;
+  clearSizeCache: (dataIndex: number, options?: ClearCacheOptions) => void;
   calculateHeight: (
     queryParam: number | HTMLElement | null,
     optionalDataIndex?: number | null
@@ -96,13 +96,20 @@ const TableCell = memo(function <T>({
     left: column.frozen ? prevWidth : undefined
   };
 
+  // cell classname
+  const cellClass = column.contentCellClassname
+    ? typeof column.contentCellClassname === "string"
+      ? column.contentCellClassname
+      : column.contentCellClassname({ row, index })
+    : null;
+
   // expander
   if (column.expander) {
     if (typeof column.expander === "boolean") {
       const Logo = isExpanded ? Minus : Plus;
 
       return (
-        <div className={cx("rft-cell", column.frozen && "frozen")} style={style}>
+        <div className={cx("rft-cell", column.frozen && "frozen", cellClass)} style={style}>
           <Logo className="rft-expander" onClick={e => onExpanderClick(e, !isExpanded)} />
         </div>
       );
@@ -132,7 +139,7 @@ const TableCell = memo(function <T>({
     }
 
     return (
-      <div className={cx("rft-cell", column.frozen && "frozen")} style={style}>
+      <div className={cx("rft-cell", column.frozen && "frozen", cellClass)} style={style}>
         {content}
       </div>
     );
@@ -263,7 +270,7 @@ function Row<T>({
     if (!expandedCalledRef.current && !forceReset) {
       resetHeight();
     } else {
-      clearSizeCache(index, true);
+      clearSizeCache(index, { forceUpdate: true });
     }
 
     expandedCalledRef.current = false;

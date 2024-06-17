@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useSource, useTitle } from "@/hooks/useTitle";
+import { faReact } from "@fortawesome/free-brands-svg-icons";
+import { faCheckCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { Table as BaseTable, ColumnProps } from "react-fluid-table";
-import { Divider, Header, Icon, List } from "semantic-ui-react";
-import styled from "styled-components";
+import { ColumnProps, Table } from "react-fluid-table";
 import ColumnPropsTable from "./ColumnProps";
 import { Snippet } from "./Snippet";
 import { InlineCode } from "./components/library/InlineCode";
 
-interface PropData {
+type PropData = {
   prop: string;
   type: string;
   description: string;
@@ -15,39 +17,7 @@ interface PropData {
   content?: () => React.ReactNode;
   expandedType?: () => React.ReactNode;
   default?: string | number;
-}
-
-const Container = styled.div`
-  padding: 1em;
-  background-color: white;
-  height: 100%;
-  overflow: auto;
-`;
-
-const Table = styled(BaseTable)`
-  border: 1px solid #ececec;
-
-  .rft-header {
-    background-color: #282a36;
-  }
-
-  .rft-cell,
-  .rft-header-cell {
-    border-right: 1px solid #ececec;
-
-    :last-child {
-      border-right: none;
-    }
-  }
-
-  .rft-header-cell-text {
-    color: #ff79c5;
-  }
-`;
-
-const Item = styled(List.Item)`
-  width: 100%;
-`;
+};
 
 const columns: ColumnProps<PropData>[] = [
   {
@@ -68,9 +38,9 @@ const columns: ColumnProps<PropData>[] = [
     header: "Required",
     width: 100,
     content: ({ row }: { row: PropData }) => (
-      <Icon
-        name={`${row.required ? "check" : "times"} circle`}
-        color={row.required ? "green" : "grey"}
+      <FontAwesomeIcon
+        icon={row.required ? faCheckCircle : faTimesCircle}
+        color={row.required ? "#21ba45" : "#767676"}
       />
     )
   },
@@ -95,9 +65,8 @@ const data: PropData[] = [
     description: "The array of items that are going to be displayed.",
     content: () => (
       <p>
-        This is an array of objects that you want to display in a table. The items in this list must
-        be defined and cannot be <InlineCode>null</InlineCode>, <InlineCode>undefined</InlineCode>,
-        or any other primitives or classes.
+        This is an array of objects that you want to display in a table. The items in this list must be defined and
+        cannot be <InlineCode>null</InlineCode>, <InlineCode>undefined</InlineCode>, or any other primitives or classes.
       </p>
     )
   },
@@ -132,8 +101,7 @@ const data: PropData[] = [
   {
     prop: "maxTableHeight",
     type: "number",
-    description:
-      "The max height of the table in pixels. If tableHeight is specified, this is ignored."
+    description: "The max height of the table in pixels. If tableHeight is specified, this is ignored."
   },
   {
     prop: "tableWidth",
@@ -143,8 +111,7 @@ const data: PropData[] = [
   {
     prop: "rowHeight",
     type: "number",
-    description:
-      "This is a fixed height of each row. Subcomponents will not be affected by this value"
+    description: "This is a fixed height of each row. Subcomponents will not be affected by this value"
   },
   {
     prop: "headerHeight",
@@ -179,9 +146,8 @@ const data: PropData[] = [
     description: "The callback function when a sortable column is clicked",
     content: () => (
       <div>
-        The arguments <InlineCode>col</InlineCode> and <InlineCode>dir</InlineCode> are the clicked
-        column and the new sortDirection. These values are <code>null</code> after a descending
-        column is clicked.
+        The arguments <InlineCode>col</InlineCode> and <InlineCode>dir</InlineCode> are the clicked column and the new
+        sortDirection. These values are <code>null</code> after a descending column is clicked.
       </div>
     )
   },
@@ -264,8 +230,7 @@ const data: PropData[] = [
   {
     prop: "stickyFooter",
     type: "boolean",
-    description:
-      "Controls whether or not the footer is sticky. This does nothing if footerComponent is not specified.",
+    description: "Controls whether or not the footer is sticky. This does nothing if footerComponent is not specified.",
     default: "false"
   }
 ];
@@ -339,103 +304,118 @@ const columns = [
 const Example = () => <Table data={data} columns={columns} subComponent={SubComponent} />;
 `;
 
-const Props = () => (
-  <Container>
-    <Header size="large">
-      <Icon name="react" color="blue" />
-      <Header.Content>
-        <code>{"<Table>"}</code> Props
-        <Header.Subheader>
-          All the props for the <code>{"<Table>"}</code> component
-        </Header.Subheader>
-      </Header.Content>
-    </Header>
-    <Table borders data={data} columns={columns as unknown as any[]} tableHeight={500} />
-    <Divider section />
-    <Header dividing color="red">
-      Required Props
-    </Header>
-    <List divided>
-      {required.map(d => (
-        <Item key={d.prop}>
-          <List.Header>
-            <code>{d.prop}</code>: <code>{d.type}</code>
-          </List.Header>
-          {!d.content ? null : typeof d.content === "string" ? d.content : d.content()}
-        </Item>
-      ))}
-    </List>
-    <Header dividing size="small" color="grey">
-      HeaderElement, CellElement, and ExpanderElement
-    </Header>
-    <List divided>
-      <Item>
-        <List.Header>
-          <code>HeaderElement</code>:{" "}
-          <code>
-            {
-              "({ style: object, onClick: Function, sortDirection: string | null }) => React.Element"
-            }
-          </code>
-        </List.Header>
-        <List.Content>
-          The HeaderElement is an element that takes in props that contains a style, onclick, and
-          sortDirection. See below for an example:
-        </List.Content>
-        <Snippet copy={false} code={headerSnippet} />
-      </Item>
-      <Item>
-        <List.Header>
-          <code>CellElement</code>:{" "}
-          <code>
-            {
-              "({ row: object, index: number, style?: React.CSSProperties, clearSizeCache: (index: number, forceUpdate?: boolean = false) => void }) => React.Element"
-            }
-          </code>
-        </List.Header>
-        <List.Content>
-          The CellElement is an element that takes in props that contains the row object itself, the
-          index in the data array, and a function to reset the rowHeight (if needed). See below for
-          an example:
-        </List.Content>
-        <Snippet copy={false} code={cellSnippet} />
-      </Item>
-      <Item>
-        <List.Header>
-          <code>ExpanderElement</code>:{" "}
-          <code>{"({ isExpanded: boolean, onClick: () => void }) => React.Element"}</code>
-        </List.Header>
-        <List.Content>
-          The ExpandedElement is an element that takes in props that contains whether or not the row
-          is expanded, as well as a function to toggle the row expansion. See below for an example:
-        </List.Content>
-        <Snippet copy={false} code={expanderSnippet} />
-      </Item>
-    </List>
-    <Header dividing size="small" color="grey">
-      Optional Props
-    </Header>
-    <List divided>
-      {optional.map(d => (
-        <Item key={d.prop}>
-          <List.Header>
-            <code>{d.prop}</code>: {d.expandedType ? d.expandedType() : <code>{d.type}</code>}
-          </List.Header>
-          {!d.content ? (
-            <p>{d.description}</p>
-          ) : typeof d.content === "string" ? (
-            d.content
-          ) : (
-            d.content()
-          )}
-        </Item>
-      ))}
-    </List>
-    <Header dividing size="small" color="grey">
-      Interfaces
-    </Header>
-    <Snippet
-      code={`import { CSSProperties, ForwardedRef, ReactNode } from "react";
+const Props = () => {
+  useTitle("");
+  useSource("");
+  return (
+    <div className="h-full overflow-auto bg-white p-4">
+      <div className="mb-3.5 flex items-end">
+        <FontAwesomeIcon icon={faReact} color="#2185d0" size="4x" />
+        <div className="text-xl font-bold">
+          <code>{"<Table>"}</code> Props
+          <div className="text-sm font-normal">
+            All the props for the <code>{"<Table>"}</code> component
+          </div>
+        </div>
+      </div>
+      <Table
+        borders
+        data={data}
+        columns={columns as unknown as any[]}
+        tableHeight={500}
+        className="border border-solid border-[#ececec] [&_.rft-cell:last]:border-none [&_.rft-cell]:border-r [&_.rft-cell]:border-solid [&_.rft-cell]:border-r-[#ececec] [&_.rft-header-cell-text]:text-[#ff79c5] [&_.rft-header-cell:last]:border-none [&_.rft-header-cell]:border-r [&_.rft-header-cell]:border-solid [&_.rft-header-cell]:border-r-[#ececec] [&_.rft-header]:bg-[#282a36]"
+      />
+      <div className="my-8 border-b border-t border-solid border-b-[rgba(255,255,255,.1)] border-t-[rgba(34,36,38,.15)]" />
+      <div className="mb-3.5 mt-6 border-b-2 border-solid border-[#db2828] pb-1 text-lg font-bold leading-[1.28571429em] text-[#db2828]">
+        Required Props
+      </div>
+      <div role="list" className="my-4">
+        {required.map(d => (
+          <div
+            key={d.prop}
+            role="listitem"
+            className="list-item w-full table-fixed list-none border-t border-solid border-[rgba(34,36,38,.15)] py-[.21428571em] leading-[1.14285714em] first:border-t-0 first:pt-0"
+          >
+            <div className="font-bold text-[rgba(0,0,0,.87)]">
+              <code>{d.prop}</code>: <code>{d.type}</code>
+            </div>
+            {!d.content ? null : typeof d.content === "string" ? d.content : d.content()}
+          </div>
+        ))}
+      </div>
+      <div className="mb-3.5 mt-6 border-b-2 border-solid border-[#767676] pb-1 text-[0.9375rem] text-lg font-bold leading-[1.28571429em] text-[#767676]">
+        HeaderElement, CellElement, and ExpanderElement
+      </div>
+      <div role="list" className="my-4">
+        <div
+          role="listitem"
+          className="list-item w-full table-fixed list-none border-t border-solid border-[rgba(34,36,38,.15)] py-[.21428571em] leading-[1.14285714em] first:border-t-0 first:pt-0"
+        >
+          <div className="font-bold text-[rgba(0,0,0,.87)]">
+            <code>HeaderElement</code>:{" "}
+            <code>{"({ style: object, onClick: Function, sortDirection: string | null }) => React.Element"}</code>
+          </div>
+          <div className="leading-[1.14285714em]">
+            The HeaderElement is an element that takes in props that contains a style, onclick, and sortDirection. See
+            below for an example:
+          </div>
+          <Snippet copy={false} code={headerSnippet} />
+        </div>
+        <div
+          role="listitem"
+          className="list-item w-full table-fixed list-none border-t border-solid border-[rgba(34,36,38,.15)] py-[.21428571em] leading-[1.14285714em] first:border-t-0 first:pt-0"
+        >
+          <div className="font-bold text-[rgba(0,0,0,.87)]">
+            <code>CellElement</code>:{" "}
+            <code>
+              {
+                "({ row: object, index: number, style?: React.CSSProperties, clearSizeCache: (index: number, forceUpdate?: boolean = false) => void }) => React.Element"
+              }
+            </code>
+          </div>
+          <div className="leading-[1.14285714em]">
+            The CellElement is an element that takes in props that contains the row object itself, the index in the data
+            array, and a function to reset the rowHeight (if needed). See below for an example:
+          </div>
+          <Snippet copy={false} code={cellSnippet} />
+        </div>
+        <div
+          role="listitem"
+          className="list-item w-full table-fixed list-none border-t border-solid border-[rgba(34,36,38,.15)] py-[.21428571em] leading-[1.14285714em] first:border-t-0 first:pt-0"
+        >
+          <div className="font-bold text-[rgba(0,0,0,.87)]">
+            <code>ExpanderElement</code>:{" "}
+            <code>{"({ isExpanded: boolean, onClick: () => void }) => React.Element"}</code>
+          </div>
+          <div className="leading-[1.14285714em]">
+            The ExpandedElement is an element that takes in props that contains whether or not the row is expanded, as
+            well as a function to toggle the row expansion. See below for an example:
+          </div>
+          <Snippet copy={false} code={expanderSnippet} />
+        </div>
+      </div>
+      <div className="mb-3.5 mt-6 border-b-2 border-solid border-[#767676] pb-1 text-[0.9375rem] text-lg font-bold leading-[1.28571429em] text-[#767676]">
+        Optional Props
+      </div>
+      <div role="list" className="my-4">
+        {optional.map(d => (
+          <div
+            key={d.prop}
+            role="listitem"
+            className="list-item w-full table-fixed list-none border-t border-solid border-[rgba(34,36,38,.15)] py-[.21428571em] leading-[1.14285714em] first:border-t-0 first:pt-0"
+          >
+            <div className="font-bold text-[rgba(0,0,0,.87)]">
+              <code>{d.prop}</code>: {d.expandedType ? d.expandedType() : <code>{d.type}</code>}
+            </div>
+            {!d.content ? <p>{d.description}</p> : typeof d.content === "string" ? d.content : d.content()}
+          </div>
+        ))}
+      </div>
+      <div className="mb-3.5 mt-6 border-b-2 border-solid border-[#767676] pb-1 text-[0.9375rem] text-lg font-bold leading-[1.28571429em] text-[#767676]">
+        Types & Interfaces
+      </div>
+      <Snippet
+        code={`import { CSSProperties, ForwardedRef, ReactNode } from "react";
 
 type SortDirection = "ASC" | "DESC" | null;
 
@@ -454,6 +434,11 @@ interface ExpanderProps {
   style: CSSProperties;
 }
 
+type ClearCacheOptions = {
+  forceUpdate?: boolean;
+  timeout?: number;
+};
+
 interface CellProps<T> {
   /**
    * the data for the row
@@ -466,7 +451,7 @@ interface CellProps<T> {
   /**
    * an optional function that can be used to clear the size cache
    */
-  clearSizeCache: (dataIndex: number, forceUpdate?: boolean) => void;
+  clearSizeCache: (dataIndex: number, options?: ClearCacheOptions) => void;
   /**
    * optional custom styles for each cell
    */
@@ -529,7 +514,7 @@ interface SubComponentProps<T> {
   /**
    * an optional function that can be used to clear the size cache
    */
-  clearSizeCache: (dataIndex: number, forceUpdate?: boolean) => void;
+  clearSizeCache: (dataIndex: number, options?: ClearCacheOptions) => void;
 }
 
 interface FooterProps<T> {
@@ -763,8 +748,9 @@ interface TableProps<T> {
   ref?: ForwardedRef<TableRef>;
 }
 `}
-    />
-  </Container>
-);
+      />
+    </div>
+  );
+};
 
 export default Props;

@@ -27,6 +27,11 @@ export type ExpanderProps<T> = {
   style: CSSProperties;
 };
 
+export type ClearCacheOptions = {
+  forceUpdate?: boolean;
+  timeout?: number;
+};
+
 export type CellProps<T> = {
   /**
    * the data for the row
@@ -39,7 +44,7 @@ export type CellProps<T> = {
   /**
    * an optional function that can be used to clear the size cache
    */
-  clearSizeCache: (dataIndex: number, forceUpdate?: boolean) => void;
+  clearSizeCache: (dataIndex: number, options?: ClearCacheOptions) => void;
   /**
    * optional custom styles for each cell
    */
@@ -102,7 +107,7 @@ export type SubComponentProps<T> = {
   /**
    * an optional function that can be used to clear the size cache
    */
-  clearSizeCache: (dataIndex: number, forceUpdate?: boolean) => void;
+  clearSizeCache: (dataIndex: number, options?: ClearCacheOptions) => void;
 };
 
 export type FooterProps<T> = {
@@ -138,6 +143,7 @@ export type ColumnProps<T> = {
    * The name of the header column, or a component to return a customized header cell.
    */
   header?: string | ((props: HeaderProps) => JSX.Element);
+  headerCellClassname?: string;
   /**
    * The width of a column in pixels. If this is set, the column will not resize.
    */
@@ -170,6 +176,7 @@ export type ColumnProps<T> = {
    * things inside of the react-fluid-table cell container.
    */
   content?: string | number | ((props: CellProps<T>) => ReactNode | JSX.Element);
+  contentCellClassname?: string | ((props: { row: T; index: number }) => string);
   /**
    * An advanced feature, this is used to render an entire cell, including the cell container.
    * The `content` prop is ignored if this property is enabled.

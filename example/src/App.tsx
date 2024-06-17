@@ -1,133 +1,82 @@
 import { RouterProvider, createHashRouter } from "react-router-dom";
 import "react-fluid-table/dist/index.css";
-import Page from "./Page";
 import Props from "./Props";
-import { Example1, Source as Example1Code } from "./examples/01-base";
-import { Example2, Source as Example2Code } from "./examples/02-sort";
-import { Example3, Source as Example3Code } from "./examples/03-sub";
-import { Example4, Source as Example4Code } from "./examples/04-custom";
-import { Example5, Source as Example5Code } from "./examples/05-variable";
-import { Example6, Source as Example6Code } from "./examples/06-expanded";
-import { Example7, Source as Example7Code } from "./examples/07-controlled";
-import { Example8, Source as Example8Code } from "./examples/08-header";
-import { Example9, Source as Example9Code } from "./examples/09-scroll";
-import { Example10, Source as Example10Code } from "./examples/10-footer";
-import { Example11, Source as Example11Code } from "./examples/11-heights";
-import { Example12, Source as Example12Code } from "./examples/12-frozen";
+import { Example1 } from "./examples/01-base";
+import { Example2 } from "./examples/02-sort";
+import { Example3 } from "./examples/03-sub";
+import { Example4 } from "./examples/04-custom";
+import { Example5 } from "./examples/05-variable";
+import { Example6 } from "./examples/06-expanded";
+import { Example7 } from "./examples/07-controlled";
+import { Example8 } from "./examples/08-header";
+import { Example9 } from "./examples/09-scroll";
+import { Example10 } from "./examples/10-footer";
+import { Example11 } from "./examples/11-heights";
+import { Example12 } from "./examples/12-frozen";
+import Layout from "./components/Layout";
 
 const router = createHashRouter([
   {
-    path: "/",
-    element: (
-      <Page title="Basic Table" code={Example1Code}>
-        <Example1 />
-      </Page>
-    )
-  },
-  {
-    path: "/sort",
-    element: (
-      <Page title="Sortable Table" code={Example2Code}>
-        <Example2 />
-      </Page>
-    )
-  },
-  {
-    path: "/sub",
-    element: (
-      <Page title="Table with Subcomponent" code={Example3Code}>
-        <Example3 />
-      </Page>
-    )
-  },
-  {
-    path: "/custom",
-    element: (
-      <Page title="Cell Content" code={Example4Code}>
-        <Example4 />
-      </Page>
-    )
-  },
-  {
-    path: "/variable",
-    element: (
-      <Page title="Variable Row Size" code={Example5Code}>
-        <Example5 />
-      </Page>
-    )
-  },
-  {
-    path: "/expanded",
-    element: (
-      <Page title="Expanded Row Height" code={Example6Code}>
-        <Example6 />
-      </Page>
-    )
-  },
-  {
-    path: "/controlled",
-    element: (
-      <Page title="Controlled Props" code={Example7Code}>
-        <Example7 />
-      </Page>
-    )
-  },
-  {
-    path: "/header",
-    element: (
-      <Page title="Custom Styling" code={Example8Code}>
-        <Example8 />
-      </Page>
-    )
-  },
-  {
-    path: "/scroll",
-    element: (
-      <Page title="Methods" code={Example9Code}>
-        <Example9 />
-      </Page>
-    )
-  },
-  {
-    path: "/footer",
-    element: (
-      <Page title="Footer" code={Example10Code}>
-        <Example10 />
-      </Page>
-    )
-  },
-  {
-    path: "/heights",
-    element: (
-      <Page title="Table Heights" code={Example11Code}>
-        <Example11 />
-      </Page>
-    )
-  },
-  {
-    path: "/frozen",
-    element: (
-      <Page title="Frozen" code={Example12Code}>
-        <Example12 />
-      </Page>
-    )
-  },
-  {
-    path: "/props",
-    element: (
-      <Page>
-        <Props />
-      </Page>
-    )
+    element: <Layout />,
+    children: [
+      {
+        path: "/",
+        element: <Example1 />
+      },
+      {
+        path: "/sort",
+        element: <Example2 />
+      },
+      {
+        path: "/sub",
+        element: <Example3 />
+      },
+      {
+        path: "/custom",
+        element: <Example4 />
+      },
+      {
+        path: "/variable",
+        element: <Example5 />
+      },
+      {
+        path: "/expanded",
+        element: <Example6 />
+      },
+      {
+        path: "/controlled",
+        element: <Example7 />
+      },
+      {
+        path: "/header",
+        element: <Example8 />
+      },
+      {
+        path: "/scroll",
+        element: <Example9 />
+      },
+      {
+        path: "/footer",
+        element: <Example10 />
+      },
+      {
+        path: "/heights",
+        element: <Example11 />
+      },
+      {
+        path: "/frozen",
+        element: <Example12 />
+      },
+      {
+        path: "/props",
+        element: <Props />
+      }
+    ]
   }
 ]);
 
 function App() {
-  return (
-    <>
-      <RouterProvider router={router} />
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

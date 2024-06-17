@@ -2,6 +2,7 @@ import _ from "lodash";
 import { useState } from "react";
 import { ColumnProps, SortDirection, Table } from "react-fluid-table";
 import { TestData, testData } from "../data";
+import { useSource, useTitle } from "@/hooks/useTitle";
 
 const columns: ColumnProps<TestData>[] = [
   {
@@ -29,33 +30,6 @@ const columns: ColumnProps<TestData>[] = [
     width: 250
   }
 ];
-
-const Example2 = () => {
-  const [data, setData] = useState(_.orderBy(testData, ["firstName"], ["asc"]));
-
-  const onSort = (col: string | null, dir: SortDirection) => {
-    if (!col || !dir) {
-      setData(testData);
-    } else {
-      const direction = dir === "ASC" ? "asc" : "desc";
-      setData(_.orderBy(data, [col], [direction]));
-    }
-  };
-
-  return (
-    <Table
-      borders
-      data={data}
-      columns={columns}
-      itemKey={row => row.id}
-      rowHeight={35}
-      tableHeight={400}
-      onSort={onSort}
-      sortColumn="firstName"
-      sortDirection="ASC"
-    />
-  );
-};
 
 const Source = `
 const testData = [/* ... */];
@@ -95,4 +69,33 @@ const Example = () => {
 };
 `;
 
-export { Example2, Source };
+const Example2 = () => {
+  useTitle("Sortable Table");
+  useSource(Source);
+  const [data, setData] = useState(_.orderBy(testData, ["firstName"], ["asc"]));
+
+  const onSort = (col: string | null, dir: SortDirection) => {
+    if (!col || !dir) {
+      setData(testData);
+    } else {
+      const direction = dir === "ASC" ? "asc" : "desc";
+      setData(_.orderBy(data, [col], [direction]));
+    }
+  };
+
+  return (
+    <Table
+      borders
+      data={data}
+      columns={columns}
+      itemKey={row => row.id}
+      rowHeight={35}
+      tableHeight={400}
+      onSort={onSort}
+      sortColumn="firstName"
+      sortDirection="ASC"
+    />
+  );
+};
+
+export { Example2 };

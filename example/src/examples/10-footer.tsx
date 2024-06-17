@@ -1,25 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Col } from "@/components/ui/col";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Row } from "@/components/ui/row";
+import { Switch } from "@/components/ui/switch";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import { ColumnProps, FooterProps, Table } from "react-fluid-table";
-import { Checkbox, Form, Grid, Icon, Input, Radio } from "semantic-ui-react";
-import styled from "styled-components";
 import { TestData, testData } from "../data";
-
-const StyledTable = styled(Table)`
-  margin-top: 10px;
-  border: 1px solid #ececec;
-
-  .rft-header {
-    background-color: #dedede;
-  }
-`;
-
-const Background = styled.div`
-  background: rgb(39, 40, 34);
-  border-radius: 5px;
-  padding: 5px 10px;
-  color: rgb(248, 248, 242);
-`;
+import { useSource, useTitle } from "@/hooks/useTitle";
 
 const TestButton = () => {
   // hooks
@@ -43,8 +34,8 @@ const TestButton = () => {
   }, []);
 
   return (
-    <button onClick={() => setLoading(true)}>
-      {loading ? <Icon loading name="spinner" /> : "Click Me"}
+    <button type="button" onClick={() => setLoading(true)}>
+      {loading ? <FontAwesomeIcon spin icon={faSpinner} /> : "Click Me"}
     </button>
   );
 };
@@ -75,133 +66,6 @@ const columns: ColumnProps<TestData>[] = [
     footer: () => <Input placeholder="type here" />
   }
 ];
-
-const Footer = styled.div`
-  background-color: white;
-`;
-
-const getFooterType = (num: number) => {
-  switch (num) {
-    case 0:
-      return "column";
-    case 1:
-      return "basic";
-    default:
-      return "complex";
-  }
-};
-
-const Example10 = () => {
-  // hooks
-  const [sticky, setSticky] = useState(true);
-  const [footerType, setFooterType] = useState(0);
-
-  // constants
-  const footerValueText = getFooterType(footerType);
-
-  const InnerFooter =
-    footerType > 0
-      ? ({ widths }: FooterProps<TestData>) => (
-          <Footer>
-            {footerType === 1 ? (
-              "Hello, World"
-            ) : (
-              <div style={{ display: "flex" }}>
-                {columns.map((c, i) => {
-                  const width = widths[i];
-                  const style: React.CSSProperties = {
-                    width,
-                    minWidth: width,
-                    padding: "8px",
-                    position: c.frozen ? "sticky" : undefined,
-                    left: c.frozen ? widths.slice(0, i).reduce((pv, c) => pv + c, 0) : undefined
-                  };
-                  return (
-                    <div key={c.key} style={style}>
-                      Footer Cell
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </Footer>
-        )
-      : undefined;
-
-  return (
-    <>
-      <Grid stackable columns={2}>
-        <Grid.Row>
-          <Grid.Column width={8}>
-            <Form>
-              <h4>Change footer properties</h4>
-              <Form.Field>
-                <Checkbox
-                  toggle
-                  label="change footer sticky value"
-                  value={sticky.toString()}
-                  checked={sticky}
-                  onChange={() => setSticky(prev => !prev)}
-                />
-              </Form.Field>
-              <Form.Field>
-                Selected value: <b>{footerValueText}</b>
-              </Form.Field>
-              <Form.Field>
-                <Radio
-                  label="set footer type to column-derived"
-                  name="radioGroup"
-                  value={footerValueText}
-                  checked={footerType === 0}
-                  onChange={() => setFooterType(0)}
-                />
-              </Form.Field>
-              <Form.Field>
-                <Radio
-                  label="set footer type to basic"
-                  name="radioGroup"
-                  value={footerValueText}
-                  checked={footerType === 1}
-                  onChange={() => setFooterType(1)}
-                />
-              </Form.Field>
-              <Form.Field>
-                <Radio
-                  label="set footer type to complex"
-                  name="radioGroup"
-                  value={footerValueText}
-                  checked={footerType > 1}
-                  onChange={() => setFooterType(2)}
-                />
-              </Form.Field>
-            </Form>
-          </Grid.Column>
-          <Grid.Column width={8}>
-            <h4>Controlled Props:</h4>
-            <Background>
-              <pre>
-                {"{\n  footerType: "}
-                <span style={{ color: "rgb(166, 226, 46)" }}>{`"${footerValueText}"`}</span>
-                {",\n  stickyFooter: "}
-                <span style={{ color: "rgb(102, 217, 239)" }}>{sticky.toString()}</span>
-                {"\n}"}
-              </pre>
-            </Background>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-      <StyledTable
-        borders
-        data={testData.slice(0, 30)}
-        columns={columns as unknown as any[]}
-        stickyFooter={sticky}
-        tableHeight={400}
-        footerStyle={{ backgroundColor: "white" }}
-        footerComponent={InnerFooter as unknown as any}
-      />
-    </>
-  );
-};
 
 const Source = `
 const data = [/* ... */];
@@ -320,5 +184,103 @@ const ComplexFooter = ({ stickyFooter }) => {
   );
 };
 `;
+
+type Footers = "column" | "basic" | "complex";
+
+const Example10 = () => {
+  // hooks
+  useTitle("Footer");
+  useSource(Source);
+  const [sticky, setSticky] = useState(true);
+  const [footerType, setFooterType] = useState<Footers>("column");
+
+  // constants
+  const InnerFooter =
+    footerType !== "column"
+      ? ({ widths }: FooterProps<TestData>) => (
+          <div className="bg-white">
+            {footerType === "basic" ? (
+              "Hello, World"
+            ) : (
+              <div style={{ display: "flex" }}>
+                {columns.map((c, i) => {
+                  const width = widths[i];
+                  const style: React.CSSProperties = {
+                    width,
+                    minWidth: width,
+                    padding: "8px",
+                    position: c.frozen ? "sticky" : undefined,
+                    left: c.frozen ? widths.slice(0, i).reduce((pv, c) => pv + c, 0) : undefined
+                  };
+                  return (
+                    <div key={c.key} style={style}>
+                      Footer Cell
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )
+      : undefined;
+
+  return (
+    <>
+      <Row>
+        <Col md={6}>
+          <form className="mb-4">
+            <h4>Change footer properties</h4>
+            <div className="flex items-end gap-x-2">
+              <div>
+                <Switch checked={sticky} onCheckedChange={setSticky} />
+              </div>
+              <div>change footer sticky value</div>
+            </div>
+            <div className="mb-4">
+              Selected value: <b>{footerType}</b>
+            </div>
+            <RadioGroup value={footerType} onValueChange={v => setFooterType(v as Footers)}>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="column" id="column" />
+                <Label htmlFor="column">set footer type to column-derived</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="basic" id="basic" />
+                <Label htmlFor="basic">set footer type to basic</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="complex" id="complex" />
+                <Label htmlFor="complex">set footer type to complex</Label>
+              </div>
+            </RadioGroup>
+          </form>
+        </Col>
+        <Col md={6}>
+          <h4>Controlled Props:</h4>
+          <div className="rounded bg-[#272822] px-2 py-1 text-[#f8f8f2]">
+            <pre>
+              {"{\n  footerType: "}
+              <span style={{ color: "rgb(166, 226, 46)" }}>{`"${footerType}"`}</span>
+              {",\n  stickyFooter: "}
+              <span style={{ color: "rgb(102, 217, 239)" }}>{sticky.toString()}</span>
+              {"\n}"}
+            </pre>
+          </div>
+        </Col>
+      </Row>
+      <Table
+        borders
+        data={testData.slice(0, 30)}
+        columns={columns as unknown as any[]}
+        stickyFooter={sticky}
+        tableHeight={400}
+        className="border border-solid border-[#ececec]"
+        headerClassname="bg-[#dedede]"
+        footerStyle={{ backgroundColor: "white" }}
+        footerComponent={InnerFooter as unknown as any}
+      />
+    </>
+  );
+};
 
 export { Example10, Source };

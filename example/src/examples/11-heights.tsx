@@ -1,18 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useSource, useTitle } from "@/hooks/useTitle";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import { ColumnProps, Table } from "react-fluid-table";
-import { Button, Form, Icon, Input } from "semantic-ui-react";
-import styled from "styled-components";
 import { TestData, testData } from "../data";
-
-const StyledTable = styled(Table)`
-  margin-top: 10px;
-  border: 1px solid #ececec;
-
-  .rft-header {
-    background-color: #dedede;
-  }
-`;
 
 const columns: ColumnProps<TestData>[] = [
   {
@@ -37,95 +32,6 @@ const columns: ColumnProps<TestData>[] = [
   }
 ];
 
-const Example11 = () => {
-  // hooks
-  const ref = useRef(0);
-  const [size, setSize] = useState(1);
-  const [running, setRunning] = useState(false);
-  const [tableHeight, setTableHeight] = useState(400);
-  const [minTableHeight, setMinTableHeight] = useState(0);
-  const [maxTableHeight, setMaxTableHeight] = useState(0);
-
-  useEffect(() => {
-    const m = ref.current;
-    return () => {
-      window.clearInterval(m);
-    };
-  }, []);
-
-  return (
-    <>
-      <Form>
-        <h4>Change height properties</h4>
-        <Form.Field>
-          <Input
-            label="table height"
-            placeholder="specify table height (<= 0 to disable)"
-            type="number"
-            value={tableHeight.toString()}
-            onChange={e => {
-              setTableHeight(/-?\d+/.test(e.target.value) ? Number(e.target.value) : 0);
-            }}
-          />
-        </Form.Field>
-        <Form.Field>
-          <Input
-            label="min table height"
-            placeholder="specify min table height (<= 0 to disable)"
-            type="number"
-            value={minTableHeight.toString()}
-            onChange={e => {
-              setMinTableHeight(/-?\d+/.test(e.target.value) ? Number(e.target.value) : 0);
-            }}
-          />
-        </Form.Field>
-        <Form.Field>
-          <Input
-            label="max table height"
-            placeholder="specify max table height (<= 0 to disable)"
-            type="number"
-            value={maxTableHeight.toString()}
-            onChange={e => {
-              setMaxTableHeight(/-?\d+/.test(e.target.value) ? Number(e.target.value) : 0);
-            }}
-          />
-        </Form.Field>
-        <div>
-          <Button
-            onClick={() => {
-              window.clearInterval(ref.current);
-              setSize(1);
-              setRunning(true);
-              ref.current = window.setInterval(() => {
-                setSize(prev => prev + 1);
-              }, 1000);
-            }}
-          >
-            Start
-          </Button>
-          <Button
-            onClick={() => {
-              window.clearInterval(ref.current);
-              setRunning(false);
-            }}
-          >
-            Stop
-          </Button>
-          {running && <Icon loading name="spinner" />}
-        </div>
-      </Form>
-      <StyledTable
-        borders
-        data={testData.slice(0, size)}
-        columns={columns as unknown as any[]}
-        tableHeight={tableHeight}
-        minTableHeight={minTableHeight}
-        maxTableHeight={maxTableHeight}
-      />
-    </>
-  );
-};
-
 const Source = `
 const data = [/* ... */];
 
@@ -142,5 +48,100 @@ const AdjustableHeightTable = ({ tableHeight, minTableHeight, maxTableHeignt }) 
   );
 };
 `;
+
+const Example11 = () => {
+  // hooks
+  useTitle("Table Heights");
+  useSource(Source);
+  const ref = useRef(0);
+  const [size, setSize] = useState(1);
+  const [running, setRunning] = useState(false);
+  const [tableHeight, setTableHeight] = useState(400);
+  const [minTableHeight, setMinTableHeight] = useState(0);
+  const [maxTableHeight, setMaxTableHeight] = useState(0);
+
+  useEffect(() => {
+    const m = ref.current;
+    return () => {
+      window.clearInterval(m);
+    };
+  }, []);
+
+  return (
+    <>
+      <form className="mb-2.5">
+        <h4>Change height properties</h4>
+        <div>
+          <Label>{"table height"}</Label>
+          <Input
+            placeholder="specify table height (<= 0 to disable)"
+            type="number"
+            value={tableHeight.toString()}
+            onChange={e => {
+              setTableHeight(/-?\d+/.test(e.target.value) ? Number(e.target.value) : 0);
+            }}
+          />
+        </div>
+        <div>
+          <Label>{"min table height"}</Label>
+          <Input
+            placeholder="specify min table height (<= 0 to disable)"
+            type="number"
+            value={minTableHeight.toString()}
+            onChange={e => {
+              setMinTableHeight(/-?\d+/.test(e.target.value) ? Number(e.target.value) : 0);
+            }}
+          />
+        </div>
+        <div>
+          <Label>{"max table height"}</Label>
+          <Input
+            placeholder="specify max table height (<= 0 to disable)"
+            type="number"
+            value={maxTableHeight.toString()}
+            onChange={e => {
+              setMaxTableHeight(/-?\d+/.test(e.target.value) ? Number(e.target.value) : 0);
+            }}
+          />
+        </div>
+        <div>
+          <Button
+            type="button"
+            onClick={() => {
+              window.clearInterval(ref.current);
+              setSize(1);
+              setRunning(true);
+              ref.current = window.setInterval(() => {
+                setSize(prev => prev + 1);
+              }, 1000);
+            }}
+          >
+            Start
+          </Button>
+          <Button
+            type="button"
+            onClick={() => {
+              window.clearInterval(ref.current);
+              setRunning(false);
+            }}
+          >
+            Stop
+          </Button>
+          {running && <FontAwesomeIcon spin icon={faSpinner} />}
+        </div>
+      </form>
+      <Table
+        borders
+        data={testData.slice(0, size)}
+        columns={columns}
+        tableHeight={tableHeight}
+        minTableHeight={minTableHeight}
+        maxTableHeight={maxTableHeight}
+        className="border border-solid border-[#ececec]"
+        headerClassname="bg-[#dedede]"
+      />
+    </>
+  );
+};
 
 export { Example11, Source };
