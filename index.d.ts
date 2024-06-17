@@ -143,6 +143,7 @@ export type ColumnProps<T> = {
    * The name of the header column, or a component to return a customized header cell.
    */
   header?: string | ((props: HeaderProps) => JSX.Element);
+  headerCellClassname?: string;
   /**
    * The width of a column in pixels. If this is set, the column will not resize.
    */
@@ -175,6 +176,7 @@ export type ColumnProps<T> = {
    * things inside of the react-fluid-table cell container.
    */
   content?: string | number | ((props: CellProps<T>) => ReactNode | JSX.Element);
+  contentCellClassname?: string | ((props: { row: T; index: number }) => string);
   /**
    * An advanced feature, this is used to render an entire cell, including the cell container.
    * The `content` prop is ignored if this property is enabled.

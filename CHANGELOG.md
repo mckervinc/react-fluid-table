@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 0.6.0
+
+_2024-06-74_
+
+### Features
+
+- **BREAKING:** `clearSizeCache` signature has changed. The second argument is now an optional object that takes a `forceUpdate` boolean and a `timeout`. Both are optional.
+- For columns, added `headerCellClassname` and `contentCellClassname`
+- when `headerHeight` is set, the header's height will actually be that height
+- _DOCS:_ removed `styled-components` and `semantic`
+
 ## 0.5.7
 
 _2024-06-14_

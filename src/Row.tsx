@@ -96,13 +96,20 @@ const TableCell = memo(function <T>({
     left: column.frozen ? prevWidth : undefined
   };
 
+  // cell classname
+  const cellClass = column.contentCellClassname
+    ? typeof column.contentCellClassname === "string"
+      ? column.contentCellClassname
+      : column.contentCellClassname({ row, index })
+    : null;
+
   // expander
   if (column.expander) {
     if (typeof column.expander === "boolean") {
       const Logo = isExpanded ? Minus : Plus;
 
       return (
-        <div className={cx("rft-cell", column.frozen && "frozen")} style={style}>
+        <div className={cx("rft-cell", column.frozen && "frozen", cellClass)} style={style}>
           <Logo className="rft-expander" onClick={e => onExpanderClick(e, !isExpanded)} />
         </div>
       );
@@ -132,7 +139,7 @@ const TableCell = memo(function <T>({
     }
 
     return (
-      <div className={cx("rft-cell", column.frozen && "frozen")} style={style}>
+      <div className={cx("rft-cell", column.frozen && "frozen", cellClass)} style={style}>
         {content}
       </div>
     );

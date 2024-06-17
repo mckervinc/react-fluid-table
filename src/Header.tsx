@@ -63,7 +63,7 @@ const HeaderCell = React.memo(function <T>({ column, width, prevWidth }: HeaderC
       <div
         style={style}
         onClick={onClick}
-        className={cx("rft-header-cell", column.frozen && "frozen")}
+        className={cx("rft-header-cell", column.frozen && "frozen", column.headerCellClassname)}
       >
         {column.header ? <div className="rft-header-cell-text">{column.header}</div> : null}
         {column.key !== col ? null : (
