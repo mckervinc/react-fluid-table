@@ -1,4 +1,4 @@
-import Navigation from "@/components/Navigation";
+import MobileNav from "@/components/Navigation";
 import { Snippet } from "@/components/Snippet";
 import { faGithubAlt } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -77,11 +77,11 @@ const Layout = () => {
         {links}
       </div>
       {/* Mobile Nav */}
-      <Navigation>
+      <MobileNav>
         <div className="w-full overflow-y-auto bg-[#1b1c1d] [&>*:last]:border-b-0 [&>*]:border-b [&>*]:border-solid [&>*]:border-b-[#2d2e2f]">
           {links}
         </div>
-      </Navigation>
+      </MobileNav>
       {/* Content */}
       <div className="min-h-screen w-[calc(100%-260px)] overflow-y-auto max-md:mt-[3.3125rem] max-md:w-full">
         {!!title && (

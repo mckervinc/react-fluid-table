@@ -1,9 +1,10 @@
+import { cn } from "@/lib/utils";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-const Navigation = ({ children }: { children?: React.ReactNode }) => {
+const MobileNav = ({ children }: { children?: React.ReactNode }) => {
   // hooks
   const [isOpen, setIsOpen] = useState(false);
   const { pathname } = useLocation();
@@ -23,7 +24,12 @@ const Navigation = ({ children }: { children?: React.ReactNode }) => {
   }, [isOpen]);
 
   return (
-    <nav className="fixed left-0 top-0 z-20 h-screen w-full overflow-y-auto bg-[#1b1c1d] px-2.5 py-4 text-[rgba(255,255,255,0.9)] md:hidden">
+    <nav
+      className={cn(
+        "fixed left-0 top-0 z-20 w-full overflow-y-auto bg-[#1b1c1d] px-2.5 py-4 text-[rgba(255,255,255,0.9)] md:hidden",
+        isOpen && "h-screen"
+      )}
+    >
       <div>
         <FontAwesomeIcon
           icon={isOpen ? faTimes : faBars}
@@ -36,4 +42,4 @@ const Navigation = ({ children }: { children?: React.ReactNode }) => {
   );
 };
 
-export default Navigation;
+export default MobileNav;
