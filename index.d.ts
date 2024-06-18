@@ -2,6 +2,8 @@ import { CSSProperties, ForwardedRef, ReactNode } from "react";
 
 export type SortDirection = "ASC" | "DESC" | null;
 
+export type ScrollAlign = "auto" | "smart" | "center" | "end" | "start";
+
 export type ExpanderProps<T> = {
   /**
    * the data for the row
@@ -28,7 +30,13 @@ export type ExpanderProps<T> = {
 };
 
 export type ClearCacheOptions = {
+  /**
+   * this is used to skip the timeout and reset the table heights immeediately.
+   */
   forceUpdate?: boolean;
+  /**
+   * an optional timeout of how long to wait before resetting the table heights in ms (default: 50)
+   */
   timeout?: number;
 };
 
@@ -115,6 +123,9 @@ export type FooterProps<T> = {
    * exposes the widths of each column to the footer
    */
   widths: number[];
+  /**
+   * the rows in the table
+   */
   rows: T[];
 };
 
@@ -143,6 +154,9 @@ export type ColumnProps<T> = {
    * The name of the header column, or a component to return a customized header cell.
    */
   header?: string | ((props: HeaderProps) => JSX.Element);
+  /**
+   * specify a custom classNsme for the header. If `header` is NOT a strins, this is ignored.
+   */
   headerCellClassname?: string;
   /**
    * The width of a column in pixels. If this is set, the column will not resize.
@@ -176,6 +190,9 @@ export type ColumnProps<T> = {
    * things inside of the react-fluid-table cell container.
    */
   content?: string | number | ((props: CellProps<T>) => ReactNode | JSX.Element);
+  /**
+   * specify a custom classNsme for the content. If `cell` is specified, this is ignored.
+   */
   contentCellClassname?: string | ((props: { row: T; index: number }) => string);
   /**
    * An advanced feature, this is used to render an entire cell, including the cell container.
@@ -189,8 +206,18 @@ export type ColumnProps<T> = {
 };
 
 export type TableRef = {
+  /**
+   * scrolls to a specific pixel offset
+   * @param scrollOffset pixel offset
+   */
   scrollTo: (scrollOffset: number) => void;
-  scrollToItem: (index: number, align?: string) => void;
+  /**
+   *
+   * @param index the index of the row to scroll to
+   * @param align where to align the row after scrolling
+   * @returns
+   */
+  scrollToItem: (index: number, align?: ScrollAlign) => void;
 };
 
 export type TableProps<T> = {

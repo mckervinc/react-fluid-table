@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import _ from "lodash";
 import React, { useState } from "react";
 import { ColumnProps, HeaderProps, SortDirection, Table } from "react-fluid-table";
@@ -23,7 +22,7 @@ const HeaderCell = ({ name, sortDirection, style, onClick }: HeaderCellProps) =>
   );
 
   return (
-    <div className={cn("rft-header-cell", sortDirection && "bg-[#272822]")} onClick={onClick} style={style as any}>
+    <div className={cn("rft-header-cell", sortDirection && "bg-[#272822]")} onClick={onClick} style={style}>
       <div className={cn("rft-header-cell-text", sortDirection ? "!text-[#f92672]" : "!text-black")}>{name}</div>
       {icon}
     </div>

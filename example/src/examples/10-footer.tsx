@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Col } from "@/components/ui/col";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -271,13 +270,13 @@ const Example10 = () => {
       <Table
         borders
         data={testData.slice(0, 30)}
-        columns={columns as unknown as any[]}
+        columns={columns}
         stickyFooter={sticky}
         tableHeight={400}
         className="border border-solid border-[#ececec]"
         headerClassname="bg-[#dedede]"
         footerStyle={{ backgroundColor: "white" }}
-        footerComponent={InnerFooter as unknown as any}
+        footerComponent={InnerFooter}
       />
     </>
   );

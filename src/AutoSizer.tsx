@@ -2,7 +2,7 @@ import React, { useContext, useMemo } from "react";
 import { useResizeDetector } from "react-resize-detector";
 import { TableContext } from "./TableContext";
 import { DEFAULT_FOOTER_HEIGHT, DEFAULT_HEADER_HEIGHT, DEFAULT_ROW_HEIGHT } from "./constants";
-import { findFooterByUuid, findHeaderByUuid } from "./util";
+import { findFooterByUuid, findHeaderByUuid, positive } from "./util";
 
 type AutoSizerProps = {
   numRows: number;
@@ -147,7 +147,7 @@ const AutoSizer = ({
 
   // calculate the computed height
   const computedHeight = useMemo(() => {
-    if (tableHeight && tableHeight > 0) {
+    if (positive(tableHeight)) {
       return tableHeight;
     }
 
@@ -171,7 +171,7 @@ const AutoSizer = ({
   });
 
   // get actual width
-  const width = tableWidth && tableWidth > 0 ? tableWidth : containerWidth || 0;
+  const width = positive(tableWidth) ? tableWidth : containerWidth || 0;
 
   return <div ref={ref}>{height || width ? children({ height, width }) : null}</div>;
 };

@@ -10,7 +10,7 @@ import React, {
   useState
 } from "react";
 import { VariableSizeList } from "react-window";
-import { ClearCacheOptions, TableProps, TableRef } from "../index";
+import { ClearCacheOptions, ScrollAlign, TableProps, TableRef } from "../index";
 import AutoSizer from "./AutoSizer";
 import Header from "./Header";
 import NumberTree from "./NumberTree";
@@ -23,6 +23,7 @@ import {
   calculateColumnWidths,
   findHeaderByUuid,
   findRowByUuidAndKey,
+  positive,
   randomString
 } from "./util";
 
@@ -233,7 +234,7 @@ const ListComponent = forwardRef(function (
   // provide access to window functions
   useImperativeHandle(ref, () => ({
     scrollTo: (scrollOffset: number): void => listRef.current.scrollTo(scrollOffset),
-    scrollToItem: (index: number, align: string = "auto"): void =>
+    scrollToItem: (index: number, align: ScrollAlign = "auto"): void =>
       listRef.current.scrollToItem(index, align)
   }));
 
@@ -254,7 +255,7 @@ const ListComponent = forwardRef(function (
       }}
       itemSize={index => {
         if (!index) {
-          if (headerHeight && headerHeight > 0) {
+          if (positive(headerHeight)) {
             return headerHeight;
           }
 
@@ -334,7 +335,7 @@ const Table = forwardRef(function <T>(
 
   // warn if a minHeight is set without a maxHeight
   const maxHeight = useMemo(() => {
-    if (minTableHeight && minTableHeight > 0 && (!maxTableHeight || maxTableHeight <= 0)) {
+    if (positive(minTableHeight) && (!maxTableHeight || maxTableHeight <= 0)) {
       return minTableHeight + 400;
     }
 

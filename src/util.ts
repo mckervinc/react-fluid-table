@@ -101,3 +101,5 @@ export const calculateColumnWidths = <T>(
     return width;
   });
 };
+
+export const positive = (x: number | null | undefined): x is number => x != null && x > 0;

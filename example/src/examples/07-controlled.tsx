@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Col } from "@/components/ui/col";
 import { Row } from "@/components/ui/row";
 import { Switch } from "@/components/ui/switch";
@@ -91,7 +90,7 @@ const Controlled = ({ data, height, columns: variableColumns }: ControlledProps)
     <Table
       borders
       data={rows}
-      columns={variableColumns as unknown as any[]}
+      columns={variableColumns}
       tableHeight={height}
       rowHeight={35}
       onSort={onSort}
