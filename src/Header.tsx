@@ -99,8 +99,8 @@ const Header = forwardRef(
     } = useContext(TableContext);
 
     // variables
-    const { scrollWidth, clientWidth } = ((ref as React.MutableRefObject<HTMLDivElement>).current ||
-      NO_NODE) as HTMLDivElement;
+    const { scrollWidth, clientWidth } =
+      (ref as React.MutableRefObject<HTMLDivElement>).current || NO_NODE;
     const width = scrollWidth <= clientWidth ? "100%" : undefined;
     const stickyStyle: React.CSSProperties = {
       zIndex: columns.find(c => c.frozen) ? 2 : undefined

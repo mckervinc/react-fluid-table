@@ -1,7 +1,7 @@
-interface LeafProps {
+type LeafProps = {
   height: number;
   index: number;
-}
+};
 
 class Leaf {
   index: number;

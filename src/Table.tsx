@@ -38,6 +38,14 @@ type ListProps<T> = Omit<TableProps<T>, "columns" | "borders"> & {
   borders: boolean;
 };
 
+type ListRef<T = any> = VariableSizeList<T> & {
+  _instanceProps: {
+    itemMetadataMap: {
+      [x: number]: { size: number };
+    };
+  };
+};
+
 /**
  * The main table component
  */
@@ -57,7 +65,7 @@ const ListComponent = forwardRef(function (
 ) {
   // hooks
   const timeoutRef = useRef(0);
-  const listRef = useRef<any>(null);
+  const listRef = useRef<ListRef>(null);
   const prevWidthRef = useRef(width);
   const [tree] = useState(new NumberTree());
   const tableRef = useRef<HTMLDivElement>(null);
@@ -101,7 +109,7 @@ const ListComponent = forwardRef(function (
         const node = tableRef.current?.children[1].children[0] as HTMLElement;
         const resetIndex = Number(node?.dataset.index || "0") + 1;
         tree.clearFromIndex(resetIndex);
-        listRef.current.resetAfterIndex(resetIndex);
+        listRef.current!.resetAfterIndex(resetIndex);
       }, timeout);
     },
     []
@@ -233,9 +241,9 @@ const ListComponent = forwardRef(function (
   /* misc */
   // provide access to window functions
   useImperativeHandle(ref, () => ({
-    scrollTo: (scrollOffset: number): void => listRef.current.scrollTo(scrollOffset),
+    scrollTo: (scrollOffset: number): void => listRef.current!.scrollTo(scrollOffset),
     scrollToItem: (index: number, align: ScrollAlign = "auto"): void =>
-      listRef.current.scrollToItem(index, align)
+      listRef.current!.scrollToItem(index, align)
   }));
 
   return (

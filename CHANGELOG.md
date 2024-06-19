@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.6.2
+
+_2024-06-19_
+
+### Bugfix
+
+- (Docs) updated types
+
 ## 0.6.1
 
 _2024-06-17_
