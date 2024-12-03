@@ -7,7 +7,7 @@ type InitialState<T> = Omit<TableState<T>, "dispatch">;
 type Action<T> = {
   type: string;
   col?: string | null;
-  dir?: SortDirection;
+  dir?: SortDirection | null;
   key?: string | number;
   widths?: number[];
   initialState?: Partial<InitialState<T>>;
@@ -24,7 +24,7 @@ type TableState<T> = {
   fixedWidth: number;
   remainingCols: number;
   sortColumn: string | null;
-  sortDirection: SortDirection;
+  sortDirection: SortDirection | null;
   stickyFooter: boolean;
   footerComponent?: (props: FooterProps<any>) => React.ReactNode;
   expanded?: (index: number) => boolean;
@@ -32,7 +32,7 @@ type TableState<T> = {
     [key: string | number]: boolean;
   };
   id?: string;
-  onSort?: (col: string | null, dir: SortDirection) => void;
+  onSort?: (col: string, dir: SortDirection | null) => void;
   tableStyle?: React.CSSProperties;
   headerStyle?: React.CSSProperties;
   headerHeight?: number;

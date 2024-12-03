@@ -1,6 +1,6 @@
 import { CSSProperties, ForwardedRef, ReactNode } from "react";
 
-export type SortDirection = "ASC" | "DESC" | null;
+export type SortDirection = "ASC" | "DESC";
 
 export type ScrollAlign = "auto" | "smart" | "center" | "end" | "start";
 
@@ -73,7 +73,7 @@ export type HeaderProps = {
   /**
    * the direction of the sort, if applicable
    */
-  sortDirection: SortDirection;
+  sortDirection: SortDirection | null;
 };
 
 export type RowRenderProps<T> = {
@@ -243,7 +243,7 @@ export type TableProps<T> = {
   /**
    * Function that is called when a header cell is sorted.
    */
-  onSort?: (col: string | null, dir: SortDirection) => void;
+  onSort?: (col: string, dir: SortDirection | null) => void;
   /**
    * The column that is sorted by default.
    */

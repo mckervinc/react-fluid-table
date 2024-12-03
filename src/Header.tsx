@@ -35,27 +35,22 @@ const HeaderCell = React.memo(function <T>({ column, width, prevWidth }: HeaderC
     if (!column.sortable) return;
 
     // sorting the same column
-    const oldCol = col;
     const oldDir = dir;
-    let newDir: SortDirection = "ASC";
-    let newCol: string | null = column.key;
+    let newDir: SortDirection | null = "ASC";
 
-    if (oldCol === newCol) {
+    if (col === column.key) {
       newDir = !oldDir ? "ASC" : oldDir === "ASC" ? "DESC" : null;
-      newCol = !newDir ? null : newCol;
     }
 
     // only changes the arrow
     dispatch({
       type: "updateSortedColumn",
-      col: newCol,
+      col: column.key,
       dir: newDir
     });
 
     // onSort actually changes the data
-    if (onSort) {
-      onSort(newCol, newDir);
-    }
+    onSort?.(column.key, newDir);
   };
 
   if (!column.header || typeof column.header === "string") {
