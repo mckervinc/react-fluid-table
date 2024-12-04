@@ -73,7 +73,7 @@ type ControlledProps = {
 const Controlled = ({ data, height, columns: variableColumns }: ControlledProps) => {
   const [rows, setRows] = useState<TestData[]>([]);
 
-  const onSort = (col: string | null, dir: SortDirection) => {
+  const onSort = (col: string, dir: SortDirection | null) => {
     if (!col || !dir) {
       setRows(data);
     } else {
@@ -124,7 +124,7 @@ const Controlled = ({ data, columns: variableColumns }) => {
   const [rows, setRows] = useState([]);
 
   const onSort = (col, dir) => {
-    if (!col || !dir) {
+    if (!dir) {
       setRows(data);
     } else {
       const direction = dir === "ASC" ? "asc" : "desc";

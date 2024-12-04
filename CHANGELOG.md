@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.6.3
+
+_2024-12-04_
+
+### Bugfix
+
+- if the header resizes, the list should re-render
+
 ## 0.6.2
 
 _2024-06-19_
@@ -59,6 +67,7 @@ _2024-06-13_
 ### Features
 
 - **BREAKING:** decouples the CSS. Now, at the top of your file, add this:
+
 ```jsx
 import "react-fluid-table/dist/index.css";
 ```

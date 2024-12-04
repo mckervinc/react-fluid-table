@@ -1,4 +1,5 @@
-import React, { forwardRef, useContext } from "react";
+import React, { forwardRef, memo, useContext, useLayoutEffect } from "react";
+import { useResizeDetector } from "react-resize-detector";
 import { ColumnProps, SortDirection } from "../index";
 import { TableContext } from "./TableContext";
 import { NO_NODE } from "./constants";
@@ -15,7 +16,7 @@ type HeaderProps = {
   style: React.CSSProperties;
 };
 
-const HeaderCell = React.memo(function <T>({ column, width, prevWidth }: HeaderCellProps<T>) {
+const HeaderCell = memo(function <T>({ column, width, prevWidth }: HeaderCellProps<T>) {
   // hooks
   const { dispatch, sortColumn: col, sortDirection, onSort } = useContext(TableContext);
 
@@ -89,9 +90,11 @@ const Header = forwardRef(
       columns,
       pixelWidths,
       headerHeight,
+      clearSizeCache,
       headerClassname,
       headerStyle = {}
     } = useContext(TableContext);
+    const { ref: resizeRef, height } = useResizeDetector<HTMLDivElement>();
 
     // variables
     const { scrollWidth, clientWidth } =
@@ -101,11 +104,19 @@ const Header = forwardRef(
       zIndex: columns.find(c => c.frozen) ? 2 : undefined
     };
 
+    // effects
+    useLayoutEffect(() => {
+      if (height) {
+        clearSizeCache(0);
+      }
+    }, [height, clearSizeCache]);
+
     return (
       <div ref={ref} className="rft-container" data-container-key={`${uuid}-container`} {...rest}>
         <div className="rft-sticky-header" data-header-key={`${uuid}-header`} style={stickyStyle}>
           <div className="rft-row-wrapper" style={{ width }}>
             <div
+              ref={resizeRef}
               className={cx("rft-header", headerClassname)}
               style={{
                 ...headerStyle,

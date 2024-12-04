@@ -10,12 +10,14 @@ type Action<T> = {
   dir?: SortDirection | null;
   key?: string | number;
   widths?: number[];
+  clearSizeCache?: (index: number, shouldForceUpdate?: boolean) => void;
   initialState?: Partial<InitialState<T>>;
   rows?: T[];
 };
 
 type TableState<T> = {
   dispatch: React.Dispatch<Action<T>>;
+  clearSizeCache: (index: number, shouldForceUpdate?: boolean) => void;
   rows: T[];
   pixelWidths: number[];
   uuid: string;
@@ -43,6 +45,7 @@ type TableState<T> = {
 
 const baseState: TableState<any> = {
   dispatch: () => {},
+  clearSizeCache: () => {},
   expandedCache: {},
   columns: [],
   pixelWidths: [],
@@ -88,10 +91,21 @@ function findColumnWidthConstants<T>(columns: ColumnProps<T>[]) {
 
 function reducer<T>(state: TableState<T>, action: Action<T>): TableState<T> {
   // instance
-  const { type, col = null, dir = null, key = "", widths = [], rows = [], initialState } = action;
+  const {
+    type,
+    col = null,
+    dir = null,
+    key = "",
+    rows = [],
+    widths = [],
+    initialState,
+    clearSizeCache = () => {}
+  } = action;
 
   // switch
   switch (type) {
+    case "initializeCacheFunction":
+      return { ...state, clearSizeCache };
     case "updateSortedColumn":
       return { ...state, sortColumn: col, sortDirection: dir };
     case "updateExpanded":

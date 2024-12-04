@@ -76,9 +76,10 @@ const ListComponent = forwardRef(function (
     useContext(TableContext);
 
   // constants
+  const footerExists = !!footerComponent;
   const hasFooter = useMemo(() => {
-    return !!footerComponent || !!columns.find(c => !!c.footer);
-  }, [footerComponent, columns]);
+    return footerExists || !!columns.find(c => !!c.footer);
+  }, [footerExists, columns]);
 
   // functions
   const generateKeyFromRow = useCallback(
@@ -160,6 +161,17 @@ const ListComponent = forwardRef(function (
   useEffect(() => {
     const widths = tableRef.current || NO_NODE;
     setUseRowWidth(widths.scrollWidth <= widths.clientWidth);
+  }, []);
+
+  // add clear function to the context
+  useLayoutEffect(() => {
+    dispatch({
+      type: "initializeCacheFunction",
+      clearSizeCache: (index: number, shouldRevalidate?: boolean) => {
+        window.clearTimeout(timeoutRef.current);
+        listRef.current?.resetAfterIndex(index, shouldRevalidate);
+      }
+    });
   }, []);
 
   /* updates */

@@ -51,7 +51,7 @@ const Example = () => {
   const [data, setData] = useState(testData);
 
   const onSort = (col, dir) => {
-    if (!col || !dir) {
+    if (!dir) {
       setData(testData);
     } else {
       setData(_.orderBy(data, [col], [dir.toLowerCase()]));
@@ -80,8 +80,8 @@ const Example3 = () => {
   useSource(Source);
   const [data, setData] = useState(testData);
 
-  const onSort = (col: string | null, dir: SortDirection) => {
-    if (!col || !dir) {
+  const onSort = (col: string, dir: SortDirection | null) => {
+    if (!dir) {
       setData(testData);
     } else {
       const direction = dir === "ASC" ? "asc" : "desc";
@@ -98,9 +98,7 @@ const Example3 = () => {
       rowHeight={35}
       itemKey={row => row.id}
       onSort={onSort}
-      subComponent={({ row }) => (
-        <div className="h-[100px] bg-[lightblue]">{`Row ${row.id} is expanded`}</div>
-      )}
+      subComponent={({ row }) => <div className="h-[100px] bg-[lightblue]">{`Row ${row.id} is expanded`}</div>}
       sortColumn="id"
       sortDirection="ASC"
     />
