@@ -44,8 +44,8 @@ const columns: ColumnProps<TestData>[] = [
 const Example = () => {
   const [data, setData] = useState(_.orderBy(testData, ['firstName'], ['asc']));
 
-  const onSort = (col: string | null, dir: SortDirection) => {
-    if (!col || !dir) {
+  const onSort = (col: string, dir: SortDirection | null) => {
+    if (!dir) {
       setData(testData);
     } else {
       const direction = dir === "ASC" ? "asc" : "desc";
@@ -74,7 +74,7 @@ const Example2 = () => {
   useSource(Source);
   const [data, setData] = useState(_.orderBy(testData, ["firstName"], ["asc"]));
 
-  const onSort = (col: string | null, dir: SortDirection) => {
+  const onSort = (col: string, dir: SortDirection | null) => {
     if (!col || !dir) {
       setData(testData);
     } else {

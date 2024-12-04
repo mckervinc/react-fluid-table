@@ -140,9 +140,10 @@ const AutoSizer = ({
   const { uuid, columns, footerComponent } = useContext(TableContext);
 
   // variables
+  const footerExists = !!footerComponent;
   const hasFooter = useMemo(
-    () => !!footerComponent || !!columns.find(c => !!c.footer),
-    [columns, footerComponent]
+    () => footerExists || !!columns.find(c => !!c.footer),
+    [columns, footerExists]
   );
 
   // calculate the computed height

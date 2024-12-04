@@ -7,15 +7,17 @@ type InitialState<T> = Omit<TableState<T>, "dispatch">;
 type Action<T> = {
   type: string;
   col?: string | null;
-  dir?: SortDirection;
+  dir?: SortDirection | null;
   key?: string | number;
   widths?: number[];
+  clearSizeCache?: (index: number, shouldForceUpdate?: boolean) => void;
   initialState?: Partial<InitialState<T>>;
   rows?: T[];
 };
 
 type TableState<T> = {
   dispatch: React.Dispatch<Action<T>>;
+  clearSizeCache: (index: number, shouldForceUpdate?: boolean) => void;
   rows: T[];
   pixelWidths: number[];
   uuid: string;
@@ -24,7 +26,7 @@ type TableState<T> = {
   fixedWidth: number;
   remainingCols: number;
   sortColumn: string | null;
-  sortDirection: SortDirection;
+  sortDirection: SortDirection | null;
   stickyFooter: boolean;
   footerComponent?: (props: FooterProps<any>) => React.ReactNode;
   expanded?: (index: number) => boolean;
@@ -32,7 +34,7 @@ type TableState<T> = {
     [key: string | number]: boolean;
   };
   id?: string;
-  onSort?: (col: string | null, dir: SortDirection) => void;
+  onSort?: (col: string, dir: SortDirection | null) => void;
   tableStyle?: React.CSSProperties;
   headerStyle?: React.CSSProperties;
   headerHeight?: number;
@@ -43,6 +45,7 @@ type TableState<T> = {
 
 const baseState: TableState<any> = {
   dispatch: () => {},
+  clearSizeCache: () => {},
   expandedCache: {},
   columns: [],
   pixelWidths: [],
@@ -88,10 +91,21 @@ function findColumnWidthConstants<T>(columns: ColumnProps<T>[]) {
 
 function reducer<T>(state: TableState<T>, action: Action<T>): TableState<T> {
   // instance
-  const { type, col = null, dir = null, key = "", widths = [], rows = [], initialState } = action;
+  const {
+    type,
+    col = null,
+    dir = null,
+    key = "",
+    rows = [],
+    widths = [],
+    initialState,
+    clearSizeCache = () => {}
+  } = action;
 
   // switch
   switch (type) {
+    case "initializeCacheFunction":
+      return { ...state, clearSizeCache };
     case "updateSortedColumn":
       return { ...state, sortColumn: col, sortDirection: dir };
     case "updateExpanded":
