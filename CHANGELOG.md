@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 0.6.4
+
+_2024-12-09_
+
+### Bugfix
+
+- Force the sticky header to be the size of the rendered header
+- Make sure footer width is 0 when not present
+
 ## 0.6.3
 
 _2024-12-04_

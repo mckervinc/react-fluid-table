@@ -101,6 +101,7 @@ const Header = forwardRef(
       (ref as React.MutableRefObject<HTMLDivElement>).current || NO_NODE;
     const width = scrollWidth <= clientWidth ? "100%" : undefined;
     const stickyStyle: React.CSSProperties = {
+      height,
       zIndex: columns.find(c => c.frozen) ? 2 : undefined
     };
 

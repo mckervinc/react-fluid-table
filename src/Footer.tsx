@@ -46,10 +46,15 @@ const Footer = () => {
   const ref = useRef<HTMLDivElement>(null);
 
   // constants
+  const hasFooter = !!FooterComponent || !!columns.find(c => !!c.footer);
   const style: React.CSSProperties = {
     minWidth: stickyFooter ? undefined : pixelWidths.reduce((pv, c) => pv + c, 0),
     ...footerStyle
   };
+  if (!hasFooter) {
+    style.width = 0;
+    style.minWidth = 0;
+  }
 
   // functions
   const onScroll = useCallback(
