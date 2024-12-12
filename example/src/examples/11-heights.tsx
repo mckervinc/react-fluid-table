@@ -36,13 +36,14 @@ const data = [/* ... */];
 
 const AdjustableHeightTable = ({ tableHeight, minTableHeight, maxTableHeignt }) => {
   return (
-    <StyledTable
-      borders
+    <Table
       data={testData}
       columns={columns}
       tableHeight={tableHeight}
       minTableHeight={minTableHeight}
       maxTableHeight={maxTableHeight}
+      className="border border-solid border-[#ececec]"
+      headerClassname="bg-[#dedede]"
     />
   );
 };
@@ -130,7 +131,6 @@ const Example11 = () => {
         </div>
       </form>
       <Table
-        borders
         data={testData.slice(0, size)}
         columns={columns}
         tableHeight={tableHeight}

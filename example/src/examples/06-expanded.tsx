@@ -144,7 +144,6 @@ const SubComponent = ({ row }: SubComponentProps<TestData>) => {
 
 const Example = () => (
   <Table
-    borders
     data={data}
     columns={columns}
     subComponent={SubComponent}
@@ -156,7 +155,7 @@ const Example = () => (
 const Example6 = () => {
   useTitle("Expanded Row Height");
   useSource(Source);
-  return <Table borders data={testData} columns={columns} tableHeight={400} subComponent={SubComponent} />;
+  return <Table data={testData} columns={columns} tableHeight={400} subComponent={SubComponent} />;
 };
 
 export { Example6, Source };

@@ -35,7 +35,6 @@ const columns: ColumnProps<TestData>[] = [
 
 const Example = () => (
   <Table
-    borders
     data={data}
     columns={columns}
     tableHeight={400}
@@ -46,7 +45,7 @@ const Example = () => (
 const Example5 = () => {
   useTitle("Variable Row Size");
   useSource(Source);
-  return <Table borders data={testData} columns={columns} tableHeight={400} />;
+  return <Table data={testData} columns={columns} tableHeight={400} />;
 };
 
 export { Example5 };

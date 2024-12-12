@@ -124,40 +124,41 @@ const Footer = ({ children }) => (
 
 const FooterFromColumn = ({ stickyFooter }) => {
   return (
-    <StyledTable
-      borders
+    <Table
       data={data}
       columns={columns}
       tableHeight={400}
       stickyFooter={stickyFooter}
       footerStyle={{ backgroundColor: "white" }}
+      className="border border-solid border-[#ececec]"
+      headerClassname="bg-[#dedede]"
     />
   );
 };
 
 const BasicFooter = ({ stickyFooter }) => {
   return (
-    <StyledTable
-      borders
+    <Table
       data={data}
       columns={columns}
       tableHeight={400}
       stickyFooter={stickyFooter}
-      footerStyle={{ backgroundColor: "white" }}
+      footerStyle={{ backgroundColor: "white", borderTop: "1px solid #ececec" }}
       footerComponent={() => <Footer>Hello, World</Footer>}
+      className="border border-solid border-[#ececec]"
+      headerClassname="bg-[#dedede]"
     />
   );
 };
 
 const ComplexFooter = ({ stickyFooter }) => {
   return (
-    <StyledTable
-      borders
+    <Table
       data={data}
       columns={columns}
       tableHeight={400}
       stickyFooter={stickyFooter}
-      footerStyle={{ backgroundColor: "white" }}
+      footerStyle={{ backgroundColor: "white", borderTop: "1px solid #ececec" }}
       footerComponent={({ widths }) => (
         <Footer>
           <div style={{ display: "flex" }}>
@@ -268,14 +269,13 @@ const Example10 = () => {
         </Col>
       </Row>
       <Table
-        borders
         data={testData.slice(0, 30)}
         columns={columns}
         stickyFooter={sticky}
         tableHeight={400}
         className="border border-solid border-[#ececec]"
         headerClassname="bg-[#dedede]"
-        footerStyle={{ backgroundColor: "white" }}
+        footerStyle={{ backgroundColor: "white", borderTop: "1px solid #ececec" }}
         footerComponent={InnerFooter}
       />
     </>

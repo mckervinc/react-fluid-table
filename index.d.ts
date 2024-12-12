@@ -1,4 +1,4 @@
-import { CSSProperties, ForwardedRef, ReactNode } from "react";
+import { CSSProperties, ForwardedRef, JSX, ReactNode } from "react";
 
 export type SortDirection = "ASC" | "DESC";
 
@@ -280,17 +280,9 @@ export type TableProps<T> = {
    */
   footerHeight?: number;
   /**
-   * Enable or disable row borders. Default: `false`.
-   */
-  borders?: boolean;
-  /**
    * React styles used for customizing the table.
    */
   style?: CSSProperties;
-  /**
-   * React styles used for customizing the table.
-   */
-  tableStyle?: CSSProperties;
   /**
    * React styles used for customizing the header.
    */
@@ -318,10 +310,9 @@ export type TableProps<T> = {
    */
   footerClassname?: string;
   /**
-   * set expanded rows. Could be an object or a function that takes the index of
-   * the row and returns a boolean.
+   * an object that contains the expanded rows.
    */
-  expandedRows?: { [x: number]: boolean } | ((index: number) => boolean);
+  expandedRows?: { [x: string | number]: boolean };
   /**
    * called when a row is expanded
    * @param value information about the row that is expanded/shrunk

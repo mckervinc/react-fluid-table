@@ -1,6 +1,7 @@
 import { useVirtualizer } from "@tanstack/react-virtual";
 import React, {
   forwardRef,
+  JSX,
   useCallback,
   useEffect,
   useImperativeHandle,

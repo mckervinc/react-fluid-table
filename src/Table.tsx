@@ -19,7 +19,6 @@ const Table = forwardRef(function <T>(props: TableProps<T>, ref: React.Forwarded
     tableHeight,
     tableWidth,
     style,
-    tableStyle,
     headerStyle,
     headerHeight,
     headerClassname,
@@ -29,7 +28,6 @@ const Table = forwardRef(function <T>(props: TableProps<T>, ref: React.Forwarded
     maxTableHeight,
     minTableHeight,
     expandedRows,
-    borders = false,
     minColumnWidth = 80,
     stickyFooter = false,
     className,
@@ -104,6 +102,7 @@ const Table = forwardRef(function <T>(props: TableProps<T>, ref: React.Forwarded
             headerStyle={headerStyle}
             headerClassname={headerClassname}
             subComponent={subComponent as any}
+            expandedRows={expandedRows}
             onExpandRow={onExpandRow as any}
             stickyFooter={stickyFooter}
             footerComponent={footerComponent as any}

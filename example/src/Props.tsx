@@ -152,13 +152,7 @@ const data: PropData[] = [
     )
   },
   {
-    prop: "borders",
-    type: "boolean",
-    description: "Controls whether or not there is a bottom border for each row",
-    default: "false"
-  },
-  {
-    prop: "tableStyle",
+    prop: "style",
     type: "object",
     description: "Add custom css styles to the outer table element"
   },
@@ -309,7 +303,6 @@ const Props = () => {
         </div>
       </div>
       <Table
-        borders
         data={data}
         columns={columns}
         tableHeight={500}
