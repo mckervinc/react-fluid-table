@@ -1,65 +1,23 @@
 import { useVirtualizer } from "@tanstack/react-virtual";
 import React, {
   forwardRef,
-  JSX,
   useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
   useState
 } from "react";
-import {
-  ColumnProps,
-  FooterProps,
-  RowRenderProps,
-  ScrollAlignment,
-  SortDirection,
-  SubComponentProps,
-  TableRef
-} from "../..";
+import { ColumnProps, ScrollAlignment, TableProps, TableRef } from "../..";
 import { DEFAULT_ROW_HEIGHT } from "../constants";
 import { arraysMatch, calculateColumnWidths, cx, findColumnWidthConstants } from "../util";
+import Footer from "./Footer";
 import Header from "./Header";
 import Row from "./Row";
-import Footer from "./Footer";
 
-type ListProps<T> = {
-  id?: string;
+type ListProps<T> = TableProps<T> & {
   uuid: string;
   height: number;
   width: number;
-  minColumnWidth: number;
-  data: T[];
-  columns: ColumnProps<T>[];
-  rowHeight?: number;
-  className?: string;
-  style?: React.CSSProperties;
-  headerStyle?: React.CSSProperties;
-  headerClassname?: string;
-  rowClassname?: string | ((index: number) => string | undefined);
-  rowStyle?: React.CSSProperties | ((index: number) => React.CSSProperties | undefined);
-  sortColumn?: string;
-  sortDirection?: SortDirection | null;
-  itemKey?: (row: T) => string | number;
-  onSort?: (col: string, dir: SortDirection | null) => void;
-  expandedRows?: { [x: string | number]: boolean };
-  onExpandRow?: (value: {
-    row: T;
-    index: number;
-    isExpanded: boolean;
-    event?: React.MouseEvent<Element, MouseEvent>;
-  }) => void;
-  subComponent?: (props: SubComponentProps<T>) => React.ReactNode | JSX.Element;
-  stickyFooter?: boolean;
-  footerComponent?: (props: FooterProps<T>) => React.ReactNode;
-  footerClassname?: string;
-  footerStyle?: React.CSSProperties;
-  onRowClick?: (data: {
-    row: T;
-    index: number;
-    event?: React.MouseEvent<Element, MouseEvent>;
-  }) => void;
-  rowRenderer?: (props: RowRenderProps<T>) => JSX.Element;
 };
 
 const syncScroll = (source: HTMLElement | null, target: HTMLElement | null) => {
@@ -79,7 +37,6 @@ const List = forwardRef(function <T>(
     rowHeight,
     headerStyle,
     headerClassname,
-    minColumnWidth,
     itemKey,
     onSort,
     sortColumn,
@@ -96,7 +53,8 @@ const List = forwardRef(function <T>(
     footerComponent,
     stickyFooter,
     rowRenderer,
-    style = {}
+    style = {},
+    minColumnWidth = 80
   }: ListProps<T>,
   ref: React.ForwardedRef<TableRef>
 ) {

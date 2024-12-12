@@ -1,8 +1,7 @@
-import { CSSProperties, ForwardedRef, JSX, ReactNode } from "react";
+import { CSSProperties, JSX, ReactNode } from "react";
 
 export type SortDirection = "ASC" | "DESC";
 
-export type ScrollAlign = "auto" | "smart" | "center" | "end" | "start";
 export type ScrollAlignment = "start" | "center" | "end" | "auto";
 
 export type ExpanderProps<T> = {
@@ -358,10 +357,6 @@ export type TableProps<T> = {
    * more row customization options.
    */
   rowRenderer?: (props: RowRenderProps<T>) => JSX.Element;
-  /**
-   * a ref for specific table functions
-   */
-  ref?: ForwardedRef<TableRef>;
 };
 
 /**

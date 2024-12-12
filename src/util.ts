@@ -54,9 +54,6 @@ export const findHeaderByUuid = (uuid: string): HTMLElement | null =>
 export const findFooterByUuid = (uuid: string): HTMLElement | null =>
   document.querySelector(`[data-footer-key='${uuid}-footer']`);
 
-export const findRowByUuidAndKey = (uuid: string, key: string | number): HTMLElement | null =>
-  document.querySelector(`[data-row-key='${uuid}-${key}']`);
-
 // table utilities
 export const calculateColumnWidths = <T>(
   element: HTMLElement | null,

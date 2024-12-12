@@ -1,44 +1,33 @@
 import React, { forwardRef, useEffect, useMemo, useState } from "react";
-import { TableProps, TableRef } from "../index";
+import { ColumnProps, TableProps, TableRef } from "../index";
 import AutoSizer from "./AutoSizer";
 import List from "./components/List";
 import { positive, randomString } from "./util";
 
 let warned = false;
 
-const Table = forwardRef(function <T>(props: TableProps<T>, ref: React.ForwardedRef<TableRef>) {
-  const {
+const Table = forwardRef(function <T>(
+  {
     id,
     rowHeight,
     footerHeight,
     data,
     columns,
-    onSort,
-    sortColumn,
-    sortDirection,
     tableHeight,
     tableWidth,
-    style,
-    headerStyle,
     headerHeight,
-    headerClassname,
+    rowRenderer,
+    subComponent,
     footerComponent,
-    footerStyle,
-    footerClassname,
     maxTableHeight,
     minTableHeight,
-    expandedRows,
-    minColumnWidth = 80,
-    stickyFooter = false,
-    className,
-    rowClassname,
-    rowStyle,
     itemKey,
-    subComponent,
-    onExpandRow,
     onRowClick,
-    rowRenderer
-  } = props;
+    onExpandRow,
+    ...props
+  }: TableProps<T>,
+  ref: React.ForwardedRef<TableRef>
+) {
   const [uuid] = useState(`${id || "data-table"}-${randomString(5)}`);
 
   // warn if a minHeight is set without a maxHeight
@@ -88,28 +77,13 @@ const Table = forwardRef(function <T>(props: TableProps<T>, ref: React.Forwarded
             width={width}
             height={height}
             data={data}
-            columns={columns as any}
-            rowHeight={rowHeight}
-            minColumnWidth={minColumnWidth}
-            style={style}
-            className={className}
-            rowClassname={rowClassname}
-            rowStyle={rowStyle}
             itemKey={itemKey as any}
-            onSort={onSort}
-            sortColumn={sortColumn}
-            sortDirection={sortDirection}
-            headerStyle={headerStyle}
-            headerClassname={headerClassname}
-            subComponent={subComponent as any}
-            expandedRows={expandedRows}
-            onExpandRow={onExpandRow as any}
-            stickyFooter={stickyFooter}
-            footerComponent={footerComponent as any}
-            footerClassname={footerClassname}
-            footerStyle={footerStyle}
             onRowClick={onRowClick as any}
             rowRenderer={rowRenderer as any}
+            onExpandRow={onExpandRow as any}
+            subComponent={subComponent as any}
+            columns={columns as ColumnProps<any>[]}
+            {...props}
           />
         );
       }}

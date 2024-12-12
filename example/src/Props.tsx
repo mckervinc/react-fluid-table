@@ -179,18 +179,6 @@ const data: PropData[] = [
       "Add custom css className to each row element. One can also pass in a function that takes in the row number in order to provide custom styling for particular rows."
   },
   {
-    prop: "rowContainerStyle",
-    type: "object | (index: number) => object",
-    description:
-      "Add custom css styles to each row container element. One can also pass in a function that takes in the row number in order to provide custom styling for particular rows."
-  },
-  {
-    prop: "rowContainerClassname",
-    type: "string | (index: number) => string",
-    description:
-      "Add custom css className to each row container element. One can also pass in a function that takes in the row number in order to provide custom styling for particular rows."
-  },
-  {
     prop: "subComponent",
     type: "Element",
     description: "The element that is rendered on a table with row expansion"
