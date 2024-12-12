@@ -7,6 +7,7 @@ import React, {
   useRef,
   useState
 } from "react";
+import { useResizeDetector } from "react-resize-detector";
 import { ColumnProps, ScrollAlignment, TableProps, TableRef } from "../..";
 import { DEFAULT_ROW_HEIGHT } from "../constants";
 import { arraysMatch, calculateColumnWidths, cx, findColumnWidthConstants } from "../util";
@@ -61,6 +62,7 @@ const List = forwardRef(function <T>(
   // hooks
   const parentRef = useRef<HTMLDivElement | null>(null);
   const headerRef = useRef<HTMLDivElement | null>(null);
+  const { ref: innerRef, width: innerWidth = 0 } = useResizeDetector<HTMLDivElement>();
   const [pixelWidths, setPixelWidths] = useState<number[]>([]);
   const [widthConstants, setWidthConstants] = useState(findColumnWidthConstants(columns));
   const [expandedCache, setExpandedCache] = useState<Record<string | number, boolean>>({});
@@ -76,6 +78,7 @@ const List = forwardRef(function <T>(
   });
 
   // constants
+  const showRowWrapper = (innerRef.current?.scrollWidth || 0) > innerWidth;
   const items = virtualizer.getVirtualItems();
   const { fixedWidth, remainingCols } = widthConstants;
 
@@ -157,6 +160,7 @@ const List = forwardRef(function <T>(
       <Header
         ref={headerRef}
         uuid={uuid}
+        showRowWrapper={showRowWrapper}
         pixelWidths={pixelWidths}
         columns={columns as ColumnProps<any>[]}
         className={headerClassname}
@@ -167,12 +171,13 @@ const List = forwardRef(function <T>(
       />
       <div className="rft-outer-container" style={{ height: virtualizer.getTotalSize() }}>
         <div
+          ref={innerRef}
           className="rft-inner-container"
           style={{
             transform: `translateY(${items[0]?.start ?? 0}px)`
           }}
         >
-          <div className="rft-row-wrapper">
+          <div className={cx(showRowWrapper && "rft-row-wrapper")}>
             {items.map(item => {
               const row = data[item.index];
               const key = generateKeyFromRow(row, item.index);
@@ -182,6 +187,8 @@ const List = forwardRef(function <T>(
               const style = typeof rowStyle === "function" ? rowStyle(item.index) : rowStyle;
               return (
                 <Row
+                  ref={virtualizer.measureElement}
+                  rowHeight={rowHeight}
                   key={key}
                   row={row}
                   uuid={uuid}
@@ -196,7 +203,6 @@ const List = forwardRef(function <T>(
                   columns={columns as any}
                   pixelWidths={pixelWidths}
                   subComponent={subComponent as any}
-                  ref={virtualizer.measureElement}
                 />
               );
             })}

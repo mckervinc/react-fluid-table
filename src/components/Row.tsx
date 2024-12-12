@@ -1,8 +1,8 @@
-import React, { forwardRef, memo, useCallback } from "react";
+import React, { forwardRef, JSX, memo, useCallback } from "react";
 import { ColumnProps, RowRenderProps, SubComponentProps } from "../..";
 import Minus from "../svg/minus-circle.svg";
 import Plus from "../svg/plus-circle.svg";
-import { cx } from "../util";
+import { cx, positive } from "../util";
 
 type TableCellProps<T> = {
   row: T;
@@ -138,6 +138,7 @@ type RowProps<T> = {
   pixelWidths: number[];
   columns: ColumnProps<T>[];
   isExpanded: boolean;
+  rowHeight?: number;
   onExpand: (
     row: T,
     index: number,
@@ -162,12 +163,13 @@ const Row = forwardRef(function <T>(
     row,
     rowKey,
     columns,
+    rowHeight,
     pixelWidths,
     isExpanded,
     onExpand,
     onRowClick,
     className,
-    style,
+    style = {},
     rowRenderer,
     subComponent: SubComponent
   }: RowProps<T>,
@@ -184,7 +186,7 @@ const Row = forwardRef(function <T>(
         row={row}
         index={index}
         className={cx("rft-row", className)}
-        style={style}
+        style={{ height: positive(rowHeight) ? rowHeight : undefined, ...style }}
         onRowClick={onRowClick}
         rowRenderer={rowRenderer}
       >

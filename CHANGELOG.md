@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 1.0.1
+
+### Bugfix
+
+- `rowHeight` is now respected
+- when there is overflow-x, borders should remain
+
 ## 1.0.0
 
 _2024-12-12_

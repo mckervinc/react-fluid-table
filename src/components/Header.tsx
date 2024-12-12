@@ -58,6 +58,7 @@ type HeaderProps<T> = {
   uuid: string;
   columns: ColumnProps<T>[];
   pixelWidths: number[];
+  showRowWrapper: boolean;
   className?: string;
   style?: React.CSSProperties;
   sortColumn?: string;
@@ -69,6 +70,7 @@ const Header = forwardRef(function <T>(
   {
     uuid,
     columns,
+    showRowWrapper,
     pixelWidths,
     className,
     style,
@@ -111,18 +113,20 @@ const Header = forwardRef(function <T>(
 
   return (
     <div ref={ref} className="rft-sticky-header" data-header-key={`${uuid}-header`}>
-      <div className={cx("rft-header", className)} style={style}>
-        {columns.map((c, i) => (
-          <HeaderCell
-            key={c.key}
-            width={pixelWidths[i]}
-            sortedCol={sortedCol}
-            sortedDir={sortedDir}
-            column={c as ColumnProps<any>}
-            onHeaderClick={onHeaderClick as any}
-            prevWidth={c.frozen ? pixelWidths.slice(0, i).reduce((pv, c) => pv + c, 0) : 0}
-          />
-        ))}
+      <div className={cx(showRowWrapper && "rft-row-wrapper")}>
+        <div className={cx("rft-header", className)} style={style}>
+          {columns.map((c, i) => (
+            <HeaderCell
+              key={c.key}
+              width={pixelWidths[i]}
+              sortedCol={sortedCol}
+              sortedDir={sortedDir}
+              column={c as ColumnProps<any>}
+              onHeaderClick={onHeaderClick as any}
+              prevWidth={c.frozen ? pixelWidths.slice(0, i).reduce((pv, c) => pv + c, 0) : 0}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
