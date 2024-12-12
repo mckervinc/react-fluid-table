@@ -1,18 +1,15 @@
-import React, { useCallback, useContext, useEffect, useRef } from "react";
-import { ColumnProps } from "..";
-import { TableContext } from "./TableContext";
-import { cx, findTableByUuid } from "./util";
+import React, { useCallback, useEffect, useRef } from "react";
+import { ColumnProps, FooterProps } from "../..";
+import { cx, findTableByUuid } from "../util";
 
 type InnerFooterCellProps<T> = {
   width: number;
   column: ColumnProps<T>;
   prevWidth: number;
+  rows: T[];
 };
 
-const FooterCell = React.memo(function <T>({ prevWidth, ...rest }: InnerFooterCellProps<T>) {
-  // hooks
-  const { rows } = useContext(TableContext);
-
+const FooterCell = React.memo(function <T>({ prevWidth, rows, ...rest }: InnerFooterCellProps<T>) {
   // instance
   const { width, column } = rest;
   const style: React.CSSProperties = {
@@ -31,24 +28,34 @@ const FooterCell = React.memo(function <T>({ prevWidth, ...rest }: InnerFooterCe
 
 FooterCell.displayName = "FooterCell";
 
-const Footer = () => {
-  const {
-    uuid,
-    rows,
-    columns,
-    stickyFooter,
-    pixelWidths,
-    footerStyle = {},
-    footerClassname,
-    footerComponent: FooterComponent
-  } = useContext(TableContext);
+type InnerFooterProps<T> = {
+  uuid: string;
+  rows: T[];
+  columns: ColumnProps<T>[];
+  pixelWidths: number[];
+  className?: string;
+  style?: React.CSSProperties;
+  sticky?: boolean;
+  component?: (props: FooterProps<T>) => React.ReactNode;
+};
+
+function Footer<T>({
+  uuid,
+  rows,
+  columns,
+  pixelWidths,
+  sticky,
+  className,
+  style: footerStyle = {},
+  component: Component
+}: InnerFooterProps<T>) {
   const scroll = useRef(false);
   const ref = useRef<HTMLDivElement>(null);
 
   // constants
-  const hasFooter = !!FooterComponent || !!columns.find(c => !!c.footer);
+  const hasFooter = !!Component || !!columns.find(c => !!c.footer);
   const style: React.CSSProperties = {
-    minWidth: stickyFooter ? undefined : pixelWidths.reduce((pv, c) => pv + c, 0),
+    minWidth: sticky ? undefined : pixelWidths.reduce((pv, c) => pv + c, 0),
     ...footerStyle
   };
   if (!hasFooter) {
@@ -59,7 +66,7 @@ const Footer = () => {
   // functions
   const onScroll = useCallback(
     (target: HTMLElement | null, element: HTMLElement | null) => {
-      if (scroll.current || !element || !stickyFooter) {
+      if (scroll.current || !element || !sticky) {
         return;
       }
 
@@ -70,7 +77,7 @@ const Footer = () => {
         scroll.current = false;
       }, 0);
     },
-    [uuid, stickyFooter]
+    [uuid, sticky]
   );
 
   const listener = useCallback(
@@ -101,21 +108,22 @@ const Footer = () => {
   }, [uuid, listener]);
 
   // render
-  if (!FooterComponent) {
+  if (!Component) {
     const hasFooter = !!columns.find(c => !!c.footer);
     return (
       <div
         ref={ref}
         style={{ border: !hasFooter ? "none" : undefined, ...style }}
         data-footer-key={`${uuid}-footer`}
-        className={cx("rft-footer", stickyFooter && "sticky", footerClassname)}
+        className={cx("rft-footer", sticky && "sticky", className)}
         onScroll={e => onScroll(e.target as HTMLDivElement, findTableByUuid(uuid))}
       >
-        <div className="rft-row-container">
+        <div className="rft-row">
           {columns.map((c, i) => (
             <FooterCell
               key={c.key}
-              column={c}
+              column={c as any}
+              rows={rows}
               width={pixelWidths[i]}
               prevWidth={c.frozen ? pixelWidths.slice(0, i).reduce((pv, c) => pv + c, 0) : 0}
             />
@@ -130,12 +138,12 @@ const Footer = () => {
       ref={ref}
       style={style}
       data-footer-key={`${uuid}-footer`}
-      className={cx("rft-footer", stickyFooter && "sticky", footerClassname)}
+      className={cx("rft-footer", sticky && "sticky", className)}
       onScroll={e => onScroll(e.target as HTMLDivElement, findTableByUuid(uuid))}
     >
-      <FooterComponent rows={rows} widths={pixelWidths} />
+      <Component rows={rows} widths={pixelWidths} />
     </div>
   );
-};
+}
 
 export default Footer;

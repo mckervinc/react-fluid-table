@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 1.0.0
+
+_2024-12-12_
+
+### Features
+
+- **BREAKING:** Removed the following props: `borders`, `rowContainerStyle`, `rowContainerClassname`, `forceReset`, `ref`.
+- **BREAKING:** Renamed the following props: `tableStyle` -> `style`.
+- no more need for `clearSizeCache` in CellProps or SubComponentProps
+- `onExpandRow` now includes the mouse event as an optional parameter
+- all jitter should be removed
+
 ## 0.6.4
 
 _2024-12-09_

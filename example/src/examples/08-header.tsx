@@ -100,7 +100,7 @@ const Example = () => {
       sortColumn="firstName"
       sortDirection="ASC"
       rowStyle={rowStyle}
-      tableStyle={{ backgroundColor: "#33be54" }}
+      style={{ backgroundColor: "#33be54" }}
       headerStyle={{ backgroundColor: "#1e9f3f" }}
     />
   );
@@ -136,7 +136,7 @@ const Example8 = () => {
       sortColumn="firstName"
       sortDirection="ASC"
       rowStyle={rowStyle}
-      tableStyle={{ backgroundColor: "#33be54" }}
+      style={{ backgroundColor: "#33be54" }}
       headerStyle={{ backgroundColor: "#1e9f3f" }}
     />
   );

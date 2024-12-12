@@ -363,7 +363,6 @@ const columns: ColumnProps<TestData>[] = [
 
 const Example = () => (
   <Table
-    borders
     data={data}
     columns={columns}
     tableHeight={400}
@@ -375,7 +374,7 @@ const Example = () => (
 const Example4 = () => {
   useTitle("Cell Content");
   useSource(Source);
-  return <Table borders data={testData} columns={columns} tableHeight={400} rowHeight={150} />;
+  return <Table data={testData} columns={columns} tableHeight={400} rowHeight={150} />;
 };
 
 export { Example4 };

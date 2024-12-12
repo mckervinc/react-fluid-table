@@ -88,7 +88,6 @@ const Controlled = ({ data, height, columns: variableColumns }: ControlledProps)
 
   return (
     <Table
-      borders
       data={rows}
       columns={variableColumns}
       tableHeight={height}
@@ -137,8 +136,7 @@ const Controlled = ({ data, columns: variableColumns }) => {
   }, [data]);
 
   return (
-    <StyledTable
-      borders
+    <Table
       data={rows}
       columns={variableColumns}
       tableHeight={400}
@@ -146,6 +144,8 @@ const Controlled = ({ data, columns: variableColumns }) => {
       onSort={onSort}
       sortColumn="firstName"
       sortDirection="ASC"
+      className="border border-solid border-[#ececec]"
+      headerClassname="bg-[#dedede]"
     />
   );
 };

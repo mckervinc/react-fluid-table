@@ -1,3 +1,52 @@
+.rft {
+  overflow-y: auto;
+  contain: strict;
+}
+
+.rft-outer-container {
+  will-change: height;
+  position: relative;
+  width: 100%;
+}
+
+.rft-inner-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  will-change: transform;
+}
+
+.rft-sticky-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.rft-sticky-header::-webkit-scrollbar {
+  display: none;
+}
+
+.rft-header {
+  display: flex;
+}
+
+.rft-row-wrapper {
+  display: inline-block;
+}
+
+.rft-row-container {
+  width: 100%;
+}
+
+.rft-row {
+  display: flex;
+}
+
 .rft-cell,
 .rft-header-cell {
   box-sizing: border-box;
@@ -9,26 +58,6 @@
 .rft-header-cell.frozen {
   position: sticky;
   z-index: 1;
-}
-
-.rft-container {
-  will-change: height;
-}
-
-.rft-sticky-header {
-  position: sticky;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1;
-}
-
-.rft-row-wrapper {
-  display: inline-block;
-}
-
-.rft-header {
-  display: flex;
 }
 
 .rft-header-cell {
@@ -56,17 +85,8 @@
   border-top: 10px solid #7d7d7d;
 }
 
-.rft-row {
-  border-bottom: 1px solid #ececec;
-}
-
-.rft-row:last-child {
-  border-bottom: none;
-}
-
 .rft-footer {
   width: 100%;
-  border-top: 1px solid #ececec;
 }
 
 .rft-footer.sticky {
@@ -80,10 +100,6 @@
 
 .rft-footer.sticky::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
-}
-
-.rft-row-container {
-  display: flex;
 }
 
 .rft-cell {

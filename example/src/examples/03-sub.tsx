@@ -60,7 +60,6 @@ const Example = () => {
 
   return (
     <Table
-      borders
       data={data}
       columns={columns}
       tableHeight={400}
@@ -91,7 +90,6 @@ const Example3 = () => {
 
   return (
     <Table
-      borders
       data={data}
       columns={columns}
       tableHeight={400}

@@ -55,7 +55,6 @@ const Example = () => {
 
   return (
     <Table
-      borders
       data={data}
       columns={columns}
       itemKey={row => row.id}
@@ -85,7 +84,6 @@ const Example2 = () => {
 
   return (
     <Table
-      borders
       data={data}
       columns={columns}
       itemKey={row => row.id}
