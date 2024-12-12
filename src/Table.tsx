@@ -77,6 +77,7 @@ const Table = forwardRef(function <T>(
             width={width}
             height={height}
             data={data}
+            rowHeight={rowHeight}
             itemKey={itemKey as any}
             onRowClick={onRowClick as any}
             rowRenderer={rowRenderer as any}

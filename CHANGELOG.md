@@ -1,6 +1,16 @@
 # CHANGELOG
 
+## 1.0.2
+
+_2024-12-12_
+
+### Bugfix
+
+- `rowHeight` is now respected (again)
+
 ## 1.0.1
+
+_2024-12-12_
 
 ### Bugfix
 
