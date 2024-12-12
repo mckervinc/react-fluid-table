@@ -256,8 +256,7 @@ const Example = () => <Table data={data} columns={columns} />;
 `;
 
 const cellSnippet = `
-const Contact = ({ row, index, style, clearSizeCache }) => {
-  const mounted = useRef(false);
+const Contact = ({ row, style }) => {
   const [showInfo, setShowInfo] = useState(false);
 
   const label = \`\${showInfo ? "hide" : "show"} contact info\`;
@@ -267,15 +266,6 @@ const Contact = ({ row, index, style, clearSizeCache }) => {
   ];
 
   const onChange = () => setShowInfo(!showInfo);
-
-  // after something that might cause the row height to change,
-  // you should call this function to get the new row height.
-  useLayoutEffect(() => {
-    if (mounted.current) {
-      clearSizeCache(index, true);
-    }
-    mounted.current = true;
-  }, [showInfo]);
 
   return <Accordion style={style} label={label} options={options} onChange={onChange} />;
 };
@@ -366,12 +356,7 @@ const Props = () => {
           className="list-item w-full table-fixed list-none border-t border-solid border-[rgba(34,36,38,.15)] py-[.21428571em] leading-[1.14285714em] first:border-t-0 first:pt-0"
         >
           <div className="font-bold text-[rgba(0,0,0,.87)]">
-            <code>CellElement</code>:{" "}
-            <code>
-              {
-                "({ row: object, index: number, style?: React.CSSProperties, clearSizeCache: (index: number, forceUpdate?: boolean = false) => void }) => React.Element"
-              }
-            </code>
+            <code>CellElement</code>: <code>{"({ row: object, index: number, style?: React.CSSProperties"}</code>
           </div>
           <div className="leading-[1.14285714em]">
             The CellElement is an element that takes in props that contains the row object itself, the index in the data

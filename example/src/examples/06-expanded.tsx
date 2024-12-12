@@ -1,11 +1,6 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
-} from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useSource, useTitle } from "@/hooks/useTitle";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { ColumnProps, SubComponentProps, Table } from "react-fluid-table";
 import { TestData, testData } from "../data";
 
@@ -37,55 +32,26 @@ const columns: ColumnProps<TestData>[] = [
   }
 ];
 
-const SubComponent = ({
-  row,
-  index,
-  clearSizeCache
-}: SubComponentProps<TestData>) => {
+const SubComponent = ({ row }: SubComponentProps<TestData>) => {
   // hooks
-  const prev = useRef("");
   const [value, setValue] = useState("");
-
-  // effects
-  useLayoutEffect(() => {
-    if (prev.current !== value) {
-      clearSizeCache(index, { forceUpdate: true });
-      clearSizeCache(index, { timeout: 200 });
-    }
-    prev.current = value;
-  }, [value, index, clearSizeCache]);
 
   return (
     <div className="bg-[#1b1c1d] px-3.5 py-2.5 text-white">
-      <Accordion
-        type="single"
-        collapsible
-        value={value}
-        onValueChange={setValue}
-      >
+      <Accordion type="single" collapsible value={value} onValueChange={setValue}>
         <AccordionItem value="item-1">
-          <AccordionTrigger>
-            What is the address for this user?
-          </AccordionTrigger>
-          <AccordionContent>
-            {`${row.address}, ${row.city}, ${row.state} ${row.zipCode}`}
-          </AccordionContent>
+          <AccordionTrigger>What is the address for this user?</AccordionTrigger>
+          <AccordionContent>{`${row.address}, ${row.city}, ${row.state} ${row.zipCode}`}</AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-2">
-          <AccordionTrigger>
-            What are the random sentences when you select this option?
-          </AccordionTrigger>
+          <AccordionTrigger>What are the random sentences when you select this option?</AccordionTrigger>
           <AccordionContent>{row.sentence}</AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-3">
-          <AccordionTrigger>
-            What famous poem was included in Breaking Bad that referenced a
-            king?
-          </AccordionTrigger>
+          <AccordionTrigger>What famous poem was included in Breaking Bad that referenced a king?</AccordionTrigger>
           <AccordionContent>
             <p>
-              The poem is called <b>Ozymandias</b> by <b>Percy Bryce Shelley</b>
-              . You can find the poem below:
+              The poem is called <b>Ozymandias</b> by <b>Percy Bryce Shelley</b>. You can find the poem below:
             </p>
             <div>I met a traveller from an antique land,</div>
             <div>Who said—“Two vast and trunkless legs of stone</div>
@@ -119,23 +85,9 @@ const columns: ColumnProps<TestData>[] = [
   { key: "email", header: "Email", width: 250 }
 ];
 
-const SubComponent = ({
-  row,
-  index,
-  clearSizeCache
-}: SubComponentProps<TestData>) => {
+const SubComponent = ({ row }: SubComponentProps<TestData>) => {
   // hooks
-  const prev = useRef("");
   const [value, setValue] = useState("");
-
-  // effects
-  useLayoutEffect(() => {
-    if (prev.current !== value) {
-      clearSizeCache(index, { forceUpdate: true });
-      clearSizeCache(index, { timeout: 200 });
-    }
-    prev.current = value;
-  }, [value, index, clearSizeCache]);
 
   return (
     <div className="bg-[#1b1c1d] px-3.5 py-2.5 text-white">
@@ -204,15 +156,7 @@ const Example = () => (
 const Example6 = () => {
   useTitle("Expanded Row Height");
   useSource(Source);
-  return (
-    <Table
-      borders
-      data={testData}
-      columns={columns}
-      tableHeight={400}
-      subComponent={SubComponent}
-    />
-  );
+  return <Table borders data={testData} columns={columns} tableHeight={400} subComponent={SubComponent} />;
 };
 
 export { Example6, Source };

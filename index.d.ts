@@ -3,6 +3,7 @@ import { CSSProperties, ForwardedRef, ReactNode } from "react";
 export type SortDirection = "ASC" | "DESC";
 
 export type ScrollAlign = "auto" | "smart" | "center" | "end" | "start";
+export type ScrollAlignment = "start" | "center" | "end" | "auto";
 
 export type ExpanderProps<T> = {
   /**
@@ -50,10 +51,6 @@ export type CellProps<T> = {
    */
   index: number;
   /**
-   * an optional function that can be used to clear the size cache
-   */
-  clearSizeCache: (dataIndex: number, options?: ClearCacheOptions) => void;
-  /**
    * optional custom styles for each cell
    */
   style?: CSSProperties;
@@ -88,7 +85,7 @@ export type RowRenderProps<T> = {
   /**
    * required row position styles
    */
-  style: CSSProperties;
+  style?: CSSProperties;
   /**
    * the cells for the row
    */
@@ -112,10 +109,6 @@ export type SubComponentProps<T> = {
    * whether or not the row is expanded
    */
   isExpanded: boolean;
-  /**
-   * an optional function that can be used to clear the size cache
-   */
-  clearSizeCache: (dataIndex: number, options?: ClearCacheOptions) => void;
 };
 
 export type FooterProps<T> = {
@@ -217,7 +210,7 @@ export type TableRef = {
    * @param align where to align the row after scrolling
    * @returns
    */
-  scrollToItem: (index: number, align?: ScrollAlign) => void;
+  scrollToItem: (index: number, align?: ScrollAlignment) => void;
 };
 
 export type TableProps<T> = {
@@ -251,7 +244,7 @@ export type TableProps<T> = {
   /**
    * The direction that is sorted by default.
    */
-  sortDirection?: SortDirection;
+  sortDirection?: SortDirection | null;
   /**
    * Specify the height of the table in pixels.
    */
@@ -293,6 +286,10 @@ export type TableProps<T> = {
   /**
    * React styles used for customizing the table.
    */
+  style?: CSSProperties;
+  /**
+   * React styles used for customizing the table.
+   */
   tableStyle?: CSSProperties;
   /**
    * React styles used for customizing the header.
@@ -306,22 +303,12 @@ export type TableProps<T> = {
    * React styles used for customizing each row. Could be an object or
    * a function that takes the index of the row and returns an object.
    */
-  rowStyle?: CSSProperties | ((index: number) => CSSProperties);
+  rowStyle?: CSSProperties | ((index: number) => CSSProperties | undefined);
   /**
    * React className used for customizing each row. Could be an object or
    * a function that takes the index of the row and returns an object.
    */
   rowClassname?: string | ((index: number) => string);
-  /**
-   * React styles used for customizing each row container. Could be an object or
-   * a function that takes the index of the row and returns an object.
-   */
-  rowContainerStyle?: CSSProperties | ((index: number) => CSSProperties);
-  /**
-   * React className used for customizing each row container. Could be an object or
-   * a function that takes the index of the row and returns an object.
-   */
-  rowContainerClassname?: string | ((index: number) => string);
   /**
    * React styles used for customizing the footer.
    */
@@ -340,7 +327,12 @@ export type TableProps<T> = {
    * @param value information about the row that is expanded/shrunk
    * @returns
    */
-  onExpandRow?: (value: { row: T; index: number; isExpanded: boolean }) => void;
+  onExpandRow?: (value: {
+    row: T;
+    index: number;
+    isExpanded: boolean;
+    event?: React.MouseEvent<Element, MouseEvent>;
+  }) => void;
   /**
    * generates a unique identifier for the row
    * @param row the row
@@ -368,17 +360,13 @@ export type TableProps<T> = {
   onRowClick?: (data: {
     row: T;
     index: number;
-    event: React.MouseEvent<Element, MouseEvent>;
+    event?: React.MouseEvent<Element, MouseEvent>;
   }) => void;
   /**
    * Custom component to wrap a table row. This provides another way of providing
    * more row customization options.
    */
   rowRenderer?: (props: RowRenderProps<T>) => JSX.Element;
-  /**
-   * advanced: this may help address flicker when toggling all rows
-   */
-  forceReset?: boolean;
   /**
    * a ref for specific table functions
    */

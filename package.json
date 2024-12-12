@@ -67,7 +67,6 @@
     "@rollup/plugin-url": "^8.0.2",
     "@svgr/rollup": "^8.1.0",
     "@testing-library/react-hooks": "^8.0.1",
-    "@types/react-window": "^1.8.8",
     "cross-env": "^7.0.3",
     "eslint": "8.56.0",
     "eslint-config-standard": "^17.1.0",
@@ -91,11 +90,11 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "react-resize-detector": "^11.0.1",
-    "react-window": "^1.8.10"
+    "@tanstack/react-virtual": "^3.11.1",
+    "react-resize-detector": "^11.0.1"
   },
   "volta": {
     "node": "18.18.0",
-    "yarn": "1.22.19"
+    "yarn": "1.22.22"
   }
 }

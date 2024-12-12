@@ -1,10 +1,11 @@
-import React, { useContext, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useResizeDetector } from "react-resize-detector";
-import { TableContext } from "./TableContext";
 import { DEFAULT_FOOTER_HEIGHT, DEFAULT_HEADER_HEIGHT, DEFAULT_ROW_HEIGHT } from "./constants";
 import { findFooterByUuid, findHeaderByUuid, positive } from "./util";
 
 type AutoSizerProps = {
+  uuid: string;
+  hasFooter: boolean;
   numRows: number;
   rowHeight?: number;
   headerHeight?: number;
@@ -121,6 +122,8 @@ const calculateHeight = (
  * container when it changes in order to provide the correct height
  */
 const AutoSizer = ({
+  uuid,
+  hasFooter,
   numRows,
   rowHeight,
   tableWidth,
@@ -137,14 +140,6 @@ const AutoSizer = ({
     width: containerWidth,
     height: containerHeight
   } = useResizeDetector<HTMLDivElement>();
-  const { uuid, columns, footerComponent } = useContext(TableContext);
-
-  // variables
-  const footerExists = !!footerComponent;
-  const hasFooter = useMemo(
-    () => footerExists || !!columns.find(c => !!c.footer),
-    [columns, footerExists]
-  );
 
   // calculate the computed height
   const computedHeight = useMemo(() => {
@@ -174,7 +169,7 @@ const AutoSizer = ({
   // get actual width
   const width = positive(tableWidth) ? tableWidth : containerWidth || 0;
 
-  return <div ref={ref}>{height || width ? children({ height, width }) : null}</div>;
+  return <div ref={ref}>{height && width ? children({ height, width }) : null}</div>;
 };
 
 export default AutoSizer;
