@@ -360,6 +360,6 @@ export type TableProps<T> = {
 };
 
 /**
- * A virtualized table build on top of `react-window`.
+ * A virtualized table build on top of `@tanstack/react-virtual`.
  */
-export const Table: <T>(props: TableProps<T>) => JSX.Element;
+export const Table: <T>(props: TableProps<T> & { ref?: React.RefObject<TableRef> }) => JSX.Element;

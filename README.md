@@ -1,8 +1,6 @@
 # react-fluid-table
 
-> A React table inspired by react-window
-
-(Note: This project is under construction)
+> A React table inspired by @tanstack/react-virtual
 
 [![NPM](https://img.shields.io/npm/v/react-fluid-table?style=flat-square)](https://www.npmjs.com/package/react-fluid-table) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg?style=flat-square)](https://standardjs.com)
 
