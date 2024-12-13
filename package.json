@@ -1,6 +1,6 @@
 {
   "name": "react-fluid-table",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A React table inspired by @tanstack/react-virtual",
   "author": "Mckervin Ceme <mckervinc@live.com>",
   "license": "MIT",
@@ -21,7 +21,8 @@
     "fluid",
     "virtualized",
     "list",
-    "scrolling"
+    "scrolling",
+    "frozen"
   ],
   "engines": {
     "node": ">=8",

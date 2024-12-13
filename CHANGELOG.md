@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 1.0.3
+
+_2024-12-12_
+
+### Bugix
+
+- fix `expandedRows` regression
+
 ## 1.0.2
 
 _2024-12-12_

@@ -29,17 +29,6 @@ export type ExpanderProps<T> = {
   style: CSSProperties;
 };
 
-export type ClearCacheOptions = {
-  /**
-   * this is used to skip the timeout and reset the table heights immeediately.
-   */
-  forceUpdate?: boolean;
-  /**
-   * an optional timeout of how long to wait before resetting the table heights in ms (default: 50)
-   */
-  timeout?: number;
-};
-
 export type CellProps<T> = {
   /**
    * the data for the row
@@ -309,9 +298,10 @@ export type TableProps<T> = {
    */
   footerClassname?: string;
   /**
-   * an object that contains the expanded rows.
+   * an object that contains the expanded rows. can also be a function that takes the index and
+   * returns a boolean.
    */
-  expandedRows?: { [x: string | number]: boolean };
+  expandedRows?: { [x: string | number]: boolean } | ((index: number) => boolean);
   /**
    * called when a row is expanded
    * @param value information about the row that is expanded/shrunk
@@ -360,6 +350,6 @@ export type TableProps<T> = {
 };
 
 /**
- * A virtualized table build on top of `@tanstack/react-virtual`.
+ * A virtualized table built on top of `@tanstack/react-virtual`.
  */
 export const Table: <T>(props: TableProps<T> & { ref?: React.RefObject<TableRef> }) => JSX.Element;

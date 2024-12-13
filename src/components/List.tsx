@@ -95,6 +95,7 @@ const List = forwardRef(function <T>(
       setPixelWidths(widths);
     }
   }, [remainingCols, fixedWidth, minColumnWidth, pixelWidths, columns]);
+  const isRowExpanded = typeof expandedRows === "function" ? expandedRows : undefined;
 
   const onExpand = useCallback(
     (
@@ -125,7 +126,7 @@ const List = forwardRef(function <T>(
 
   // initialize expansion
   useEffect(() => {
-    if (expandedRows) {
+    if (expandedRows && typeof expandedRows !== "function") {
       setExpandedCache(expandedRows);
     }
   }, [expandedRows]);
@@ -181,7 +182,7 @@ const List = forwardRef(function <T>(
             {items.map(item => {
               const row = data[item.index];
               const key = generateKeyFromRow(row, item.index);
-              const isExpanded = !!expandedCache[key];
+              const isExpanded = isRowExpanded?.(item.index) ?? !!expandedCache[key];
               const className =
                 typeof rowClassname === "function" ? rowClassname(item.index) : rowClassname;
               const style = typeof rowStyle === "function" ? rowStyle(item.index) : rowStyle;
