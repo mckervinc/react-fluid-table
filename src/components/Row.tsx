@@ -23,33 +23,36 @@ const TableCell = memo(function <T>({
   prevWidth,
   onExpanderClick
 }: TableCellProps<T>) {
-  // cell style
+  // instance
+  const { frozen, contentClassname, contentStyle } = column;
   const style: React.CSSProperties = {
     width: width || undefined,
     minWidth: width || undefined,
-    left: column.frozen ? prevWidth : undefined
+    left: frozen ? prevWidth : undefined
   };
-
-  // cell classname
-  const cellClass = column.contentCellClassname
-    ? typeof column.contentCellClassname === "string"
-      ? column.contentCellClassname
-      : column.contentCellClassname({ row, index })
-    : null;
 
   // expander
   if (column.expander) {
+    // cell classname
+    const cellClass =
+      typeof contentClassname === "function" ? contentClassname({ row, index }) : contentClassname;
+
     if (typeof column.expander === "boolean") {
       const Logo = isExpanded ? Minus : Plus;
+      const cellStyle =
+        (typeof contentStyle === "function" ? contentStyle({ row, index }) : contentStyle) || {};
 
       return (
-        <div className={cx("rft-cell", column.frozen && "frozen", cellClass)} style={style}>
+        <div
+          className={cx("rft-cell", frozen && "frozen", cellClass)}
+          style={{ ...cellStyle, ...style }}
+        >
           <Logo className="rft-expander" onClick={onExpanderClick} />
         </div>
       );
     }
 
-    const frozenStyle: React.CSSProperties = column.frozen ? { position: "sticky", zIndex: 2 } : {};
+    const frozenStyle: React.CSSProperties = frozen ? { position: "sticky", zIndex: 2 } : {};
     return (
       <column.expander
         row={row}
@@ -63,6 +66,11 @@ const TableCell = memo(function <T>({
 
   // basic styling
   if (!column.cell) {
+    // cell classname/style
+    const cellClass =
+      typeof contentClassname === "function" ? contentClassname({ row, index }) : contentClassname;
+    const cellStyle =
+      (typeof contentStyle === "function" ? contentStyle({ row, index }) : contentStyle) || {};
     let content = (row[column.key as keyof T] || null) as React.ReactNode;
     if (column.content) {
       if (typeof column.content === "string" || typeof column.content === "number") {
@@ -73,7 +81,10 @@ const TableCell = memo(function <T>({
     }
 
     return (
-      <div className={cx("rft-cell", column.frozen && "frozen", cellClass)} style={style}>
+      <div
+        className={cx("rft-cell", frozen && "frozen", cellClass)}
+        style={{ ...cellStyle, ...style }}
+      >
         {content}
       </div>
     );

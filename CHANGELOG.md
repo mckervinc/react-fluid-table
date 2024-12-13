@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 1.1.0
+
+_2024-12-13_
+
+### Features
+
+- **BREAKING:** `headerCellClassname` and `contentCellClassname` are renamed to `headerClassname` and `contentClassname`.
+- For columns, added `headerStyle` and `contentStyle`
+- (chore)Fix index.d.ts typos
+
 ## 1.0.3
 
 _2024-12-12_

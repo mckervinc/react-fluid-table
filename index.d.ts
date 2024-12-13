@@ -136,9 +136,13 @@ export type ColumnProps<T> = {
    */
   header?: string | ((props: HeaderProps) => JSX.Element);
   /**
-   * specify a custom classNsme for the header. If `header` is NOT a strins, this is ignored.
+   * specify a custom className for the header. If `header` is NOT a string, this is ignored.
    */
-  headerCellClassname?: string;
+  headerClassname?: string;
+  /**
+   * specify a custom style for the header. If `header` is NOT a string, this is ignored.
+   */
+  headerStyle?: CSSProperties;
   /**
    * The width of a column in pixels. If this is set, the column will not resize.
    */
@@ -172,9 +176,13 @@ export type ColumnProps<T> = {
    */
   content?: string | number | ((props: CellProps<T>) => ReactNode | JSX.Element);
   /**
-   * specify a custom classNsme for the content. If `cell` is specified, this is ignored.
+   * specify a custom className for the content. If `cell` is specified, this is ignored.
    */
-  contentCellClassname?: string | ((props: { row: T; index: number }) => string);
+  contentClassname?: string | ((props: { row: T; index: number }) => string | undefined);
+  /**
+   * specify a custom style for the content. If `cell` is specified, this is ignored.
+   */
+  contentStyle?: CSSProperties | ((props: { row: T; index: number }) => CSSProperties | undefined);
   /**
    * An advanced feature, this is used to render an entire cell, including the cell container.
    * The `content` prop is ignored if this property is enabled.

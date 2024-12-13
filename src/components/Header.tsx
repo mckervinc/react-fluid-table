@@ -19,30 +19,33 @@ const HeaderCell = memo(function <T>({
   sortedDir,
   onHeaderClick
 }: HeaderCellProps<T>) {
+  // instance
+  const { key, sortable, frozen } = column;
   const style: React.CSSProperties = {
-    cursor: column.sortable ? "pointer" : undefined,
+    cursor: sortable ? "pointer" : undefined,
     width: width || undefined,
     minWidth: width || undefined,
-    left: column.frozen ? prevWidth : undefined
+    left: frozen ? prevWidth : undefined
   };
 
   if (!column.header || typeof column.header === "string") {
+    const { headerStyle = {}, headerClassname } = column;
     return (
       <div
-        style={style}
+        style={{ ...headerStyle, ...style }}
         onClick={() => onHeaderClick(column)}
-        className={cx("rft-header-cell", column.frozen && "frozen", column.headerCellClassname)}
+        className={cx("rft-header-cell", frozen && "frozen", headerClassname)}
       >
         {column.header ? <div className="rft-header-cell-text">{column.header}</div> : null}
-        {column.key !== sortedCol ? null : (
+        {key !== sortedCol ? null : (
           <div className={cx("rft-header-cell-arrow", sortedDir?.toLowerCase())}></div>
         )}
       </div>
     );
   }
 
-  const headerDir = column.key === sortedCol ? sortedDir || null : null;
-  const frozenStyle: React.CSSProperties = column.frozen ? { position: "sticky", zIndex: 1 } : {};
+  const headerDir = key === sortedCol ? sortedDir || null : null;
+  const frozenStyle: React.CSSProperties = frozen ? { position: "sticky", zIndex: 1 } : {};
   return (
     <column.header
       onClick={() => onHeaderClick(column)}
