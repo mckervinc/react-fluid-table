@@ -53,7 +53,7 @@ function Footer<T>({
   const ref = useRef<HTMLDivElement>(null);
 
   // constants
-  const hasFooter = !!Component || !!columns.find(c => !!c.footer);
+  const hasFooter = !!Component || columns.some(c => !!c.footer);
   const style: React.CSSProperties = {
     minWidth: sticky ? undefined : pixelWidths.reduce((pv, c) => pv + c, 0),
     ...footerStyle
@@ -109,7 +109,7 @@ function Footer<T>({
 
   // render
   if (!Component) {
-    const hasFooter = !!columns.find(c => !!c.footer);
+    const hasFooter = columns.some(c => !!c.footer);
     return (
       <div
         ref={ref}

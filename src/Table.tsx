@@ -67,7 +67,7 @@ const Table = forwardRef(function <T>(
       maxTableHeight={maxHeight}
       headerHeight={headerHeight}
       footerHeight={footerHeight}
-      hasFooter={!!footerComponent || !!columns.find(c => !!c.footer)}
+      hasFooter={!!footerComponent || columns.some(c => !!c.footer)}
     >
       {({ height, width }) => {
         return (
