@@ -9,7 +9,7 @@ import React, {
   useState
 } from "react";
 import { useResizeDetector } from "react-resize-detector";
-import { ColumnProps, ScrollAlignment, TableProps, TableRef } from "../..";
+import { ScrollAlignment, TableProps, TableRef } from "../..";
 import { DEFAULT_ROW_HEIGHT } from "../constants";
 import { arraysMatch, calculateColumnWidths, cx, findColumnWidthConstants } from "../util";
 import Footer from "./Footer";
@@ -20,12 +20,6 @@ type ListProps<T> = TableProps<T> & {
   uuid: string;
   height: number;
   width: number;
-};
-
-const syncScroll = (source: HTMLElement | null, target: HTMLElement | null) => {
-  if (source && target) {
-    target.scrollLeft = source.scrollLeft;
-  }
 };
 
 function BaseList<T>(
@@ -62,7 +56,6 @@ function BaseList<T>(
 ) {
   // hooks
   const parentRef = useRef<HTMLDivElement | null>(null);
-  const headerRef = useRef<HTMLDivElement | null>(null);
   const { ref: innerRef, width: innerWidth = 0 } = useResizeDetector<HTMLDivElement>();
   const [widthConstants, setWidthConstants] = useState(findColumnWidthConstants(columns));
   const [pixelWidths, setPixelWidths] = useState<number[]>(() => {
@@ -82,7 +75,7 @@ function BaseList<T>(
   });
 
   // constants
-  const showRowWrapper = (innerRef.current?.scrollWidth || 0) > innerWidth;
+  const isScrollHorizontal = (innerRef.current?.scrollWidth || 0) > innerWidth;
   const items = virtualizer.getVirtualItems();
   const { fixedWidth, remainingCols } = widthConstants;
 
@@ -104,10 +97,6 @@ function BaseList<T>(
     },
     [expandedCache]
   );
-
-  // Event listeners for scroll events
-  const parentScroll = useCallback(() => syncScroll(parentRef.current, headerRef.current), []);
-  const headerScroll = useCallback(() => syncScroll(headerRef.current, parentRef.current), []);
 
   // effects
   // update pixel widths every time the width changes
@@ -134,18 +123,6 @@ function BaseList<T>(
     }
   }, [expandedRows]);
 
-  // Attach scroll listeners when component mounts
-  useEffect(() => {
-    parentRef.current?.addEventListener("scroll", parentScroll);
-    headerRef.current?.addEventListener("scroll", headerScroll);
-
-    // Clean up event listeners when component unmounts
-    return () => {
-      parentRef.current?.removeEventListener("scroll", parentScroll);
-      headerRef.current?.removeEventListener("scroll", headerScroll);
-    };
-  }, []);
-
   // provide access to window functions
   useImperativeHandle(ref, () => ({
     scrollTo: (scrollOffset: number): void => virtualizer.scrollToOffset(scrollOffset),
@@ -162,11 +139,10 @@ function BaseList<T>(
       style={{ ...style, height, width }}
     >
       <Header
-        ref={headerRef}
         uuid={uuid}
-        showRowWrapper={showRowWrapper}
+        isScrollHorizontal={isScrollHorizontal}
         pixelWidths={pixelWidths}
-        columns={columns as ColumnProps<any>[]}
+        columns={columns}
         className={headerClassname}
         style={headerStyle}
         onSort={onSort}
@@ -181,7 +157,7 @@ function BaseList<T>(
             transform: `translateY(${items[0]?.start ?? 0}px)`
           }}
         >
-          <div className={cx(showRowWrapper && "rft-row-wrapper")}>
+          <div className={cx(isScrollHorizontal && "rft-row-wrapper")}>
             {items.map(({ index }) => {
               const row = data[index];
               const fargs = { row, index };
@@ -222,6 +198,7 @@ function BaseList<T>(
         pixelWidths={pixelWidths}
         className={footerClassname}
         style={footerStyle}
+        isScrollHorizontal={isScrollHorizontal}
         component={footerComponent}
       />
     </div>

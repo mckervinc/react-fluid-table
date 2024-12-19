@@ -6,7 +6,7 @@ import { positive, randomString } from "./util";
 
 let warned = false;
 
-const Table = forwardRef(function <T>(
+function BaseTable<T>(
   {
     id,
     rowHeight,
@@ -83,6 +83,7 @@ const Table = forwardRef(function <T>(
             rowRenderer={rowRenderer}
             onExpandRow={onExpandRow}
             subComponent={subComponent}
+            footerComponent={footerComponent}
             columns={columns}
             {...props}
           />
@@ -90,8 +91,11 @@ const Table = forwardRef(function <T>(
       }}
     </AutoSizer>
   );
-});
+}
 
-Table.displayName = "Table";
+const Table = forwardRef(BaseTable) as <T>(
+  props: TableProps<T> & { ref?: React.ForwardedRef<TableRef> }
+) => React.JSX.Element;
+(Table as React.FC).displayName = "Table";
 
 export default Table;

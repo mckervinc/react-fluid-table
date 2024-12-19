@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { ColumnProps, SortDirection } from "../..";
 import { cx } from "../util";
 
@@ -62,7 +62,7 @@ type HeaderProps<T> = {
   uuid: string;
   columns: ColumnProps<T>[];
   pixelWidths: number[];
-  showRowWrapper: boolean;
+  isScrollHorizontal: boolean;
   className?: string;
   style?: React.CSSProperties;
   sortColumn?: string;
@@ -70,20 +70,17 @@ type HeaderProps<T> = {
   onSort?: (col: string, dir: SortDirection | null) => void;
 };
 
-const Header = forwardRef(function <T>(
-  {
-    uuid,
-    columns,
-    showRowWrapper,
-    pixelWidths,
-    className,
-    style,
-    sortColumn,
-    sortDirection,
-    onSort
-  }: HeaderProps<T>,
-  ref: React.ForwardedRef<HTMLDivElement>
-) {
+function Header<T>({
+  uuid,
+  columns,
+  isScrollHorizontal,
+  pixelWidths,
+  className,
+  style,
+  sortColumn,
+  sortDirection,
+  onSort
+}: HeaderProps<T>) {
   // hooks
   const [sortedCol, setSortedCol] = useState(sortColumn);
   const [sortedDir, setSortedDir] = useState(sortDirection);
@@ -116,8 +113,11 @@ const Header = forwardRef(function <T>(
   }, [sortColumn, sortDirection]);
 
   return (
-    <div ref={ref} className="rft-sticky-header" data-header-key={`${uuid}-header`}>
-      <div className={cx(showRowWrapper && "rft-row-wrapper")}>
+    <div
+      className={cx("rft-sticky-header", isScrollHorizontal && "scroll")}
+      data-header-key={`${uuid}-header`}
+    >
+      <div className={cx(isScrollHorizontal && "rft-row-wrapper")}>
         <div className={cx("rft-header", className)} style={style}>
           {columns.map((c, i) => (
             <HeaderCell
@@ -134,7 +134,7 @@ const Header = forwardRef(function <T>(
       </div>
     </div>
   );
-});
+}
 
 Header.displayName = "Header";
 

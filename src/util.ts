@@ -47,8 +47,6 @@ const randomString = (num: number) => {
 
 const findElementByValue = (value: string) => document.querySelector<HTMLElement>(value);
 
-const findTableByUuid = (uuid: string) => findElementByValue(`[data-table-key='${uuid}']`);
-
 const findHeaderByUuid = (uuid: string) => findElementByValue(`[data-header-key='${uuid}-header']`);
 
 const findFooterByUuid = (uuid: string) => findElementByValue(`[data-footer-key='${uuid}-footer']`);
@@ -116,6 +114,5 @@ export {
   findColumnWidthConstants,
   findFooterByUuid,
   findHeaderByUuid,
-  findTableByUuid,
   randomString
 };

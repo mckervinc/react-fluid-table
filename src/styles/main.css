@@ -20,13 +20,11 @@
   top: 0;
   left: 0;
   z-index: 1;
-  overflow-x: auto;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 
-.rft-sticky-header::-webkit-scrollbar {
-  display: none;
+.rft-sticky-header.scroll,
+.rft-footer.scroll {
+  width: fit-content;
 }
 
 .rft-header {
@@ -92,12 +90,6 @@
   bottom: 0;
   left: 0;
   z-index: 1;
-  overflow-x: auto;
-  scrollbar-width: none; /* Firefox */
-}
-
-.rft-footer.sticky::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
 }
 
 .rft-cell {

@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 1.2.2
+
+_2024-12-19_
+
+### Features
+
+- explicit support for React 19
+- fixes horizontal scroll bug on iOS
+- fixes `footerComponent` regression
+
 ## 1.2.1
 
 _2024-12-19_
