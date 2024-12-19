@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useMemo, useState } from "react";
-import { ColumnProps, TableProps, TableRef } from "../index";
+import { TableProps, TableRef } from "../index";
 import AutoSizer from "./AutoSizer";
 import List from "./components/List";
 import { positive, randomString } from "./util";
@@ -78,12 +78,12 @@ const Table = forwardRef(function <T>(
             height={height}
             data={data}
             rowHeight={rowHeight}
-            itemKey={itemKey as any}
-            onRowClick={onRowClick as any}
-            rowRenderer={rowRenderer as any}
-            onExpandRow={onExpandRow as any}
-            subComponent={subComponent as any}
-            columns={columns as ColumnProps<any>[]}
+            itemKey={itemKey}
+            onRowClick={onRowClick}
+            rowRenderer={rowRenderer}
+            onExpandRow={onExpandRow}
+            subComponent={subComponent}
+            columns={columns}
             {...props}
           />
         );

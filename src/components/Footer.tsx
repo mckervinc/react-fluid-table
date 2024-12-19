@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { memo, useCallback, useEffect, useRef } from "react";
 import { ColumnProps, FooterProps } from "../..";
 import { cx, findTableByUuid } from "../util";
 
@@ -9,7 +9,7 @@ type InnerFooterCellProps<T> = {
   rows: T[];
 };
 
-const FooterCell = React.memo(function <T>({ prevWidth, rows, ...rest }: InnerFooterCellProps<T>) {
+function BaseFooterCell<T>({ prevWidth, rows, ...rest }: InnerFooterCellProps<T>) {
   // instance
   const { width, column } = rest;
   const style: React.CSSProperties = {
@@ -24,9 +24,10 @@ const FooterCell = React.memo(function <T>({ prevWidth, rows, ...rest }: InnerFo
       {!!column.footer && <column.footer rows={rows} {...rest} />}
     </div>
   );
-});
+}
 
-FooterCell.displayName = "FooterCell";
+const FooterCell = memo(BaseFooterCell) as <T>(props: InnerFooterCellProps<T>) => React.JSX.Element;
+(FooterCell as React.FC).displayName = "FooterCell";
 
 type InnerFooterProps<T> = {
   uuid: string;
@@ -122,7 +123,7 @@ function Footer<T>({
           {columns.map((c, i) => (
             <FooterCell
               key={c.key}
-              column={c as any}
+              column={c}
               rows={rows}
               width={pixelWidths[i]}
               prevWidth={c.frozen ? pixelWidths.slice(0, i).reduce((pv, c) => pv + c, 0) : 0}

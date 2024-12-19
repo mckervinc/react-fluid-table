@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 1.2.1
+
+_2024-12-19_
+
+### Features
+
+- on initial render, the widths of the column are initialized correctly.
+- small typescript changes to remove usage of `any`
+
 ## 1.2.0
 
 _2024-12-18_

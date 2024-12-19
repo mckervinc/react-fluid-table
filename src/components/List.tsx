@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useRef,
   useState
 } from "react";
@@ -27,7 +28,7 @@ const syncScroll = (source: HTMLElement | null, target: HTMLElement | null) => {
   }
 };
 
-const List = forwardRef(function <T>(
+function BaseList<T>(
   {
     id,
     uuid,
@@ -63,8 +64,11 @@ const List = forwardRef(function <T>(
   const parentRef = useRef<HTMLDivElement | null>(null);
   const headerRef = useRef<HTMLDivElement | null>(null);
   const { ref: innerRef, width: innerWidth = 0 } = useResizeDetector<HTMLDivElement>();
-  const [pixelWidths, setPixelWidths] = useState<number[]>([]);
   const [widthConstants, setWidthConstants] = useState(findColumnWidthConstants(columns));
+  const [pixelWidths, setPixelWidths] = useState<number[]>(() => {
+    const { fixedWidth, remainingCols } = widthConstants;
+    return calculateColumnWidths(width, remainingCols, fixedWidth, minColumnWidth, columns);
+  });
   const [expandedCache, setExpandedCache] = useState<Record<string | number, boolean>>({});
   const generateKeyFromRow = useCallback(
     (row: T, defaultValue: number) => itemKey?.(row) ?? defaultValue,
@@ -83,18 +87,6 @@ const List = forwardRef(function <T>(
   const { fixedWidth, remainingCols } = widthConstants;
 
   // functions
-  const updatePixelWidths = useCallback(() => {
-    const widths = calculateColumnWidths(
-      parentRef.current,
-      remainingCols,
-      fixedWidth,
-      minColumnWidth,
-      columns
-    );
-    if (!arraysMatch(widths, pixelWidths)) {
-      setPixelWidths(widths);
-    }
-  }, [remainingCols, fixedWidth, minColumnWidth, pixelWidths, columns]);
   const isRowExpanded = typeof expandedRows === "function" ? expandedRows : undefined;
 
   const onExpand = useCallback(
@@ -119,7 +111,18 @@ const List = forwardRef(function <T>(
 
   // effects
   // update pixel widths every time the width changes
-  useEffect(() => updatePixelWidths(), [width]);
+  useLayoutEffect(() => {
+    const widths = calculateColumnWidths(
+      parentRef.current?.clientWidth ?? width,
+      remainingCols,
+      fixedWidth,
+      minColumnWidth,
+      columns
+    );
+    if (!arraysMatch(widths, pixelWidths)) {
+      setPixelWidths(widths);
+    }
+  }, [width, remainingCols, fixedWidth, minColumnWidth, pixelWidths, columns]);
 
   // set the width constants
   useEffect(() => setWidthConstants(findColumnWidthConstants(columns)), [columns]);
@@ -198,13 +201,13 @@ const List = forwardRef(function <T>(
                   style={style}
                   className={className}
                   isExpanded={isExpanded}
-                  onRowClick={onRowClick as any}
-                  rowRenderer={rowRenderer as any}
-                  onExpand={onExpand as any}
+                  onRowClick={onRowClick}
+                  rowRenderer={rowRenderer}
+                  onExpand={onExpand}
                   index={index}
-                  columns={columns as any}
+                  columns={columns}
                   pixelWidths={pixelWidths}
-                  subComponent={subComponent as any}
+                  subComponent={subComponent}
                 />
               );
             })}
@@ -215,14 +218,19 @@ const List = forwardRef(function <T>(
         uuid={uuid}
         rows={data}
         sticky={stickyFooter}
-        columns={columns as ColumnProps<any>[]}
+        columns={columns}
         pixelWidths={pixelWidths}
         className={footerClassname}
         style={footerStyle}
-        component={footerComponent as any}
+        component={footerComponent}
       />
     </div>
   );
-});
+}
+
+const List = forwardRef(BaseList) as <T>(
+  props: ListProps<T> & { ref?: React.ForwardedRef<TableRef> }
+) => React.JSX.Element;
+(List as React.FC).displayName = "List";
 
 export default List;

@@ -30,7 +30,7 @@ const columns: ColumnProps<PropData>[] = [
     key: "type",
     header: "Type",
     minWidth: 120,
-    maxWidth: 170,
+    maxWidth: 270,
     content: ({ row }: { row: PropData }) => <code>{row.type}</code>
   },
   {
@@ -53,6 +53,7 @@ const columns: ColumnProps<PropData>[] = [
   {
     key: "description",
     header: "Description",
+    minWidth: 200,
     content: ({ row }: { row: PropData }) => row.description
   }
 ];

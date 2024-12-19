@@ -11,7 +11,7 @@ type HeaderCellProps<T> = {
   onHeaderClick: (column: ColumnProps<T>) => void;
 };
 
-const HeaderCell = memo(function <T>({
+function BaseHeaderCell<T>({
   column,
   width,
   prevWidth,
@@ -53,9 +53,10 @@ const HeaderCell = memo(function <T>({
       style={{ ...style, ...frozenStyle }}
     />
   );
-});
+}
 
-HeaderCell.displayName = "HeaderCell";
+const HeaderCell = memo(BaseHeaderCell) as <T>(props: HeaderCellProps<T>) => React.JSX.Element;
+(HeaderCell as React.FC).displayName = "HeaderCell";
 
 type HeaderProps<T> = {
   uuid: string;
@@ -124,8 +125,8 @@ const Header = forwardRef(function <T>(
               width={pixelWidths[i]}
               sortedCol={sortedCol}
               sortedDir={sortedDir}
-              column={c as ColumnProps<any>}
-              onHeaderClick={onHeaderClick as any}
+              column={c}
+              onHeaderClick={onHeaderClick}
               prevWidth={c.frozen ? pixelWidths.slice(0, i).reduce((pv, c) => pv + c, 0) : 0}
             />
           ))}

@@ -5,7 +5,7 @@ import { ColumnProps } from "..";
  * @param classes list of potential className strings
  * @returns a combined className string
  */
-export const cx = (...args: (string | number | null | boolean | undefined)[]) => {
+const cx = (...args: (string | number | null | boolean | undefined)[]) => {
   return args
     .flat()
     .filter((x): x is Exclude<typeof x, null | undefined> => !!x)
@@ -13,7 +13,7 @@ export const cx = (...args: (string | number | null | boolean | undefined)[]) =>
     .join(" ");
 };
 
-export const arraysMatch = <T>(arr1: T[] | null | undefined, arr2: T[] | null | undefined) => {
+const arraysMatch = <T>(arr1: T[] | null | undefined, arr2: T[] | null | undefined) => {
   if (arr1 == null && arr2 == null) {
     return true;
   }
@@ -35,7 +35,7 @@ export const arraysMatch = <T>(arr1: T[] | null | undefined, arr2: T[] | null | 
   return false;
 };
 
-export const randomString = (num: number) => {
+const randomString = (num: number) => {
   let result = "";
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const length = characters.length;
@@ -45,25 +45,22 @@ export const randomString = (num: number) => {
   return result;
 };
 
-export const findTableByUuid = (uuid: string): HTMLElement | null =>
-  document.querySelector(`[data-table-key='${uuid}']`);
+const findElementByValue = (value: string) => document.querySelector<HTMLElement>(value);
 
-export const findHeaderByUuid = (uuid: string): HTMLElement | null =>
-  document.querySelector(`[data-header-key='${uuid}-header']`);
+const findTableByUuid = (uuid: string) => findElementByValue(`[data-table-key='${uuid}']`);
 
-export const findFooterByUuid = (uuid: string): HTMLElement | null =>
-  document.querySelector(`[data-footer-key='${uuid}-footer']`);
+const findHeaderByUuid = (uuid: string) => findElementByValue(`[data-header-key='${uuid}-header']`);
+
+const findFooterByUuid = (uuid: string) => findElementByValue(`[data-footer-key='${uuid}-footer']`);
 
 // table utilities
-export const calculateColumnWidths = <T>(
-  element: HTMLElement | null,
+const calculateColumnWidths = <T>(
+  clientWidth: number,
   numColumns: number,
   fixedColumnWidths: number,
   minColumnWidth: number,
   columns: ColumnProps<T>[]
 ) => {
-  if (!element) return columns.map(() => minColumnWidth);
-  const clientWidth = element.clientWidth;
   let n = Math.max(numColumns, 1);
   let usedSpace = fixedColumnWidths;
   let freeSpace = Math.max(clientWidth - usedSpace, 0);
@@ -99,7 +96,7 @@ export const calculateColumnWidths = <T>(
   });
 };
 
-export const findColumnWidthConstants = <T>(columns: ColumnProps<T>[]) => {
+const findColumnWidthConstants = <T>(columns: ColumnProps<T>[]) => {
   return columns.reduce(
     (pv, c) => ({
       fixedWidth: pv.fixedWidth + (c.width || 0),
@@ -109,4 +106,16 @@ export const findColumnWidthConstants = <T>(columns: ColumnProps<T>[]) => {
   );
 };
 
-export const positive = (x: number | null | undefined): x is number => x != null && x > 0;
+const positive = (x: number | null | undefined): x is number => x != null && x > 0;
+
+export {
+  arraysMatch,
+  calculateColumnWidths,
+  cx,
+  positive,
+  findColumnWidthConstants,
+  findFooterByUuid,
+  findHeaderByUuid,
+  findTableByUuid,
+  randomString
+};

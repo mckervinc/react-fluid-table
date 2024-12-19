@@ -14,7 +14,7 @@ type TableCellProps<T> = {
   onExpanderClick: (event?: React.MouseEvent<Element, MouseEvent>) => void;
 };
 
-const TableCell = memo(function <T>({
+function BaseTableCell<T>({
   row,
   index,
   width,
@@ -93,9 +93,10 @@ const TableCell = memo(function <T>({
   // custom cell styling
   const frozenStyle: React.CSSProperties = column.frozen ? { position: "sticky", zIndex: 2 } : {};
   return <column.cell row={row} index={index} style={{ ...style, ...frozenStyle }} />;
-});
+}
 
-TableCell.displayName = "TableCell";
+const TableCell = memo(BaseTableCell) as <T>(props: TableCellProps<T>) => React.JSX.Element;
+(TableCell as React.FC).displayName = "TableCell";
 
 type RowComponentProps<T> = {
   row: T;
@@ -167,7 +168,7 @@ type RowProps<T> = {
   rowRenderer?: (props: RowRenderProps<T>) => JSX.Element;
 };
 
-const Row = forwardRef(function <T>(
+function BaseRow<T>(
   {
     uuid,
     index,
@@ -205,7 +206,7 @@ const Row = forwardRef(function <T>(
           <TableCell
             key={`${uuid}-${rowKey}-${i}`}
             row={row}
-            column={c as any}
+            column={c}
             index={index}
             width={pixelWidths[i]}
             isExpanded={isExpanded}
@@ -221,8 +222,11 @@ const Row = forwardRef(function <T>(
       )}
     </div>
   );
-});
+}
 
-Row.displayName = "Row";
+const Row = forwardRef(BaseRow) as <T>(
+  props: RowProps<T> & { ref?: React.ForwardedRef<HTMLDivElement> }
+) => React.JSX.Element;
+(Row as React.FC).displayName = "Row";
 
 export default Row;
