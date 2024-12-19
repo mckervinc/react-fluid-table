@@ -16,7 +16,7 @@ const columns: ColumnProps<PropData>[] = [
   {
     key: "prop",
     header: "Prop",
-    width: 140,
+    width: 200,
     content: ({ row }) => <code>{row.prop}</code>
   },
   {
@@ -47,6 +47,16 @@ const data: PropData[] = [
         a custom element to render the header any way you like. See below for details
       </div>
     )
+  },
+  {
+    prop: "headerClassname",
+    type: "string",
+    description: "An optional classname that can be applied to the header cell."
+  },
+  {
+    prop: "headerStyle",
+    type: "React.CSSProperties",
+    description: "An optional style object that can be applied to the header cell."
   },
   {
     prop: "width",
@@ -96,6 +106,16 @@ const data: PropData[] = [
         of the cell container.
       </div>
     )
+  },
+  {
+    prop: "contentClassname",
+    type: "string | ((props: { row: any; index: number }) => string | undefined)",
+    description: "An optional classname that can be applied to the content cell."
+  },
+  {
+    prop: "contentStyle",
+    type: "React.CSSProperties | ((props: { row: any; index: number }) => React.CSSProperties | undefined)",
+    description: "An optional style object that can be applied to the content cell."
   },
   {
     prop: "cell",

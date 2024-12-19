@@ -289,14 +289,14 @@ export type TableProps<T> = {
   headerClassname?: string;
   /**
    * React styles used for customizing each row. Could be an object or
-   * a function that takes the index of the row and returns an object.
+   * a function that takes the index or the row and returns an object.
    */
-  rowStyle?: CSSProperties | ((index: number) => CSSProperties | undefined);
+  rowStyle?: CSSProperties | ((value: { row: T; index: number }) => CSSProperties | undefined);
   /**
    * React className used for customizing each row. Could be an object or
-   * a function that takes the index of the row and returns an object.
+   * a function that takes the index or the row and returns an object.
    */
-  rowClassname?: string | ((index: number) => string);
+  rowClassname?: string | ((value: { row: T; index: number }) => string);
   /**
    * React styles used for customizing the footer.
    */
@@ -306,10 +306,12 @@ export type TableProps<T> = {
    */
   footerClassname?: string;
   /**
-   * an object that contains the expanded rows. can also be a function that takes the index and
-   * returns a boolean.
+   * an object that contains the expanded rows. can also be a function that takes the index
+   * or row and returns a boolean.
    */
-  expandedRows?: { [x: string | number]: boolean } | ((index: number) => boolean);
+  expandedRows?:
+    | { [x: string | number]: boolean }
+    | ((value: { row: T; index: number }) => boolean);
   /**
    * called when a row is expanded
    * @param value information about the row that is expanded/shrunk

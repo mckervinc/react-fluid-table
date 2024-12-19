@@ -168,13 +168,13 @@ const data: PropData[] = [
   },
   {
     prop: "rowStyle",
-    type: "object | (index: number) => object",
+    type: "object | (value: { row: any; index: number }) => object",
     description:
       "Add custom css styles to each row element. One can also pass in a function that takes in the row number in order to provide custom styling for particular rows."
   },
   {
     prop: "rowClassname",
-    type: "string | (index: number) => string",
+    type: "string | (value: { row: any; index: number }) => string",
     description:
       "Add custom css className to each row element. One can also pass in a function that takes in the row number in order to provide custom styling for particular rows."
   },
@@ -185,7 +185,7 @@ const data: PropData[] = [
   },
   {
     prop: "onRowClick",
-    type: "(e: Event, { index: number }) => void",
+    type: "(value: { row: any, index: number, event?: Event }) => void",
     description: "optional click handler for the rows in the table"
   },
   {

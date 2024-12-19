@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 1.2.0
+
+_2024-12-18_
+
+### Features
+
+- **BREAKING:** instead of taking just the `index`, the following functions all also take in the row as well: `expandedRows`, `rowStyle`, and `rowClassname`.
+- (docs) added `contentClassname`, `contentStyle`
+
 ## 1.1.0
 
 _2024-12-13_

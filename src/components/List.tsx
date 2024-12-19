@@ -179,13 +179,14 @@ const List = forwardRef(function <T>(
           }}
         >
           <div className={cx(showRowWrapper && "rft-row-wrapper")}>
-            {items.map(item => {
-              const row = data[item.index];
-              const key = generateKeyFromRow(row, item.index);
-              const isExpanded = isRowExpanded?.(item.index) ?? !!expandedCache[key];
+            {items.map(({ index }) => {
+              const row = data[index];
+              const fargs = { row, index };
+              const key = generateKeyFromRow(row, index);
+              const isExpanded = isRowExpanded?.(fargs) ?? !!expandedCache[key];
               const className =
-                typeof rowClassname === "function" ? rowClassname(item.index) : rowClassname;
-              const style = typeof rowStyle === "function" ? rowStyle(item.index) : rowStyle;
+                typeof rowClassname === "function" ? rowClassname(fargs) : rowClassname;
+              const style = typeof rowStyle === "function" ? rowStyle(fargs) : rowStyle;
               return (
                 <Row
                   ref={virtualizer.measureElement}
@@ -200,7 +201,7 @@ const List = forwardRef(function <T>(
                   onRowClick={onRowClick as any}
                   rowRenderer={rowRenderer as any}
                   onExpand={onExpand as any}
-                  index={item.index}
+                  index={index}
                   columns={columns as any}
                   pixelWidths={pixelWidths}
                   subComponent={subComponent as any}

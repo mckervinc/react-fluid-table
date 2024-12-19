@@ -1,5 +1,5 @@
 import _ from "lodash";
-import React, { useState } from "react";
+import { useState } from "react";
 import { ColumnProps, HeaderProps, SortDirection, Table } from "react-fluid-table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TestData, testData } from "../data";
@@ -86,10 +86,6 @@ const Example = () => {
     }
   };
 
-  const rowStyle = index => ({
-    backgroundColor: index % 2 === 0 ? "#33be54" : "#21ba49"
-  });
-
   return (
     <Table
       data={data}
@@ -99,7 +95,9 @@ const Example = () => {
       onSort={onSort}
       sortColumn="firstName"
       sortDirection="ASC"
-      rowStyle={rowStyle}
+      rowStyle={({ index }) => ({
+        backgroundColor: index % 2 === 0 ? "#33be54" : "#21ba49"
+      })}
       style={{ backgroundColor: "#33be54" }}
       headerStyle={{ backgroundColor: "#1e9f3f" }}
     />
@@ -122,10 +120,6 @@ const Example8 = () => {
     }
   };
 
-  const rowStyle = (index: number): React.CSSProperties => ({
-    backgroundColor: index % 2 === 0 ? "#33be54" : "#21ba49"
-  });
-
   return (
     <Table
       data={data}
@@ -135,7 +129,9 @@ const Example8 = () => {
       onSort={onSort}
       sortColumn="firstName"
       sortDirection="ASC"
-      rowStyle={rowStyle}
+      rowStyle={({ index }) => ({
+        backgroundColor: index % 2 === 0 ? "#33be54" : "#21ba49"
+      })}
       style={{ backgroundColor: "#33be54" }}
       headerStyle={{ backgroundColor: "#1e9f3f" }}
     />
