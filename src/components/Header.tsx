@@ -136,6 +136,4 @@ function Header<T>({
   );
 }
 
-Header.displayName = "Header";
-
 export default Header;

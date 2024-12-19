@@ -9,7 +9,7 @@ type InnerFooterCellProps<T> = {
   rows: T[];
 };
 
-function BaseFooterCell<T>({ prevWidth, rows, ...rest }: InnerFooterCellProps<T>) {
+function BaseFooterCell<T>({ prevWidth, ...rest }: InnerFooterCellProps<T>) {
   // instance
   const { width, column } = rest;
   const style: React.CSSProperties = {
@@ -21,7 +21,7 @@ function BaseFooterCell<T>({ prevWidth, rows, ...rest }: InnerFooterCellProps<T>
 
   return (
     <div className={cx("cell", column.frozen && "frozen")} style={style}>
-      {!!column.footer && <column.footer rows={rows} {...rest} />}
+      {!!column.footer && <column.footer {...rest} />}
     </div>
   );
 }
