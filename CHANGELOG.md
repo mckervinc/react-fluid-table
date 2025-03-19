@@ -6,6 +6,14 @@ _2025-03-19_
 
 ### Features
 
+- no forcing rft-sizer height
+
+## 1.2.3
+
+_2025-03-19_
+
+### Features
+
 - bumps dependencies
 - adds more class names, and makes the auto sizer fill to height 100%
 

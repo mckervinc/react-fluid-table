@@ -3,10 +3,6 @@
   contain: strict;
 }
 
-.rft-sizer {
-  height: 100%;
-}
-
 .rft-outer-container {
   position: relative;
   width: 100%;
