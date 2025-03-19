@@ -169,7 +169,11 @@ const AutoSizer = ({
   // get actual width
   const width = positive(tableWidth) ? tableWidth : containerWidth || 0;
 
-  return <div ref={ref}>{height && width ? children({ height, width }) : null}</div>;
+  return (
+    <div className="rft-sizer" ref={ref}>
+      {height && width ? children({ height, width }) : null}
+    </div>
+  );
 };
 
 export default AutoSizer;

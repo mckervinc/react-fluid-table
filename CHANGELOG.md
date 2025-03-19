@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 1.2.4
+
+_2025-03-19_
+
+### Features
+
+- bumps dependencies
+- adds more class names, and makes the auto sizer fill to height 100%
+
 ## 1.2.2
 
 _2024-12-19_

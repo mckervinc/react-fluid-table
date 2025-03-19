@@ -117,7 +117,7 @@ function Header<T>({
       className={cx("rft-sticky-header", isScrollHorizontal && "scroll")}
       data-header-key={`${uuid}-header`}
     >
-      <div className={cx(isScrollHorizontal && "rft-row-wrapper")}>
+      <div className={cx("rft-header-wrapper", isScrollHorizontal && "rft-row-wrapper")}>
         <div className={cx("rft-header", className)} style={style}>
           {columns.map((c, i) => (
             <HeaderCell
