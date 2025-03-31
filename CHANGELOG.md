@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 1.2.5
+
+_2025-03-31_
+
+### Bugix
+
+- on window resize, added padding to help with scroll flicker
+
 ## 1.2.4
 
 _2025-03-19_
