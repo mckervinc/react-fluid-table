@@ -4,6 +4,9 @@
 # dependencies
 node_modules
 
+# publish
+.npmrc
+
 # builds
 build
 dist
