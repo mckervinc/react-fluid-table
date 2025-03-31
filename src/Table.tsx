@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useMemo, useState } from "react";
+import React, { forwardRef, useMemo, useState } from "react";
 import { TableProps, TableRef } from "../index";
 import AutoSizer from "./AutoSizer";
 import List from "./components/List";
@@ -33,27 +33,18 @@ function BaseTable<T>(
   // warn if a minHeight is set without a maxHeight
   const maxHeight = useMemo(() => {
     if (positive(minTableHeight) && (!maxTableHeight || maxTableHeight <= 0)) {
+      if (!warned) {
+        warned = true;
+        console.warn(
+          `maxTableHeight was either not present, or is <= 0, but you provided a minTableHeight of ${minTableHeight}px. As a result, the maxTableHeight will be set to ${
+            minTableHeight + 400
+          }px. To avoid this warning, please specify a maxTableHeight.`
+        );
+      }
       return minTableHeight + 400;
     }
 
     return maxTableHeight;
-  }, [minTableHeight, maxTableHeight]);
-
-  // handle warning
-  useEffect(() => {
-    if (
-      minTableHeight &&
-      minTableHeight > 0 &&
-      (!maxTableHeight || maxTableHeight <= 0) &&
-      !warned
-    ) {
-      warned = true;
-      console.warn(
-        `maxTableHeight was either not present, or is <= 0, but you provided a minTableHeight of ${minTableHeight}px. As a result, the maxTableHeight will be set to ${
-          minTableHeight + 400
-        }px. To avoid this warning, please specify a maxTableHeight.`
-      );
-    }
   }, [minTableHeight, maxTableHeight]);
 
   return (
