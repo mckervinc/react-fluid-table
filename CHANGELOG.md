@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## 1.2.7
+
+_2025-03-31_
+
+### Bugix
+
+- isHorizontalScroll is always false for now
+
+## 1.2.6
+
+_2025-03-31_
+
+### Bugix
+
+- move heuristic
+
 ## 1.2.5
 
 _2025-03-31_
