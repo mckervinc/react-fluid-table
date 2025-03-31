@@ -75,7 +75,7 @@ function BaseList<T>(
   });
 
   // constants
-  const isScrollHorizontal = (innerRef.current?.scrollWidth || 0) + 16 > innerWidth;
+  const isScrollHorizontal = (innerRef.current?.scrollWidth || 0) > innerWidth + 16;
   const items = virtualizer.getVirtualItems();
   const { fixedWidth, remainingCols } = widthConstants;
 
