@@ -1,19 +1,23 @@
 import React, { useMemo } from "react";
 import { useResizeDetector } from "react-resize-detector";
 import { DEFAULT_FOOTER_HEIGHT, DEFAULT_HEADER_HEIGHT, DEFAULT_ROW_HEIGHT } from "./constants";
-import { findFooterByUuid, findHeaderByUuid, positive } from "./util";
+import { findFooterByUuid, findHeaderByUuid } from "./util";
+
+type AutoSizerDimensions = {
+  rowHeight: number;
+  headerHeight: number;
+  footerHeight: number;
+  tableWidth: number;
+  tableHeight: number;
+  minTableHeight: number;
+  maxTableHeight: number;
+};
 
 type AutoSizerProps = {
   uuid: string;
   hasFooter: boolean;
   numRows: number;
-  rowHeight?: number;
-  headerHeight?: number;
-  footerHeight?: number;
-  tableWidth?: number;
-  tableHeight?: number;
-  minTableHeight?: number;
-  maxTableHeight?: number;
+  dimensions: AutoSizerDimensions;
   children: ({ height, width }: { height: number; width: number }) => React.ReactNode;
 };
 
@@ -121,53 +125,45 @@ const calculateHeight = (
  * to generate its own height. This uses ResizeObserver to observe the
  * container when it changes in order to provide the correct height
  */
-const AutoSizer = ({
-  uuid,
-  hasFooter,
-  numRows,
-  rowHeight,
-  tableWidth,
-  tableHeight,
-  minTableHeight,
-  maxTableHeight,
-  headerHeight,
-  footerHeight,
-  children
-}: AutoSizerProps) => {
+const AutoSizer = ({ uuid, hasFooter, numRows, dimensions, children }: AutoSizerProps) => {
   // hooks
   const {
     ref,
-    width: containerWidth,
-    height: containerHeight
+    width: containerWidth = 0,
+    height: containerHeight = 0
   } = useResizeDetector<HTMLDivElement>();
+
+  // instance
+  const {
+    rowHeight,
+    tableWidth,
+    tableHeight,
+    footerHeight,
+    headerHeight,
+    minTableHeight,
+    maxTableHeight
+  } = dimensions;
 
   // calculate the computed height
   const computedHeight = useMemo(() => {
-    if (positive(tableHeight)) {
+    if (tableHeight > 0) {
       return tableHeight;
     }
 
-    return calculateHeight(
-      rowHeight || 0,
-      headerHeight || 0,
-      footerHeight || 0,
-      uuid,
-      numRows,
-      hasFooter
-    );
+    return calculateHeight(rowHeight, headerHeight, footerHeight, uuid, numRows, hasFooter);
   }, [tableHeight, rowHeight, headerHeight, footerHeight, numRows, uuid, hasFooter]);
 
   // calculate the actual height of the table
   const height = findCorrectHeight({
     computedHeight,
-    containerHeight: containerHeight || 0,
-    tableHeight: tableHeight || 0,
-    minHeight: minTableHeight || 0,
-    maxHeight: maxTableHeight || 0
+    containerHeight,
+    tableHeight,
+    minHeight: minTableHeight,
+    maxHeight: maxTableHeight
   });
 
   // get actual width
-  const width = positive(tableWidth) ? tableWidth : containerWidth || 0;
+  const width = tableWidth > 0 ? tableWidth : containerWidth;
 
   return (
     <div className="rft-sizer" ref={ref}>

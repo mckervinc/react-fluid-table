@@ -104,13 +104,10 @@ const findColumnWidthConstants = <T>(columns: ColumnProps<T>[]) => {
   );
 };
 
-const positive = (x: number | null | undefined): x is number => x != null && x > 0;
-
 export {
   arraysMatch,
   calculateColumnWidths,
   cx,
-  positive,
   findColumnWidthConstants,
   findFooterByUuid,
   findHeaderByUuid,

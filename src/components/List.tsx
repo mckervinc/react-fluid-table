@@ -16,7 +16,15 @@ import Footer from "./Footer";
 import Header from "./Header";
 import Row from "./Row";
 
-type ListProps<T> = TableProps<T> & {
+type ListProps<T> = Omit<
+  TableProps<T>,
+  | "tableWidth"
+  | "tableHeight"
+  | "footerHeight"
+  | "headerHeight"
+  | "minTableHeight"
+  | "maxTableHeight"
+> & {
   uuid: string;
   height: number;
   width: number;
@@ -55,6 +63,7 @@ function BaseList<T>(
   ref: React.ForwardedRef<TableRef>
 ) {
   // hooks
+  const prevRowHeight = useRef(rowHeight);
   const parentRef = useRef<HTMLDivElement | null>(null);
   const { ref: innerRef, width: _innerWidth = 0 } = useResizeDetector<HTMLDivElement>();
   const [widthConstants, setWidthConstants] = useState(findColumnWidthConstants(columns));
@@ -112,6 +121,15 @@ function BaseList<T>(
       setPixelWidths(widths);
     }
   }, [width, remainingCols, fixedWidth, minColumnWidth, pixelWidths, columns]);
+
+  // remeasure if the rowHeight changes
+  useLayoutEffect(() => {
+    if (prevRowHeight.current !== rowHeight) {
+      virtualizer.measure();
+    }
+
+    prevRowHeight.current = rowHeight;
+  }, [rowHeight, virtualizer.measure]);
 
   // set the width constants
   useEffect(() => setWidthConstants(findColumnWidthConstants(columns)), [columns]);
