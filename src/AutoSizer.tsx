@@ -166,7 +166,7 @@ const AutoSizer = ({ uuid, hasFooter, numRows, dimensions, children }: AutoSizer
   const width = tableWidth > 0 ? tableWidth : containerWidth;
 
   return (
-    <div className="rft-sizer" ref={ref}>
+    <div ref={ref} className="rft-sizer">
       {height && width ? children({ height, width }) : null}
     </div>
   );

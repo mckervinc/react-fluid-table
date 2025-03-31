@@ -10,7 +10,7 @@ import React, {
 } from "react";
 import { useResizeDetector } from "react-resize-detector";
 import { ScrollAlignment, TableProps, TableRef } from "../..";
-import { DEFAULT_ROW_HEIGHT } from "../constants";
+import { DEFAULT_ROW_HEIGHT, DEFAULT_SCROLLBAR_WIDTH } from "../constants";
 import { arraysMatch, calculateColumnWidths, cx, findColumnWidthConstants } from "../util";
 import Footer from "./Footer";
 import Header from "./Header";
@@ -84,7 +84,8 @@ function BaseList<T>(
   });
 
   // constants
-  const isScrollHorizontal = false;
+  const isScrollHorizontal =
+    (innerRef.current?.scrollWidth || 0) > innerWidth + DEFAULT_SCROLLBAR_WIDTH;
   const items = virtualizer.getVirtualItems();
   const { fixedWidth, remainingCols } = widthConstants;
 
