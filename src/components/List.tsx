@@ -56,7 +56,7 @@ function BaseList<T>(
 ) {
   // hooks
   const parentRef = useRef<HTMLDivElement | null>(null);
-  const { ref: innerRef, width: innerWidth = 0 } = useResizeDetector<HTMLDivElement>();
+  const { ref: innerRef, width: _innerWidth = 0 } = useResizeDetector<HTMLDivElement>();
   const [widthConstants, setWidthConstants] = useState(findColumnWidthConstants(columns));
   const [pixelWidths, setPixelWidths] = useState<number[]>(() => {
     const { fixedWidth, remainingCols } = widthConstants;
@@ -75,7 +75,7 @@ function BaseList<T>(
   });
 
   // constants
-  const isScrollHorizontal = (innerRef.current?.scrollWidth || 0) > innerWidth + 16;
+  const isScrollHorizontal = false;
   const items = virtualizer.getVirtualItems();
   const { fixedWidth, remainingCols } = widthConstants;
 
