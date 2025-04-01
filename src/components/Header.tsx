@@ -103,6 +103,7 @@ function Header<T>({
       setSortedCol(column.key);
       setSortedDir(newDir);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [sortedCol, sortedDir]
   );
 

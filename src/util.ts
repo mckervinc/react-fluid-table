@@ -23,7 +23,7 @@ const arraysMatch = <T>(arr1: T[] | null | undefined, arr2: T[] | null | undefin
       return false;
     }
 
-    for (var i = 0; i < arr1.length; i++) {
+    for (let i = 0; i < arr1.length; i++) {
       if (arr1[i] !== arr2[i]) {
         return false;
       }

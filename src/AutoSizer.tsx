@@ -93,7 +93,7 @@ const calculateHeight = (
 
   // calculate border offset
   const table = header?.parentElement?.parentElement;
-  const borderOffset = !!table ? table.offsetHeight - table.clientHeight : 0;
+  const borderOffset = table ? table.offsetHeight - table.clientHeight : 0;
 
   // if there are rows, let's do the calculation
   if (nodes.length) {

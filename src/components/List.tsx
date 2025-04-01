@@ -106,6 +106,7 @@ function BaseList<T>(
         setExpandedCache(prev => ({ ...prev, [rowKey]: toggleExpanded }));
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [expandedCache]
   );
 
