@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useResizeDetector } from "react-resize-detector";
 import { ESTIMATED_NUM_ROWS, FOOTER_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT } from "./constants";
-import { findFooterByUuid, findHeaderByUuid } from "./util";
+import { findFooterByUuid, findHeaderByUuid, getElemHeight } from "./util";
 
 type EstimatedArgs = {
   estimatedRow: number;
@@ -20,14 +20,12 @@ const estimateTableHeight = (
 
   // find the header height
   const header = findHeaderByUuid(uuid);
-  const headerHeight =
-    estimatedHeader > 0 ? estimatedHeader : header?.offsetHeight || HEADER_HEIGHT;
+  const headerHeight = getElemHeight(header, estimatedHeader, HEADER_HEIGHT);
 
   // find footer height
   let footerHeight = 0;
   if (hasFooter) {
-    footerHeight =
-      estimatedFooter > 0 ? estimatedFooter : findFooterByUuid(uuid)?.offsetHeight || FOOTER_HEIGHT;
+    footerHeight = getElemHeight(findFooterByUuid(uuid), estimatedFooter, FOOTER_HEIGHT);
   }
 
   // calculate border height

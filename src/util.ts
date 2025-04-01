@@ -51,6 +51,10 @@ const findHeaderByUuid = (uuid: string) => findElementByValue(`[data-header-key=
 
 const findFooterByUuid = (uuid: string) => findElementByValue(`[data-footer-key='${uuid}-footer']`);
 
+const getElemHeight = (e: HTMLElement | null, constHeight: number, defaultValue: number) => {
+  return constHeight > 0 ? constHeight : (e?.offsetHeight ?? defaultValue);
+};
+
 // table utilities
 const calculateColumnWidths = <T>(
   clientWidth: number,
@@ -111,5 +115,6 @@ export {
   findColumnWidthConstants,
   findFooterByUuid,
   findHeaderByUuid,
+  getElemHeight,
   randomString
 };

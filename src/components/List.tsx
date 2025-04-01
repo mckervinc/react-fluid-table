@@ -12,14 +12,16 @@ import React, {
 import { useResizeDetector } from "react-resize-detector";
 import { ScrollAlignment, TableProps, TableRef } from "../..";
 import { FOOTER_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT, SCROLLBAR_WIDTH } from "../constants";
-import { arraysMatch, calculateColumnWidths, cx, findColumnWidthConstants } from "../util";
+import {
+  arraysMatch,
+  calculateColumnWidths,
+  cx,
+  findColumnWidthConstants,
+  getElemHeight
+} from "../util";
 import Footer from "./Footer";
 import Header from "./Header";
 import Row from "./Row";
-
-const getElemHeight = (e: HTMLElement | null, constHeight: number, defaultValue: number) => {
-  return constHeight > 0 ? constHeight : (e?.offsetHeight ?? defaultValue);
-};
 
 type ListProps<T> = Omit<
   TableProps<T>,
@@ -132,9 +134,14 @@ function BaseList<T>(
     }
 
     if (maxTableHeight > 0) {
+      // calculate border height
+      const table = parentRef.current?.parentElement;
+      const borderHeight = table ? table.offsetHeight - table.clientHeight : 0;
+
+      // compute
       const headerHeight = getElemHeight(headerRef.current, heightOfHeader, HEADER_HEIGHT);
       const footerHeight = getElemHeight(footerRef.current, heightOfFooter, FOOTER_HEIGHT);
-      return Math.min(headerHeight + bodyHeight! + footerHeight, maxTableHeight);
+      return Math.min(headerHeight + bodyHeight! + footerHeight + borderHeight, maxTableHeight);
     }
 
     return estimatedHeight;
