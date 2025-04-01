@@ -42,7 +42,9 @@ jobs:
           yarn install
           yarn --cwd example install
       - name: Build
-        run: yarn --cwd example build
+        run: |
+          yarn build
+          yarn --cwd example build
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
