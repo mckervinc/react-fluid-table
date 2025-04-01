@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { forwardRef, memo } from "react";
 import { ColumnProps, FooterProps } from "../..";
 import { cx } from "../util";
 
@@ -41,17 +41,20 @@ type InnerFooterProps<T> = {
   component?: (props: FooterProps<T>) => React.ReactNode;
 };
 
-function Footer<T>({
-  uuid,
-  rows,
-  columns,
-  pixelWidths,
-  sticky,
-  className,
-  isScrollHorizontal,
-  style: footerStyle = {},
-  component: Component
-}: InnerFooterProps<T>) {
+function BaseFooter<T>(
+  {
+    uuid,
+    rows,
+    columns,
+    pixelWidths,
+    sticky,
+    className,
+    isScrollHorizontal,
+    style: footerStyle = {},
+    component: Component
+  }: InnerFooterProps<T>,
+  ref: React.ForwardedRef<HTMLDivElement>
+) {
   // constants
   const hasFooter = !!Component || columns.some(c => !!c.footer);
   const style: React.CSSProperties = {
@@ -68,6 +71,7 @@ function Footer<T>({
     const hasFooter = columns.some(c => !!c.footer);
     return (
       <div
+        ref={ref}
         style={{ border: !hasFooter ? "none" : undefined, ...style }}
         data-footer-key={`${uuid}-footer`}
         className={cx("rft-footer", sticky && "sticky", isScrollHorizontal && "scroll", className)}
@@ -89,6 +93,7 @@ function Footer<T>({
 
   return (
     <div
+      ref={ref}
       style={style}
       data-footer-key={`${uuid}-footer`}
       className={cx("rft-footer", sticky && "sticky", isScrollHorizontal && "scroll", className)}
@@ -97,5 +102,10 @@ function Footer<T>({
     </div>
   );
 }
+
+const Footer = forwardRef(BaseFooter) as <T>(
+  props: InnerFooterProps<T> & { ref?: React.ForwardedRef<HTMLDivElement> }
+) => React.JSX.Element;
+(Footer as React.FC).displayName = "Footer";
 
 export default Footer;
