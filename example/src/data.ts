@@ -14,7 +14,7 @@ import {
 } from "@ngneat/falso";
 import _ from "lodash";
 
-export interface TestData {
+type TestData = {
   id: number;
   firstName: string;
   lastName: string;
@@ -28,14 +28,14 @@ export interface TestData {
   city: string;
   state: string;
   zipCode: string;
-}
+};
 
-export const testData: TestData[] = _.range(3000).map(i => ({
+const testData: TestData[] = _.range(3000).map(i => ({
   id: i + 1,
   firstName: randFirstName(),
   lastName: randLastName(),
   email: randEmail(),
-  avatar: randImg({ width: 134, height: 134 }),
+  avatar: randImg({ width: 134, height: 134 }).replace("random=", "?random="),
   country: randCountryCode().toLowerCase(),
   words: randCatchPhrase(),
   sentence: randSentence(),
@@ -45,3 +45,5 @@ export const testData: TestData[] = _.range(3000).map(i => ({
   state: randStateAbbr(),
   zipCode: randZipCode()
 }));
+
+export { testData, type TestData };
