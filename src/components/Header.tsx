@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { forwardRef, memo, useCallback, useEffect, useState } from "react";
 import { ColumnProps, SortDirection } from "../..";
 import { cx } from "../util";
 
@@ -70,17 +70,20 @@ type HeaderProps<T> = {
   onSort?: (col: string, dir: SortDirection | null) => void;
 };
 
-function Header<T>({
-  uuid,
-  columns,
-  isScrollHorizontal,
-  pixelWidths,
-  className,
-  style,
-  sortColumn,
-  sortDirection,
-  onSort
-}: HeaderProps<T>) {
+function BaseHeader<T>(
+  {
+    uuid,
+    columns,
+    isScrollHorizontal,
+    pixelWidths,
+    className,
+    style,
+    sortColumn,
+    sortDirection,
+    onSort
+  }: HeaderProps<T>,
+  ref: React.ForwardedRef<HTMLDivElement>
+) {
   // hooks
   const [sortedCol, setSortedCol] = useState(sortColumn);
   const [sortedDir, setSortedDir] = useState(sortDirection);
@@ -103,6 +106,7 @@ function Header<T>({
       setSortedCol(column.key);
       setSortedDir(newDir);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [sortedCol, sortedDir]
   );
 
@@ -114,6 +118,7 @@ function Header<T>({
 
   return (
     <div
+      ref={ref}
       className={cx("rft-sticky-header", isScrollHorizontal && "scroll")}
       data-header-key={`${uuid}-header`}
     >
@@ -135,5 +140,10 @@ function Header<T>({
     </div>
   );
 }
+
+const Header = forwardRef(BaseHeader) as <T>(
+  props: HeaderProps<T> & { ref?: React.ForwardedRef<HTMLDivElement> }
+) => React.JSX.Element;
+(Header as React.FC).displayName = "Header";
 
 export default Header;

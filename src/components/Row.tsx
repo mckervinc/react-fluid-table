@@ -2,7 +2,7 @@ import React, { forwardRef, JSX, memo, useCallback } from "react";
 import { ColumnProps, RowRenderProps, SubComponentProps } from "../..";
 import Minus from "../svg/minus-circle.svg";
 import Plus from "../svg/plus-circle.svg";
-import { cx, positive } from "../util";
+import { cx } from "../util";
 
 type TableCellProps<T> = {
   row: T;
@@ -175,7 +175,7 @@ function BaseRow<T>(
     row,
     rowKey,
     columns,
-    rowHeight,
+    rowHeight = 0,
     pixelWidths,
     isExpanded,
     onExpand,
@@ -198,7 +198,7 @@ function BaseRow<T>(
         row={row}
         index={index}
         className={cx("rft-row", className)}
-        style={{ height: positive(rowHeight) ? rowHeight : undefined, ...style }}
+        style={{ height: rowHeight > 0 ? rowHeight : undefined, ...style }}
         onRowClick={onRowClick}
         rowRenderer={rowRenderer}
       >

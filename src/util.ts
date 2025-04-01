@@ -23,7 +23,7 @@ const arraysMatch = <T>(arr1: T[] | null | undefined, arr2: T[] | null | undefin
       return false;
     }
 
-    for (var i = 0; i < arr1.length; i++) {
+    for (let i = 0; i < arr1.length; i++) {
       if (arr1[i] !== arr2[i]) {
         return false;
       }
@@ -50,6 +50,10 @@ const findElementByValue = (value: string) => document.querySelector<HTMLElement
 const findHeaderByUuid = (uuid: string) => findElementByValue(`[data-header-key='${uuid}-header']`);
 
 const findFooterByUuid = (uuid: string) => findElementByValue(`[data-footer-key='${uuid}-footer']`);
+
+const getElemHeight = (e: HTMLElement | null, constHeight: number, defaultValue: number) => {
+  return constHeight > 0 ? constHeight : (e?.offsetHeight ?? defaultValue);
+};
 
 // table utilities
 const calculateColumnWidths = <T>(
@@ -104,15 +108,13 @@ const findColumnWidthConstants = <T>(columns: ColumnProps<T>[]) => {
   );
 };
 
-const positive = (x: number | null | undefined): x is number => x != null && x > 0;
-
 export {
   arraysMatch,
   calculateColumnWidths,
   cx,
-  positive,
   findColumnWidthConstants,
   findFooterByUuid,
   findHeaderByUuid,
+  getElemHeight,
   randomString
 };

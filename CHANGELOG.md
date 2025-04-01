@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 1.3.0
+
+_2025-04-01_
+
+### Features
+
+- added `estimatedRowHeight` back
+
+### Bugix
+
+- isHorizontalScroll uses a scroll bar heuristic of 17
+- should handle maxTableHeight a bit better. There _should_ be less jitter
+
 ## 1.2.7
 
 _2025-03-31_
