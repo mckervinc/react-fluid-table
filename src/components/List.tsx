@@ -11,11 +11,15 @@ import React, {
 } from "react";
 import { useResizeDetector } from "react-resize-detector";
 import { ScrollAlignment, TableProps, TableRef } from "../..";
-import { DEFAULT_ROW_HEIGHT, DEFAULT_SCROLLBAR_WIDTH } from "../constants";
+import { FOOTER_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT, SCROLLBAR_WIDTH } from "../constants";
 import { arraysMatch, calculateColumnWidths, cx, findColumnWidthConstants } from "../util";
 import Footer from "./Footer";
 import Header from "./Header";
 import Row from "./Row";
+
+const getElemHeight = (e: HTMLElement | null, constHeight: number, defaultValue: number) => {
+  return constHeight > 0 ? constHeight : (e?.offsetHeight ?? defaultValue);
+};
 
 type ListProps<T> = Omit<
   TableProps<T>,
@@ -31,6 +35,8 @@ type ListProps<T> = Omit<
   width: number;
   tableHeight: number;
   maxTableHeight: number;
+  headerHeight: number;
+  footerHeight: number;
 };
 
 function BaseList<T>(
@@ -64,7 +70,9 @@ function BaseList<T>(
     estimatedRowHeight,
     style = {},
     minColumnWidth = 80,
-    height: estimatedHeight
+    height: estimatedHeight,
+    headerHeight: heightOfHeader,
+    footerHeight: heightOfFooter
   }: ListProps<T>,
   ref: React.ForwardedRef<TableRef>
 ) {
@@ -87,13 +95,12 @@ function BaseList<T>(
   const virtualizer = useVirtualizer({
     count: data.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => rowHeight ?? DEFAULT_ROW_HEIGHT,
+    estimateSize: () => rowHeight ?? estimatedRowHeight ?? ROW_HEIGHT,
     getItemKey: index => generateKeyFromRow(data[index], index)
   });
 
   // constants
-  const isScrollHorizontal =
-    (innerRef.current?.scrollWidth || 0) > innerWidth + DEFAULT_SCROLLBAR_WIDTH;
+  const isScrollHorizontal = (innerRef.current?.scrollWidth || 0) > innerWidth + SCROLLBAR_WIDTH;
   const items = virtualizer.getVirtualItems();
   const { measure: recalculate, measurementsCache } = virtualizer;
   const { fixedWidth, remainingCols } = widthConstants;
@@ -125,13 +132,13 @@ function BaseList<T>(
     }
 
     if (maxTableHeight > 0) {
-      const headerHeight = headerRef.current?.offsetHeight ?? 0;
-      const footerHeight = footerRef.current?.offsetHeight ?? 0;
+      const headerHeight = getElemHeight(headerRef.current, heightOfHeader, HEADER_HEIGHT);
+      const footerHeight = getElemHeight(footerRef.current, heightOfFooter, FOOTER_HEIGHT);
       return Math.min(headerHeight + bodyHeight! + footerHeight, maxTableHeight);
     }
 
     return estimatedHeight;
-  }, [bodyHeight, estimatedHeight, maxTableHeight, tableHeight]);
+  }, [bodyHeight, estimatedHeight, heightOfFooter, heightOfHeader, maxTableHeight, tableHeight]);
 
   // functions
   const isRowExpanded = typeof expandedRows === "function" ? expandedRows : undefined;

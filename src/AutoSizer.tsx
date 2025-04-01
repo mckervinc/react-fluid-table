@@ -1,11 +1,6 @@
 import React, { useMemo } from "react";
 import { useResizeDetector } from "react-resize-detector";
-import {
-  DEFAULT_FOOTER_HEIGHT,
-  DEFAULT_HEADER_HEIGHT,
-  DEFAULT_ROW_HEIGHT,
-  ESTIMATED_NUM_ROWS
-} from "./constants";
+import { ESTIMATED_NUM_ROWS, FOOTER_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT } from "./constants";
 import { findFooterByUuid, findHeaderByUuid } from "./util";
 
 type EstimatedArgs = {
@@ -26,15 +21,13 @@ const estimateTableHeight = (
   // find the header height
   const header = findHeaderByUuid(uuid);
   const headerHeight =
-    estimatedHeader > 0 ? estimatedHeader : header?.offsetHeight || DEFAULT_HEADER_HEIGHT;
+    estimatedHeader > 0 ? estimatedHeader : header?.offsetHeight || HEADER_HEIGHT;
 
   // find footer height
   let footerHeight = 0;
   if (hasFooter) {
     footerHeight =
-      estimatedFooter > 0
-        ? estimatedFooter
-        : findFooterByUuid(uuid)?.offsetHeight || DEFAULT_FOOTER_HEIGHT;
+      estimatedFooter > 0 ? estimatedFooter : findFooterByUuid(uuid)?.offsetHeight || FOOTER_HEIGHT;
   }
 
   // calculate border height
@@ -42,7 +35,7 @@ const estimateTableHeight = (
   const borderHeight = table ? table.offsetHeight - table.clientHeight : 0;
 
   // for the rows, calculate the height of all the rows
-  const rowHeight = estimatedRow || DEFAULT_ROW_HEIGHT;
+  const rowHeight = estimatedRow || ROW_HEIGHT;
   const numRows =
     maxHeight > 0 ? size : Math.min(size || ESTIMATED_NUM_ROWS, ESTIMATED_NUM_ROWS) + 1;
   const bodyHeight = numRows * rowHeight;
@@ -104,8 +97,8 @@ const AutoSizer = ({ uuid, hasFooter, numRows, dimensions, children }: AutoSizer
 
     const computedHeight = estimateTableHeight(uuid, numRows, hasFooter, {
       estimatedRow: rowHeight || estimatedRowHeight,
-      estimatedHeader: headerHeight || DEFAULT_HEADER_HEIGHT,
-      estimatedFooter: footerHeight || DEFAULT_FOOTER_HEIGHT,
+      estimatedHeader: headerHeight || HEADER_HEIGHT,
+      estimatedFooter: footerHeight || FOOTER_HEIGHT,
       maxHeight: maxTableHeight
     });
 

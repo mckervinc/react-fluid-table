@@ -68,20 +68,22 @@ function BaseTable<T>(
           <List
             ref={ref}
             uuid={uuid}
+            data={data}
             width={width}
             height={height}
-            data={data}
-            tableHeight={tableHeight}
-            maxTableHeight={maxHeight}
-            rowHeight={rowHeight}
+            columns={columns}
             itemKey={itemKey}
+            rowHeight={rowHeight}
             onRowClick={onRowClick}
             rowRenderer={rowRenderer}
             onExpandRow={onExpandRow}
+            tableHeight={tableHeight}
+            maxTableHeight={maxHeight}
+            headerHeight={headerHeight}
+            footerHeight={footerHeight}
             subComponent={subComponent}
             footerComponent={footerComponent}
             estimatedRowHeight={estimatedRowHeight}
-            columns={columns}
             {...props}
           />
         );
