@@ -87,6 +87,7 @@ function BaseList<T>(
   const isScrollHorizontal =
     (innerRef.current?.scrollWidth || 0) > innerWidth + DEFAULT_SCROLLBAR_WIDTH;
   const items = virtualizer.getVirtualItems();
+  const { measure: recalculate } = virtualizer;
   const { fixedWidth, remainingCols } = widthConstants;
 
   // functions
@@ -126,11 +127,11 @@ function BaseList<T>(
   // remeasure if the rowHeight changes
   useLayoutEffect(() => {
     if (prevRowHeight.current !== rowHeight) {
-      virtualizer.measure();
+      recalculate();
     }
 
     prevRowHeight.current = rowHeight;
-  }, [rowHeight, virtualizer.measure]);
+  }, [rowHeight, recalculate]);
 
   // set the width constants
   useEffect(() => setWidthConstants(findColumnWidthConstants(columns)), [columns]);
