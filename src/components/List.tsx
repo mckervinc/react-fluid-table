@@ -5,13 +5,21 @@ import React, {
   useEffect,
   useImperativeHandle,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState
 } from "react";
 import { useResizeDetector } from "react-resize-detector";
 import { ScrollAlignment, TableProps, TableRef } from "../..";
-import { DEFAULT_ROW_HEIGHT, DEFAULT_SCROLLBAR_WIDTH } from "../constants";
-import { arraysMatch, calculateColumnWidths, cx, findColumnWidthConstants } from "../util";
+import { DEFAULT_ROW_HEIGHT, DEFAULT_SCROLLBAR_WIDTH, ESTIMATED_NUM_ROWS } from "../constants";
+import {
+  arraysMatch,
+  calculateColumnWidths,
+  cx,
+  findColumnWidthConstants,
+  findFooterByUuid,
+  findHeaderByUuid
+} from "../util";
 import Footer from "./Footer";
 import Header from "./Header";
 import Row from "./Row";
@@ -28,13 +36,14 @@ type ListProps<T> = Omit<
   uuid: string;
   height: number;
   width: number;
+  tableHeight: number;
+  maxTableHeight: number;
 };
 
 function BaseList<T>(
   {
     id,
     uuid,
-    height,
     width,
     data,
     columns,
@@ -57,13 +66,17 @@ function BaseList<T>(
     footerComponent,
     stickyFooter,
     rowRenderer,
+    tableHeight,
+    maxTableHeight,
+    estimatedRowHeight,
     style = {},
-    minColumnWidth = 80
+    minColumnWidth = 80,
+    height: estimatedHeight
   }: ListProps<T>,
   ref: React.ForwardedRef<TableRef>
 ) {
   // hooks
-  const prevRowHeight = useRef(rowHeight);
+  const prevRowHeight = useRef(rowHeight ?? estimatedRowHeight);
   const parentRef = useRef<HTMLDivElement | null>(null);
   const { ref: innerRef, width: _innerWidth = 0 } = useResizeDetector<HTMLDivElement>();
   const [widthConstants, setWidthConstants] = useState(findColumnWidthConstants(columns));
@@ -87,8 +100,47 @@ function BaseList<T>(
   const isScrollHorizontal =
     (innerRef.current?.scrollWidth || 0) > innerWidth + DEFAULT_SCROLLBAR_WIDTH;
   const items = virtualizer.getVirtualItems();
-  const { measure: recalculate } = virtualizer;
+  const { measure: recalculate, measurementsCache } = virtualizer;
   const { fixedWidth, remainingCols } = widthConstants;
+
+  // calculate body height
+  const bodyHeight = useMemo(() => {
+    // do not calculate if tableHeight is specified
+    if (tableHeight > 0) {
+      return tableHeight;
+    }
+
+    const { length } = measurementsCache;
+    const numRows =
+      maxTableHeight > 0 ? length : Math.min(length || ESTIMATED_NUM_ROWS, ESTIMATED_NUM_ROWS);
+
+    let result = 0;
+    for (let i = 0; i < numRows; i++) {
+      result += measurementsCache[i].size;
+      if (maxTableHeight > 0 && result >= maxTableHeight) {
+        result = maxTableHeight;
+        break;
+      }
+    }
+
+    return result;
+  }, [maxTableHeight, measurementsCache, tableHeight]);
+
+  // calculate the height
+  const height = useMemo(() => {
+    if (tableHeight > 0) {
+      return tableHeight;
+    }
+
+    if (maxTableHeight > 0) {
+      const headerHeight = findHeaderByUuid(uuid)?.offsetHeight ?? 0;
+      const footerHeight = findFooterByUuid(uuid)?.offsetHeight ?? 0;
+      const calculated = headerHeight + bodyHeight + footerHeight;
+      return Math.min(calculated, maxTableHeight);
+    }
+
+    return estimatedHeight;
+  }, [estimatedHeight, bodyHeight, tableHeight, uuid, maxTableHeight]);
 
   // functions
   const isRowExpanded = typeof expandedRows === "function" ? expandedRows : undefined;
@@ -127,12 +179,13 @@ function BaseList<T>(
 
   // remeasure if the rowHeight changes
   useLayoutEffect(() => {
-    if (prevRowHeight.current !== rowHeight) {
+    const toCheck = rowHeight ?? estimatedRowHeight;
+    if (prevRowHeight.current !== toCheck) {
       recalculate();
     }
 
-    prevRowHeight.current = rowHeight;
-  }, [rowHeight, recalculate]);
+    prevRowHeight.current = toCheck;
+  }, [estimatedRowHeight, rowHeight, recalculate]);
 
   // set the width constants
   useEffect(() => setWidthConstants(findColumnWidthConstants(columns)), [columns]);

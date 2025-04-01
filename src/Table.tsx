@@ -16,6 +16,7 @@ function BaseTable<T>(
     headerHeight = 0,
     minTableHeight = 0,
     maxTableHeight = 0,
+    estimatedRowHeight,
     rowRenderer,
     subComponent,
     footerComponent,
@@ -51,6 +52,7 @@ function BaseTable<T>(
     footerHeight,
     headerHeight,
     minTableHeight,
+    estimatedRowHeight: estimatedRowHeight || 0,
     maxTableHeight: maxHeight
   };
 
@@ -69,6 +71,8 @@ function BaseTable<T>(
             width={width}
             height={height}
             data={data}
+            tableHeight={tableHeight}
+            maxTableHeight={maxHeight}
             rowHeight={rowHeight}
             itemKey={itemKey}
             onRowClick={onRowClick}
@@ -76,6 +80,7 @@ function BaseTable<T>(
             onExpandRow={onExpandRow}
             subComponent={subComponent}
             footerComponent={footerComponent}
+            estimatedRowHeight={estimatedRowHeight}
             columns={columns}
             {...props}
           />

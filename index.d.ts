@@ -268,6 +268,12 @@ export type TableProps<T> = {
    */
   rowHeight?: number;
   /**
+   * The estimated height of each row in pixels. This can be used to help mitigate any
+   * "jank" in initial renders, as well as help calculate the table height when
+   * `tableHeight` is not specified.
+   */
+  estimatedRowHeight?: number;
+  /**
    * specify a fixed header height
    */
   headerHeight?: number;
