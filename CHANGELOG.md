@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 1.4.1
+
+_2025-04-18_
+
+### Bugfix
+
+- set `box-sizing: content-box` on `.rft`. Should fix vertical scroll bars appearing when borders are present and maxTableHeight is specified.
+
 ## 1.4.0
 
 _2025-04-18_
