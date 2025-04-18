@@ -7,9 +7,9 @@ import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { cn } from "@/lib/utils";
 import { useSource, useTitle } from "@/hooks/useTitle";
 
-interface HeaderCellProps extends HeaderProps {
+type HeaderCellProps = HeaderProps & {
   name?: string;
-}
+};
 
 const HeaderCell = ({ name, sortDirection, style, onClick }: HeaderCellProps) => {
   const icon = !sortDirection ? null : (

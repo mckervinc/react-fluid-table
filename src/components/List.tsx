@@ -9,9 +9,8 @@ import React, {
   useRef,
   useState
 } from "react";
-import { useResizeDetector } from "react-resize-detector";
 import { ScrollAlignment, TableProps, TableRef } from "../..";
-import { FOOTER_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT, SCROLLBAR_WIDTH } from "../constants";
+import { FOOTER_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT } from "../constants";
 import {
   arraysMatch,
   calculateColumnWidths,
@@ -66,7 +65,6 @@ function BaseList<T>(
     footerClassname,
     footerComponent,
     stickyFooter,
-    rowRenderer,
     tableHeight,
     maxTableHeight,
     estimatedRowHeight,
@@ -83,7 +81,6 @@ function BaseList<T>(
   const headerRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
   const prevRowHeight = useRef(rowHeight ?? estimatedRowHeight);
-  const { ref: innerRef, width: _innerWidth = 0 } = useResizeDetector<HTMLDivElement>();
   const [widthConstants, setWidthConstants] = useState(findColumnWidthConstants(columns));
   const [pixelWidths, setPixelWidths] = useState<number[]>(() => {
     const { fixedWidth, remainingCols } = widthConstants;
@@ -102,7 +99,6 @@ function BaseList<T>(
   });
 
   // constants
-  const isScrollHorizontal = (innerRef.current?.scrollWidth || 0) > innerWidth + SCROLLBAR_WIDTH;
   const items = virtualizer.getVirtualItems();
   const { measure: recalculate, measurementsCache } = virtualizer;
   const { fixedWidth, remainingCols } = widthConstants;
@@ -220,7 +216,6 @@ function BaseList<T>(
       <Header
         uuid={uuid}
         ref={headerRef}
-        isScrollHorizontal={isScrollHorizontal}
         pixelWidths={pixelWidths}
         columns={columns}
         className={headerClassname}
@@ -229,46 +224,34 @@ function BaseList<T>(
         sortColumn={sortColumn}
         sortDirection={sortDirection}
       />
-      <div className="rft-outer-container" style={{ height: virtualizer.getTotalSize() }}>
-        <div
-          ref={innerRef}
-          className="rft-inner-container"
-          style={{
-            transform: `translateY(${items[0]?.start ?? 0}px)`
-          }}
-        >
-          <div className={cx(isScrollHorizontal && "rft-row-wrapper")}>
-            {items.map(({ index }) => {
-              const row = data[index];
-              const fargs = { row, index };
-              const key = generateKeyFromRow(row, index);
-              const isExpanded = isRowExpanded?.(fargs) ?? !!expandedCache[key];
-              const className =
-                typeof rowClassname === "function" ? rowClassname(fargs) : rowClassname;
-              const style = typeof rowStyle === "function" ? rowStyle(fargs) : rowStyle;
-              return (
-                <Row
-                  ref={virtualizer.measureElement}
-                  rowHeight={rowHeight}
-                  key={key}
-                  row={row}
-                  uuid={uuid}
-                  rowKey={key}
-                  style={style}
-                  className={className}
-                  isExpanded={isExpanded}
-                  onRowClick={onRowClick}
-                  rowRenderer={rowRenderer}
-                  onExpand={onExpand}
-                  index={index}
-                  columns={columns}
-                  pixelWidths={pixelWidths}
-                  subComponent={subComponent}
-                />
-              );
-            })}
-          </div>
-        </div>
+      <div className="rft-body" style={{ height: virtualizer.getTotalSize() }}>
+        {items.map(({ index, start }) => {
+          const row = data[index];
+          const fargs = { row, index };
+          const key = generateKeyFromRow(row, index);
+          const isExpanded = isRowExpanded?.(fargs) ?? !!expandedCache[key];
+          const className = typeof rowClassname === "function" ? rowClassname(fargs) : rowClassname;
+          const style = typeof rowStyle === "function" ? rowStyle(fargs) : rowStyle;
+          return (
+            <Row
+              ref={virtualizer.measureElement}
+              key={key}
+              row={row}
+              uuid={uuid}
+              rowKey={key}
+              style={style}
+              offset={start}
+              className={className}
+              isExpanded={isExpanded}
+              onRowClick={onRowClick}
+              onExpand={onExpand}
+              index={index}
+              columns={columns}
+              pixelWidths={pixelWidths}
+              subComponent={subComponent}
+            />
+          );
+        })}
       </div>
       <Footer
         uuid={uuid}
@@ -279,7 +262,6 @@ function BaseList<T>(
         pixelWidths={pixelWidths}
         className={footerClassname}
         style={footerStyle}
-        isScrollHorizontal={isScrollHorizontal}
         component={footerComponent}
       />
     </div>

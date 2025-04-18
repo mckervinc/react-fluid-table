@@ -32,7 +32,6 @@ const FooterCell = memo(BaseFooterCell) as <T>(props: InnerFooterCellProps<T>) =
 type InnerFooterProps<T> = {
   uuid: string;
   rows: T[];
-  isScrollHorizontal: boolean;
   columns: ColumnProps<T>[];
   pixelWidths: number[];
   className?: string;
@@ -49,7 +48,6 @@ function BaseFooter<T>(
     pixelWidths,
     sticky,
     className,
-    isScrollHorizontal,
     style: footerStyle = {},
     component: Component
   }: InnerFooterProps<T>,
@@ -74,7 +72,7 @@ function BaseFooter<T>(
         ref={ref}
         style={{ border: !hasFooter ? "none" : undefined, ...style }}
         data-footer-key={`${uuid}-footer`}
-        className={cx("rft-footer", sticky && "sticky", isScrollHorizontal && "scroll", className)}
+        className={cx("rft-footer", sticky && "sticky", className)}
       >
         <div className="rft-row">
           {columns.map((c, i) => (
@@ -96,7 +94,7 @@ function BaseFooter<T>(
       ref={ref}
       style={style}
       data-footer-key={`${uuid}-footer`}
-      className={cx("rft-footer", sticky && "sticky", isScrollHorizontal && "scroll", className)}
+      className={cx("rft-footer", sticky && "sticky", className)}
     >
       <Component rows={rows} widths={pixelWidths} />
     </div>

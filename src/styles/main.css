@@ -1,53 +1,40 @@
 .rft {
+  display: grid;
   overflow-y: auto;
   contain: strict;
+  grid-template-rows: auto 1fr auto;
 }
 
-.rft-outer-container {
-  position: relative;
-  width: 100%;
-}
-
-.rft-inner-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-}
-
-.rft-sticky-header {
+.rft-header {
+  display: grid;
   position: sticky;
   top: 0;
   left: 0;
   z-index: 1;
 }
 
-.rft-sticky-header.scroll,
-.rft-footer.scroll {
-  width: fit-content;
-}
-
-.rft-header {
+.rft-header-row {
   display: flex;
 }
 
-.rft-row-wrapper {
-  display: inline-block;
-}
-
-.rft-row-container {
+.rft-body {
+  display: grid;
+  position: relative;
   width: 100%;
 }
 
 .rft-row {
   display: flex;
+  flex-wrap: wrap;
+  position: absolute;
+  width: 100%;
 }
 
 .rft-cell,
 .rft-header-cell {
   box-sizing: border-box;
   display: flex;
-  padding: 8px;
+  padding: 0.5rem;
 }
 
 .rft-cell.frozen,
@@ -68,7 +55,7 @@
 .rft-header-cell-arrow {
   width: 0;
   height: 0;
-  margin-left: 4px;
+  margin-left: 0.25rem;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
 }
@@ -81,17 +68,6 @@
   border-top: 10px solid #7d7d7d;
 }
 
-.rft-footer {
-  width: 100%;
-}
-
-.rft-footer.sticky {
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  z-index: 1;
-}
-
 .rft-cell {
   align-items: center;
   position: relative;
@@ -102,6 +78,21 @@
   cursor: pointer;
   height: 1em;
   width: 1em;
+}
+
+.rft-sub-component {
+  width: 100%;
+}
+
+.rft-footer {
+  width: 100%;
+}
+
+.rft-footer.sticky {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
 }
 
 .rft-hidden {
