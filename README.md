@@ -12,6 +12,9 @@ yarn add react-fluid-table
 
 # using npm
 npm i react-fluid-table
+
+# using pnpm
+pnpm i react-fluid-table
 ```
 
 ## Usage
@@ -62,11 +65,7 @@ $ yarn install
 **Usage**
 
 ```bash
-# in one terminal window/tab
 $ yarn start
-# in a separate terminal window/tab
-$ cd example
-$ yarn dev
 ```
 
 ## License
