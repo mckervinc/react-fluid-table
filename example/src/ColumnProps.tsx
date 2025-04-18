@@ -2,7 +2,7 @@ import React from "react";
 import { ColumnProps, Table } from "react-fluid-table";
 import { InlineCode } from "./components/library/InlineCode";
 
-interface PropData {
+type PropData = {
   prop: string;
   type: string;
   description: React.ReactNode;
@@ -10,7 +10,7 @@ interface PropData {
   content?: () => React.ReactNode;
   expandedType?: () => React.ReactNode;
   default?: string | number;
-}
+};
 
 const columns: ColumnProps<PropData>[] = [
   {
@@ -147,7 +147,7 @@ const ColumnPropsTable = () => (
     data={data}
     columns={columns}
     tableHeight={400}
-    className="border border-solid border-[#ececec] [&_.rft-cell:last]:border-none [&_.rft-cell]:border-r [&_.rft-cell]:border-solid [&_.rft-cell]:border-r-[#ececec] [&_.rft-header-cell-text]:text-[#ff79c5] [&_.rft-header-cell:last]:border-none [&_.rft-header-cell]:border-r [&_.rft-header-cell]:border-solid [&_.rft-header-cell]:border-r-[#ececec] [&_.rft-header]:bg-[#282a36] [&_.rft-row-container]:border-b [&_.rft-row-container]:border-b-[#ececec] last:[&_.rft-row-container]:border-b-0"
+    className="border border-solid border-[#ececec] [&_.rft-cell:last]:border-none [&_.rft-cell]:border-r [&_.rft-cell]:border-solid [&_.rft-cell]:border-r-[#ececec] [&_.rft-header-cell-text]:text-[#ff79c5] [&_.rft-header-cell:last]:border-none [&_.rft-header-cell]:border-r [&_.rft-header-cell]:border-solid [&_.rft-header-cell]:border-r-[#ececec] [&_.rft-header]:bg-[#282a36] [&_.rft-row]:border-b [&_.rft-row]:border-b-[#ececec] last:[&_.rft-row]:border-b-0"
   />
 );
 

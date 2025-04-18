@@ -101,17 +101,17 @@ const Controlled = ({ data, height, columns: variableColumns }: ControlledProps)
   );
 };
 
-interface ToggleType {
+type ToggleType = {
   data: boolean;
   height: boolean;
   columns: boolean;
-}
+};
 
-interface DataType {
+type DataType = {
   data: TestData[];
   height: number;
   columns: ColumnProps<TestData>[];
-}
+};
 
 type keyM = keyof ToggleType;
 type keyD = keyof DataType;
