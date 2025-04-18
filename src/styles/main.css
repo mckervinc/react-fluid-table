@@ -2,6 +2,7 @@
   display: grid;
   overflow: auto;
   contain: strict;
+  box-sizing: content-box;
   grid-template-rows: auto 1fr auto;
 }
 

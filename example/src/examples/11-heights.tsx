@@ -56,9 +56,9 @@ const Example11 = () => {
   const ref = useRef(0);
   const [size, setSize] = useState(1);
   const [running, setRunning] = useState(false);
-  const [tableHeight, setTableHeight] = useState(400);
+  const [tableHeight, setTableHeight] = useState(0);
   const [minTableHeight, setMinTableHeight] = useState(0);
-  const [maxTableHeight, setMaxTableHeight] = useState(0);
+  const [maxTableHeight, setMaxTableHeight] = useState(400);
 
   useEffect(() => {
     const m = ref.current;
