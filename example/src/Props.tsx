@@ -190,12 +190,6 @@ const data: PropData[] = [
     description: "optional click handler for the rows in the table"
   },
   {
-    prop: "rowRenderer",
-    type: "(props: CellElement) => Element",
-    description:
-      "A custom element used to wrap an entire row. This provides another way of customizing each row of the table"
-  },
-  {
     prop: "footerComponent",
     type: "(props: FooterProps) => Element",
     description: "You can provide an optional footer"
@@ -295,7 +289,7 @@ const Props = () => {
         data={data}
         columns={columns}
         tableHeight={500}
-        className="border border-solid border-[#ececec] [&_.rft-cell:last]:border-none [&_.rft-cell]:border-r [&_.rft-cell]:border-solid [&_.rft-cell]:border-r-[#ececec] [&_.rft-header-cell-text]:text-[#ff79c5] [&_.rft-header-cell:last]:border-none [&_.rft-header-cell]:border-r [&_.rft-header-cell]:border-solid [&_.rft-header-cell]:border-r-[#ececec] [&_.rft-header]:bg-[#282a36] [&_.rft-row-container]:border-b [&_.rft-row-container]:border-b-[#ececec] last:[&_.rft-row-container]:border-b-0"
+        className="border border-solid border-[#ececec] [&_.rft-cell:last]:border-none [&_.rft-cell]:border-r [&_.rft-cell]:border-solid [&_.rft-cell]:border-r-[#ececec] [&_.rft-header-cell-text]:text-[#ff79c5] [&_.rft-header-cell:last]:border-none [&_.rft-header-cell]:border-r [&_.rft-header-cell]:border-solid [&_.rft-header-cell]:border-r-[#ececec] [&_.rft-header]:bg-[#282a36] [&_.rft-row]:border-b [&_.rft-row]:border-b-[#ececec] last:[&_.rft-row]:border-b-0"
       />
       <div className="my-8 border-b border-t border-solid border-b-[rgba(255,255,255,.1)] border-t-[rgba(34,36,38,.15)]" />
       <div className="mb-3.5 mt-6 border-b-2 border-solid border-[#db2828] pb-1 text-lg font-bold leading-[1.28571429em] text-[#db2828]">

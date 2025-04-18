@@ -1,5 +1,5 @@
-import React, { forwardRef, JSX, memo, useCallback } from "react";
-import { ColumnProps, RowRenderProps, SubComponentProps } from "../..";
+import React, { forwardRef, JSX, memo } from "react";
+import { ColumnProps, SubComponentProps } from "../..";
 import Minus from "../svg/minus-circle.svg";
 import Plus from "../svg/plus-circle.svg";
 import { cx } from "../util";
@@ -98,59 +98,15 @@ function BaseTableCell<T>({
 const TableCell = memo(BaseTableCell) as <T>(props: TableCellProps<T>) => React.JSX.Element;
 (TableCell as React.FC).displayName = "TableCell";
 
-type RowComponentProps<T> = {
-  row: T;
-  index: number;
-  className?: string;
-  children: React.ReactNode;
-  style?: React.CSSProperties;
-  onRowClick?: (data: {
-    row: T;
-    index: number;
-    event?: React.MouseEvent<Element, MouseEvent>;
-  }) => void;
-  rowRenderer?: (props: RowRenderProps<T>) => JSX.Element;
-};
-
-function RowComponent<T>({
-  row,
-  index,
-  children,
-  className,
-  onRowClick,
-  style,
-  rowRenderer: RowRenderer
-}: RowComponentProps<T>) {
-  // functions
-  const onContainerClick = useCallback(
-    (event: React.MouseEvent<Element, MouseEvent>) => onRowClick?.({ row, index, event }),
-    [row, index, onRowClick]
-  );
-
-  if (RowRenderer) {
-    return (
-      <RowRenderer row={row} index={index}>
-        {children}
-      </RowRenderer>
-    );
-  }
-
-  return (
-    <div className={className} style={style} onClick={onContainerClick}>
-      {children}
-    </div>
-  );
-}
-
 type RowProps<T> = {
   uuid: string;
   row: T;
   rowKey: string | number;
   index: number;
+  offset: number;
   pixelWidths: number[];
   columns: ColumnProps<T>[];
   isExpanded: boolean;
-  rowHeight?: number;
   onExpand: (
     row: T,
     index: number,
@@ -165,24 +121,22 @@ type RowProps<T> = {
     index: number;
     event?: React.MouseEvent<Element, MouseEvent>;
   }) => void;
-  rowRenderer?: (props: RowRenderProps<T>) => JSX.Element;
 };
 
 function BaseRow<T>(
   {
     uuid,
     index,
+    offset,
     row,
     rowKey,
     columns,
-    rowHeight = 0,
     pixelWidths,
     isExpanded,
     onExpand,
     onRowClick,
     className,
     style = {},
-    rowRenderer,
     subComponent: SubComponent
   }: RowProps<T>,
   ref: React.ForwardedRef<HTMLDivElement>
@@ -192,31 +146,27 @@ function BaseRow<T>(
       ref={ref}
       data-index={index}
       data-row-key={`${uuid}-${rowKey}`}
-      className="rft-row-container"
+      className={cx("rft-row", className)}
+      style={{
+        transform: `translateY(${offset}px)`,
+        ...style
+      }}
+      onClick={event => onRowClick?.({ row, index, event })}
     >
-      <RowComponent
-        row={row}
-        index={index}
-        className={cx("rft-row", className)}
-        style={{ height: rowHeight > 0 ? rowHeight : undefined, ...style }}
-        onRowClick={onRowClick}
-        rowRenderer={rowRenderer}
-      >
-        {columns.map((c, i) => (
-          <TableCell
-            key={`${uuid}-${rowKey}-${i}`}
-            row={row}
-            column={c}
-            index={index}
-            width={pixelWidths[i]}
-            isExpanded={isExpanded}
-            onExpanderClick={e => onExpand(row, index, rowKey, e)}
-            prevWidth={c.frozen ? pixelWidths.slice(0, i).reduce((pv, c) => pv + c, 0) : 0}
-          />
-        ))}
-      </RowComponent>
-      {!SubComponent ? null : (
-        <div className={isExpanded ? undefined : "rft-hidden"}>
+      {columns.map((c, i) => (
+        <TableCell
+          key={`${uuid}-${rowKey}-${i}`}
+          row={row}
+          column={c}
+          index={index}
+          width={pixelWidths[i]}
+          isExpanded={isExpanded}
+          onExpanderClick={e => onExpand(row, index, rowKey, e)}
+          prevWidth={c.frozen ? pixelWidths.slice(0, i).reduce((pv, c) => pv + c, 0) : 0}
+        />
+      ))}
+      {!!SubComponent && (
+        <div className={cx("rft-sub-component", !isExpanded && "rft-hidden")}>
           <SubComponent row={row} index={index} isExpanded={isExpanded} />
         </div>
       )}

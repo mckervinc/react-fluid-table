@@ -23,13 +23,12 @@ const estimateTableHeight = (
   const headerHeight = getElemHeight(header, estimatedHeader, HEADER_HEIGHT);
 
   // find footer height
-  let footerHeight = 0;
-  if (hasFooter) {
-    footerHeight = getElemHeight(findFooterByUuid(uuid), estimatedFooter, FOOTER_HEIGHT);
-  }
+  const footerHeight = hasFooter
+    ? getElemHeight(findFooterByUuid(uuid), estimatedFooter, FOOTER_HEIGHT)
+    : 0;
 
   // calculate border height
-  const table = header?.parentElement?.parentElement;
+  const table = header?.parentElement;
   const borderHeight = table ? table.offsetHeight - table.clientHeight : 0;
 
   // for the rows, calculate the height of all the rows

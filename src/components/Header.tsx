@@ -62,7 +62,6 @@ type HeaderProps<T> = {
   uuid: string;
   columns: ColumnProps<T>[];
   pixelWidths: number[];
-  isScrollHorizontal: boolean;
   className?: string;
   style?: React.CSSProperties;
   sortColumn?: string;
@@ -74,7 +73,6 @@ function BaseHeader<T>(
   {
     uuid,
     columns,
-    isScrollHorizontal,
     pixelWidths,
     className,
     style,
@@ -119,23 +117,22 @@ function BaseHeader<T>(
   return (
     <div
       ref={ref}
-      className={cx("rft-sticky-header", isScrollHorizontal && "scroll")}
+      style={style}
       data-header-key={`${uuid}-header`}
+      className={cx("rft-header", className)}
     >
-      <div className={cx("rft-header-wrapper", isScrollHorizontal && "rft-row-wrapper")}>
-        <div className={cx("rft-header", className)} style={style}>
-          {columns.map((c, i) => (
-            <HeaderCell
-              key={c.key}
-              width={pixelWidths[i]}
-              sortedCol={sortedCol}
-              sortedDir={sortedDir}
-              column={c}
-              onHeaderClick={onHeaderClick}
-              prevWidth={c.frozen ? pixelWidths.slice(0, i).reduce((pv, c) => pv + c, 0) : 0}
-            />
-          ))}
-        </div>
+      <div className="rft-header-row">
+        {columns.map((c, i) => (
+          <HeaderCell
+            key={c.key}
+            width={pixelWidths[i]}
+            sortedCol={sortedCol}
+            sortedDir={sortedDir}
+            column={c}
+            onHeaderClick={onHeaderClick}
+            prevWidth={c.frozen ? pixelWidths.slice(0, i).reduce((pv, c) => pv + c, 0) : 0}
+          />
+        ))}
       </div>
     </div>
   );
