@@ -1,6 +1,6 @@
 .rft {
   display: grid;
-  overflow-y: auto;
+  overflow: auto;
   contain: strict;
   grid-template-rows: auto 1fr auto;
 }
@@ -80,10 +80,7 @@
   width: 1em;
 }
 
-.rft-sub-component {
-  width: 100%;
-}
-
+.rft-sub-component,
 .rft-footer {
   width: 100%;
 }
