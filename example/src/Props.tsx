@@ -190,12 +190,6 @@ const data: PropData[] = [
     description: "optional click handler for the rows in the table"
   },
   {
-    prop: "rowRenderer",
-    type: "(props: CellElement) => Element",
-    description:
-      "A custom element used to wrap an entire row. This provides another way of customizing each row of the table"
-  },
-  {
     prop: "footerComponent",
     type: "(props: FooterProps) => Element",
     description: "You can provide an optional footer"

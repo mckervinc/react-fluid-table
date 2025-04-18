@@ -61,29 +61,6 @@ export type HeaderProps = {
   sortDirection: SortDirection | null;
 };
 
-export type RowRenderProps<T> = {
-  /**
-   * the data for the row
-   */
-  row: T;
-  /**
-   * the index of the row
-   */
-  index: number;
-  /**
-   * required row position styles
-   */
-  style?: CSSProperties;
-  /**
-   * the cells for the row
-   */
-  children: ReactNode;
-  /**
-   * the className for the row-renderer
-   */
-  className?: string;
-};
-
 export type SubComponentProps<T> = {
   /**
    * the data for the row
@@ -358,11 +335,6 @@ export type TableProps<T> = {
     index: number;
     event?: React.MouseEvent<Element, MouseEvent>;
   }) => void;
-  /**
-   * Custom component to wrap a table row. This provides another way of providing
-   * more row customization options.
-   */
-  rowRenderer?: (props: RowRenderProps<T>) => JSX.Element;
 };
 
 /**

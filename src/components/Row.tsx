@@ -1,5 +1,5 @@
 import React, { forwardRef, JSX, memo } from "react";
-import { ColumnProps, RowRenderProps, SubComponentProps } from "../..";
+import { ColumnProps, SubComponentProps } from "../..";
 import Minus from "../svg/minus-circle.svg";
 import Plus from "../svg/plus-circle.svg";
 import { cx } from "../util";
@@ -121,7 +121,6 @@ type RowProps<T> = {
     index: number;
     event?: React.MouseEvent<Element, MouseEvent>;
   }) => void;
-  rowRenderer?: (props: RowRenderProps<T>) => JSX.Element;
 };
 
 function BaseRow<T>(

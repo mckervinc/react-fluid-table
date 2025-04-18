@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 1.4.0
+
+_2025-04-18_
+
+### Breaking
+
+- removed `rowRenderer` functionality.
+- removed `.rft-row-container`, `.rft-outer-container`, and `.rft-inner-container`. as css class names.
+
+### Bugfix
+
+- on certain devices, the background color of the row did not fill the table. This should be resolved.
+- no need for `isHorizontalScroll` hack
+
 ## 1.3.0
 
 _2025-04-01_
