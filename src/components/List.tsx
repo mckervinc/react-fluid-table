@@ -137,7 +137,9 @@ function BaseList<T>(
       // compute
       const headerHeight = getElemHeight(headerRef.current, heightOfHeader, HEADER_HEIGHT);
       const footerHeight = getElemHeight(footerRef.current, heightOfFooter, FOOTER_HEIGHT);
-      return Math.min(headerHeight + bodyHeight! + footerHeight + borderHeight, maxTableHeight);
+      return (
+        Math.min(headerHeight + bodyHeight! + footerHeight + borderHeight * 2, maxTableHeight) + 2
+      );
     }
 
     return estimatedHeight;

@@ -37,7 +37,7 @@ const estimateTableHeight = (
     maxHeight > 0 ? size : Math.min(size || ESTIMATED_NUM_ROWS, ESTIMATED_NUM_ROWS) + 1;
   const bodyHeight = numRows * rowHeight;
 
-  const result = headerHeight + bodyHeight + borderHeight + footerHeight;
+  const result = headerHeight + bodyHeight + borderHeight * 2 + footerHeight;
   return maxHeight > 0 ? Math.min(maxHeight, result) : result;
 };
 

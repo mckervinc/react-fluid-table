@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 1.4.2
+
+_2025-04-18_
+
+### Bugfix
+
+- revert `box-sizing`. This was causing an infinite loop in certain dialogs. Instead we multiply border height by two to fix vertical scroll bars appearing when borders are present and maxTableHeight is specified.
+
 ## 1.4.1
 
 _2025-04-18_
