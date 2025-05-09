@@ -175,10 +175,9 @@ function BaseList<T>(
       minColumnWidth,
       columns
     );
-    if (!arraysMatch(widths, pixelWidths)) {
-      setPixelWidths(widths);
-    }
-  }, [width, remainingCols, fixedWidth, minColumnWidth, pixelWidths, columns]);
+    
+    setPixelWidths(prev => !arraysMatch(widths, prev) ? widths : prev);
+  }, [width, remainingCols, fixedWidth, minColumnWidth, columns]);
 
   // remeasure if the rowHeight changes
   useLayoutEffect(() => {
