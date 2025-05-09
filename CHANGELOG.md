@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 1.4.3
+
+_2025-05-09_
+
+### Bugfix
+
+- there should be slightly less renders when the window changes size
+
 ## 1.4.2
 
 _2025-04-18_
