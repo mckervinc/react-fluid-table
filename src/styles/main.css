@@ -30,6 +30,11 @@
   width: 100%;
 }
 
+.rft-end {
+  position: absolute;
+  width: 100%;
+}
+
 .rft-cell,
 .rft-header-cell {
   box-sizing: border-box;

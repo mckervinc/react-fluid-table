@@ -338,12 +338,16 @@ export type TableProps<T> = {
   /**
    * Function to get more data when you reach the bottom of the table
    */
-  onLoadRows?: (data: { lastRow: T; lastIndex: number }) => Promise<unknown>;
+  onLoadRows?: () => Promise<unknown>;
   /**
    * Number of rows from the bottom to trigger loading more rows. This is ignored if
-   * onLoadRows is not specified. Default: 1
+   * onLoadRows is not specified (default: 1).
    */
   asyncOverscan?: number;
+  /**
+   * optional component that gets rendered at the bottom of the table
+   */
+  endComponent?: (data: { isLoading: boolean }) => ReactNode;
 };
 
 /**

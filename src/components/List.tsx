@@ -72,6 +72,7 @@ function BaseList<T>(
     style = {},
     asyncOverscan = 1,
     minColumnWidth = 80,
+    endComponent: EndComponent,
     height: estimatedHeight,
     headerHeight: heightOfHeader,
     footerHeight: heightOfFooter
@@ -95,7 +96,7 @@ function BaseList<T>(
     [itemKey]
   );
   const virtualizer = useVirtualizer({
-    count: data.length,
+    count: data.length + (EndComponent ? 1 : 0),
     getScrollElement: () => parentRef.current,
     estimateSize: () => rowHeight ?? estimatedRowHeight ?? ROW_HEIGHT,
     getItemKey: index => generateKeyFromRow(data[index], index)
@@ -178,7 +179,7 @@ function BaseList<T>(
     if (lastItem.index >= data.length - asyncOverscan && !loadingMore) {
       setLoadingMore(true);
       try {
-        await onLoadRows({ lastRow: row, lastIndex: lastItem.index });
+        await onLoadRows();
       } finally {
         setLoadingMore(false);
       }
@@ -253,6 +254,23 @@ function BaseList<T>(
       />
       <div className="rft-body" style={{ height: virtualizer.getTotalSize() }}>
         {items.map(({ index, start }) => {
+          const isEndRow = index > data.length - 1;
+          if (isEndRow && !!EndComponent) {
+            const key = `${uuid}-end`;
+            return (
+              <div
+                key={key}
+                ref={virtualizer.measureElement}
+                className="rft-end"
+                data-index={index}
+                data-row-key={key}
+                style={{ transform: `translateY(${start}px)` }}
+              >
+                <EndComponent isLoading={loadingMore} />
+              </div>
+            );
+          }
+
           const row = data[index];
           const fargs = { row, index };
           const key = generateKeyFromRow(row, index);
