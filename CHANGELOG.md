@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 1.5.0
+
+_2025-06-10_
+
+### Features
+
+- added `onLoadRows` prop, which enables infinite loading
+
 ## 1.4.3
 
 _2025-05-09_
