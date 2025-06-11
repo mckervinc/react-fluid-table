@@ -51,6 +51,9 @@ const links = (
     <Link to="/frozen" className="block px-4 py-3 text-[#ffffffe6] hover:bg-[rgba(255,255,255,.08)] hover:text-white">
       Frozen
     </Link>
+    <Link to="/infinite" className="block px-4 py-3 text-[#ffffffe6] hover:bg-[rgba(255,255,255,.08)] hover:text-white">
+      Infinite
+    </Link>
     <Link to="/props" className="block px-4 py-3 text-[#ffffffe6] hover:bg-[rgba(255,255,255,.08)] hover:text-white">
       Table Props
     </Link>

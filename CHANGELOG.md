@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 1.5.0
+
+_2025-06-11_
+
+### Features
+
+- added `onLoadRows` prop, which enables infinite loading
+- added `endComponent` prop, which enables a component to be displayed at the end of the table
+
 ## 1.4.3
 
 _2025-05-09_

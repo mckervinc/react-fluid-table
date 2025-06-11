@@ -56,6 +56,7 @@ function BaseList<T>(
     sortDirection,
     expandedRows,
     onRowClick,
+    onLoadRows,
     onExpandRow,
     subComponent,
     className,
@@ -69,7 +70,9 @@ function BaseList<T>(
     maxTableHeight,
     estimatedRowHeight,
     style = {},
+    asyncOverscan = 1,
     minColumnWidth = 80,
+    endComponent: EndComponent,
     height: estimatedHeight,
     headerHeight: heightOfHeader,
     footerHeight: heightOfFooter
@@ -80,7 +83,9 @@ function BaseList<T>(
   const parentRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
+  const [loadingMore, setLoadingMore] = useState(false);
   const prevRowHeight = useRef(rowHeight ?? estimatedRowHeight);
+  const [hasMoreData, setHasMoreData] = useState(true);
   const [widthConstants, setWidthConstants] = useState(findColumnWidthConstants(columns));
   const [pixelWidths, setPixelWidths] = useState<number[]>(() => {
     const { fixedWidth, remainingCols } = widthConstants;
@@ -92,7 +97,7 @@ function BaseList<T>(
     [itemKey]
   );
   const virtualizer = useVirtualizer({
-    count: data.length,
+    count: data.length + (EndComponent ? 1 : 0),
     getScrollElement: () => parentRef.current,
     estimateSize: () => rowHeight ?? estimatedRowHeight ?? ROW_HEIGHT,
     getItemKey: index => generateKeyFromRow(data[index], index)
@@ -165,6 +170,24 @@ function BaseList<T>(
     [expandedCache]
   );
 
+  const lastItemIndex = items.length ? items[items.length - 1].index : null;
+  const onLoadMore = useCallback(async () => {
+    if (!onLoadRows || lastItemIndex == null) {
+      return;
+    }
+
+    if (hasMoreData && lastItemIndex >= data.length - asyncOverscan && !loadingMore) {
+      setLoadingMore(true);
+      try {
+        const remainingData = await onLoadRows();
+        setHasMoreData(remainingData);
+      } finally {
+        setLoadingMore(false);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastItemIndex, data.length, loadingMore, asyncOverscan, hasMoreData]);
+
   // effects
   // update pixel widths every time the width changes
   useLayoutEffect(() => {
@@ -175,8 +198,8 @@ function BaseList<T>(
       minColumnWidth,
       columns
     );
-    
-    setPixelWidths(prev => !arraysMatch(widths, prev) ? widths : prev);
+
+    setPixelWidths(prev => (!arraysMatch(widths, prev) ? widths : prev));
   }, [width, remainingCols, fixedWidth, minColumnWidth, columns]);
 
   // remeasure if the rowHeight changes
@@ -198,6 +221,11 @@ function BaseList<T>(
       setExpandedCache(expandedRows);
     }
   }, [expandedRows]);
+
+  // handle async fetching
+  useEffect(() => {
+    onLoadMore();
+  }, [onLoadMore]);
 
   // provide access to window functions
   useImperativeHandle(ref, () => ({
@@ -227,6 +255,25 @@ function BaseList<T>(
       />
       <div className="rft-body" style={{ height: virtualizer.getTotalSize() }}>
         {items.map(({ index, start }) => {
+          // handle the end component
+          const isEndRow = index > data.length - 1;
+          if (isEndRow && !!EndComponent) {
+            const key = `${uuid}-end`;
+            return (
+              <div
+                key={key}
+                ref={virtualizer.measureElement}
+                className="rft-end"
+                data-index={index}
+                data-row-key={key}
+                style={{ transform: `translateY(${start}px)` }}
+              >
+                <EndComponent isLoading={loadingMore} hasMoreData={hasMoreData} />
+              </div>
+            );
+          }
+
+          // handle remaining rows
           const row = data[index];
           const fargs = { row, index };
           const key = generateKeyFromRow(row, index);

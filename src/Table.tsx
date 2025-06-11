@@ -7,8 +7,6 @@ import { randomString } from "./util";
 function BaseTable<T>(
   {
     id,
-    data,
-    columns,
     rowHeight,
     tableWidth = 0,
     tableHeight = 0,
@@ -17,11 +15,6 @@ function BaseTable<T>(
     minTableHeight = 0,
     maxTableHeight = 0,
     estimatedRowHeight,
-    subComponent,
-    footerComponent,
-    itemKey,
-    onRowClick,
-    onExpandRow,
     ...props
   }: TableProps<T>,
   ref: React.ForwardedRef<TableRef>
@@ -58,29 +51,22 @@ function BaseTable<T>(
   return (
     <AutoSizer
       uuid={uuid}
-      numRows={data.length}
       dimensions={dimensions}
-      hasFooter={!!footerComponent || columns.some(c => !!c.footer)}
+      numRows={props.data.length}
+      hasFooter={!!props.footerComponent || props.columns.some(c => !!c.footer)}
     >
       {({ height, width }) => {
         return (
           <List
             ref={ref}
             uuid={uuid}
-            data={data}
             width={width}
             height={height}
-            columns={columns}
-            itemKey={itemKey}
             rowHeight={rowHeight}
-            onRowClick={onRowClick}
-            onExpandRow={onExpandRow}
             tableHeight={tableHeight}
             maxTableHeight={maxHeight}
             headerHeight={headerHeight}
             footerHeight={footerHeight}
-            subComponent={subComponent}
-            footerComponent={footerComponent}
             estimatedRowHeight={estimatedRowHeight}
             {...props}
           />
