@@ -336,9 +336,11 @@ export type TableProps<T> = {
     event?: React.MouseEvent<Element, MouseEvent>;
   }) => void;
   /**
-   * Function to get more data when you reach the bottom of the table
+   * Function to get more data when you reach the bottom of the table. If this returns
+   * true, then when it reaches the bottom this function will run. If it returns false, then
+   * we have exhausted all remaining data.
    */
-  onLoadRows?: () => Promise<unknown>;
+  onLoadRows?: () => Promise<boolean>;
   /**
    * Number of rows from the bottom to trigger loading more rows. This is ignored if
    * onLoadRows is not specified (default: 1).
@@ -347,7 +349,7 @@ export type TableProps<T> = {
   /**
    * optional component that gets rendered at the bottom of the table
    */
-  endComponent?: (data: { isLoading: boolean }) => ReactNode;
+  endComponent?: (data: { isLoading: boolean; hasMoreData: boolean }) => ReactNode;
 };
 
 /**

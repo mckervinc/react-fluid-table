@@ -7,7 +7,7 @@ _2025-06-11_
 ### Features
 
 - added `onLoadRows` prop, which enables infinite loading
-- added `endComponent` prop, which enables a component to be displayed at the end of the list
+- added `endComponent` prop, which enables a component to be displayed at the end of the table
 
 ## 1.4.3
 

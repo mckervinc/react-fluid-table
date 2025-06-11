@@ -49,6 +49,8 @@ const columns: ColumnProps<TestData>[] = [
   { key: "email", header: "Email", width: 250 }
 ];
 
+const NUM_ROWS = 50;
+
 const Example = () => {
   const [multiplier, setMultiplier] = useState(1);
   const [data, setData] = useState(generateTestData(NUM_ROWS));
@@ -58,6 +60,7 @@ const Example = () => {
 
     setMultiplier(prev => prev + 1);
     setData(generateTestData((multiplier + 1) * NUM_ROWS));
+    return true;
   }, [multiplier]);
 
   return <Table data={data} columns={columns} onLoadRows={() => fetchData()} />;
@@ -77,6 +80,7 @@ const Example13 = () => {
 
     setMultiplier(prev => prev + 1);
     setData(generateTestData((multiplier + 1) * NUM_ROWS));
+    return true;
   }, [multiplier]);
 
   return <Table data={data} columns={columns} onLoadRows={() => fetchData()} />;

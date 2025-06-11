@@ -209,6 +209,24 @@ const data: PropData[] = [
     type: "boolean",
     description: "Controls whether or not the footer is sticky. This does nothing if footerComponent is not specified.",
     default: "false"
+  },
+  {
+    prop: "endComponent",
+    type: "(props: { isLoading: boolean; hasMoreData: boolean; }) => Element",
+    description: "You can provide an optional component that is rendered at the end of the table."
+  },
+  {
+    prop: "onLoadRows",
+    type: "() => Promise<boolean>",
+    description:
+      "This will load more data to the table. This enables infinite scrolling. If the functions returns true, it asssumes more data is available. Returning false means no more data is available."
+  },
+  {
+    prop: "asyncOverscan",
+    type: "number",
+    description:
+      "The number of rows from the bottom of the table that need to be rendered before onLoadRows is triggered.",
+    default: "1"
   }
 ];
 

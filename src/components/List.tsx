@@ -85,6 +85,7 @@ function BaseList<T>(
   const footerRef = useRef<HTMLDivElement>(null);
   const [loadingMore, setLoadingMore] = useState(false);
   const prevRowHeight = useRef(rowHeight ?? estimatedRowHeight);
+  const [hasMoreData, setHasMoreData] = useState(true);
   const [widthConstants, setWidthConstants] = useState(findColumnWidthConstants(columns));
   const [pixelWidths, setPixelWidths] = useState<number[]>(() => {
     const { fixedWidth, remainingCols } = widthConstants;
@@ -169,23 +170,23 @@ function BaseList<T>(
     [expandedCache]
   );
 
-  const lastItem = items.length ? items[items.length - 1] : null;
-  const row = lastItem ? data[lastItem.index] : null;
+  const lastItemIndex = items.length ? items[items.length - 1].index : null;
   const onLoadMore = useCallback(async () => {
-    if (!onLoadRows || !lastItem || !row) {
+    if (!onLoadRows || lastItemIndex == null) {
       return;
     }
 
-    if (lastItem.index >= data.length - asyncOverscan && !loadingMore) {
+    if (hasMoreData && lastItemIndex >= data.length - asyncOverscan && !loadingMore) {
       setLoadingMore(true);
       try {
-        await onLoadRows();
+        const remainingData = await onLoadRows();
+        setHasMoreData(remainingData);
       } finally {
         setLoadingMore(false);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lastItem, data.length, loadingMore, row, asyncOverscan]);
+  }, [lastItemIndex, data.length, loadingMore, asyncOverscan, hasMoreData]);
 
   // effects
   // update pixel widths every time the width changes
@@ -254,6 +255,7 @@ function BaseList<T>(
       />
       <div className="rft-body" style={{ height: virtualizer.getTotalSize() }}>
         {items.map(({ index, start }) => {
+          // handle the end component
           const isEndRow = index > data.length - 1;
           if (isEndRow && !!EndComponent) {
             const key = `${uuid}-end`;
@@ -266,11 +268,12 @@ function BaseList<T>(
                 data-row-key={key}
                 style={{ transform: `translateY(${start}px)` }}
               >
-                <EndComponent isLoading={loadingMore} />
+                <EndComponent isLoading={loadingMore} hasMoreData={hasMoreData} />
               </div>
             );
           }
 
+          // handle remaining rows
           const row = data[index];
           const fargs = { row, index };
           const key = generateKeyFromRow(row, index);
