@@ -56,6 +56,7 @@ function BaseList<T>(
     sortDirection,
     expandedRows,
     onRowClick,
+    onLoadRows,
     onExpandRow,
     subComponent,
     className,
@@ -69,6 +70,7 @@ function BaseList<T>(
     maxTableHeight,
     estimatedRowHeight,
     style = {},
+    asyncOverscan = 1,
     minColumnWidth = 80,
     height: estimatedHeight,
     headerHeight: heightOfHeader,
@@ -80,6 +82,7 @@ function BaseList<T>(
   const parentRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLDivElement>(null);
+  const [loadingMore, setLoadingMore] = useState(false);
   const prevRowHeight = useRef(rowHeight ?? estimatedRowHeight);
   const [widthConstants, setWidthConstants] = useState(findColumnWidthConstants(columns));
   const [pixelWidths, setPixelWidths] = useState<number[]>(() => {
@@ -165,6 +168,24 @@ function BaseList<T>(
     [expandedCache]
   );
 
+  const lastItem = items.length ? items[items.length - 1] : null;
+  const row = lastItem ? data[lastItem.index] : null;
+  const onLoadMore = useCallback(async () => {
+    if (!onLoadRows || !lastItem || !row) {
+      return;
+    }
+
+    if (lastItem.index >= data.length - asyncOverscan && !loadingMore) {
+      setLoadingMore(true);
+      try {
+        await onLoadRows({ lastRow: row, lastIndex: lastItem.index });
+      } finally {
+        setLoadingMore(false);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastItem, data.length, loadingMore, row, asyncOverscan]);
+
   // effects
   // update pixel widths every time the width changes
   useLayoutEffect(() => {
@@ -175,8 +196,8 @@ function BaseList<T>(
       minColumnWidth,
       columns
     );
-    
-    setPixelWidths(prev => !arraysMatch(widths, prev) ? widths : prev);
+
+    setPixelWidths(prev => (!arraysMatch(widths, prev) ? widths : prev));
   }, [width, remainingCols, fixedWidth, minColumnWidth, columns]);
 
   // remeasure if the rowHeight changes
@@ -198,6 +219,11 @@ function BaseList<T>(
       setExpandedCache(expandedRows);
     }
   }, [expandedRows]);
+
+  // handle async fetching
+  useEffect(() => {
+    onLoadMore();
+  }, [onLoadMore]);
 
   // provide access to window functions
   useImperativeHandle(ref, () => ({

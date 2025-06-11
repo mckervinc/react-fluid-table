@@ -17,11 +17,7 @@ function BaseTable<T>(
     minTableHeight = 0,
     maxTableHeight = 0,
     estimatedRowHeight,
-    subComponent,
     footerComponent,
-    itemKey,
-    onRowClick,
-    onExpandRow,
     ...props
   }: TableProps<T>,
   ref: React.ForwardedRef<TableRef>
@@ -71,15 +67,11 @@ function BaseTable<T>(
             width={width}
             height={height}
             columns={columns}
-            itemKey={itemKey}
             rowHeight={rowHeight}
-            onRowClick={onRowClick}
-            onExpandRow={onExpandRow}
             tableHeight={tableHeight}
             maxTableHeight={maxHeight}
             headerHeight={headerHeight}
             footerHeight={footerHeight}
-            subComponent={subComponent}
             footerComponent={footerComponent}
             estimatedRowHeight={estimatedRowHeight}
             {...props}

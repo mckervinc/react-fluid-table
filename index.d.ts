@@ -335,6 +335,15 @@ export type TableProps<T> = {
     index: number;
     event?: React.MouseEvent<Element, MouseEvent>;
   }) => void;
+  /**
+   * Function to get more data when you reach the bottom of the table
+   */
+  onLoadRows?: (data: { lastRow: T; lastIndex: number }) => Promise<unknown>;
+  /**
+   * Number of rows from the bottom to trigger loading more rows. This is ignored if
+   * onLoadRows is not specified. Default: 1
+   */
+  asyncOverscan?: number;
 };
 
 /**

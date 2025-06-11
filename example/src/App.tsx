@@ -13,6 +13,7 @@ import { Example9 } from "./examples/09-scroll";
 import { Example10 } from "./examples/10-footer";
 import { Example11 } from "./examples/11-heights";
 import { Example12 } from "./examples/12-frozen";
+import { Example13 } from "./examples/13-infinite";
 import Layout from "./components/Layout";
 
 const router = createHashRouter([
@@ -66,6 +67,10 @@ const router = createHashRouter([
       {
         path: "/frozen",
         element: <Example12 />
+      },
+      {
+        path: "/infinite",
+        element: <Example13 />
       },
       {
         path: "/props",
