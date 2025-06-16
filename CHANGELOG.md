@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 1.5.1
+
+_2025-06-16_
+
+### Bugfix
+
+- added `hasMoreData` so users can have more control over when loading needs to occur
+
 ## 1.5.0
 
 _2025-06-11_

@@ -70,6 +70,7 @@ function BaseList<T>(
     maxTableHeight,
     estimatedRowHeight,
     style = {},
+    hasMoreData: controlledHasMoreData,
     asyncOverscan = 1,
     minColumnWidth = 80,
     endComponent: EndComponent,
@@ -85,7 +86,7 @@ function BaseList<T>(
   const footerRef = useRef<HTMLDivElement>(null);
   const [loadingMore, setLoadingMore] = useState(false);
   const prevRowHeight = useRef(rowHeight ?? estimatedRowHeight);
-  const [hasMoreData, setHasMoreData] = useState(true);
+  const [hasMoreData, setHasMoreData] = useState(controlledHasMoreData ?? true);
   const [widthConstants, setWidthConstants] = useState(findColumnWidthConstants(columns));
   const [pixelWidths, setPixelWidths] = useState<number[]>(() => {
     const { fixedWidth, remainingCols } = widthConstants;
@@ -105,6 +106,7 @@ function BaseList<T>(
 
   // constants
   const items = virtualizer.getVirtualItems();
+  const hasNextPage = controlledHasMoreData ?? hasMoreData;
   const { measure: recalculate, measurementsCache } = virtualizer;
   const { fixedWidth, remainingCols } = widthConstants;
 
@@ -176,17 +178,19 @@ function BaseList<T>(
       return;
     }
 
-    if (hasMoreData && lastItemIndex >= data.length - asyncOverscan && !loadingMore) {
+    if (hasNextPage && lastItemIndex >= data.length - asyncOverscan && !loadingMore) {
       setLoadingMore(true);
       try {
         const remainingData = await onLoadRows();
-        setHasMoreData(remainingData);
+        if (controlledHasMoreData == null) {
+          setHasMoreData(remainingData);
+        }
       } finally {
         setLoadingMore(false);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lastItemIndex, data.length, loadingMore, asyncOverscan, hasMoreData]);
+  }, [lastItemIndex, data.length, loadingMore, asyncOverscan, hasNextPage, controlledHasMoreData]);
 
   // effects
   // update pixel widths every time the width changes
@@ -268,7 +272,7 @@ function BaseList<T>(
                 data-row-key={key}
                 style={{ transform: `translateY(${start}px)` }}
               >
-                <EndComponent isLoading={loadingMore} hasMoreData={hasMoreData} />
+                <EndComponent isLoading={loadingMore} hasMoreData={hasNextPage} />
               </div>
             );
           }

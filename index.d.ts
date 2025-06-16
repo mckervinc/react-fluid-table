@@ -342,6 +342,11 @@ export type TableProps<T> = {
    */
   onLoadRows?: () => Promise<boolean>;
   /**
+   * boolean to determine if there is more data to be loaded. If omitted, then the
+   * result of `onLoadRows` determines this.
+   */
+  hasMoreData?: boolean;
+  /**
    * Number of rows from the bottom to trigger loading more rows. This is ignored if
    * onLoadRows is not specified (default: 1).
    */
