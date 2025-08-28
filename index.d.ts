@@ -74,6 +74,10 @@ export type SubComponentProps<T> = {
    * whether or not the row is expanded
    */
   isExpanded: boolean;
+  /**
+   * exposes the widths of each column to the sub component
+   */
+  widths: number[];
 };
 
 export type FooterProps<T> = {

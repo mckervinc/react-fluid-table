@@ -167,7 +167,7 @@ function BaseRow<T>(
       ))}
       {!!SubComponent && (
         <div className={cx("rft-sub-component", !isExpanded && "rft-hidden")}>
-          <SubComponent row={row} index={index} isExpanded={isExpanded} />
+          <SubComponent row={row} index={index} isExpanded={isExpanded} widths={pixelWidths} />
         </div>
       )}
     </div>
