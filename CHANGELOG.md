@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 1.5.2
+
+_2025-08-28_
+
+### Features
+
+- added `widths` prop to the SubComponent
+
 ## 1.5.1
 
 _2025-06-16_
