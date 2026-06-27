@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.0.0
+
+_2026-06-27_
+
+### Other
+
+- **BREAKING** - node >= 20 is required. Moves build to tsup.
+
 ## 1.5.2
 
 _2025-08-28_
