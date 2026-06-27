@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { useResizeDetector } from "react-resize-detector";
 import { ESTIMATED_NUM_ROWS, FOOTER_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT } from "./constants";
+import type { AutoSizerResizerProps } from "./types";
 import { findFooterByUuid, findHeaderByUuid, getElemHeight } from "./util";
 
 type EstimatedArgs = {
@@ -58,6 +59,7 @@ type AutoSizerProps = {
   numRows: number;
   dimensions: AutoSizerDimensions;
   children: ({ height, width }: { height: number; width: number }) => React.ReactNode;
+  resizerProps?: AutoSizerResizerProps;
 };
 
 /**
@@ -66,14 +68,14 @@ type AutoSizerProps = {
  * to generate its own height. This uses ResizeObserver to observe the
  * container when it changes in order to provide the correct height
  */
-const AutoSizer = ({ uuid, hasFooter, numRows, dimensions, children }: AutoSizerProps) => {
-  // hooks
-  const {
-    ref,
-    width: containerWidth = 0,
-    height: containerHeight = 0
-  } = useResizeDetector<HTMLDivElement>();
-
+const AutoSizer = ({
+  uuid,
+  hasFooter,
+  numRows,
+  dimensions,
+  children,
+  resizerProps = {}
+}: AutoSizerProps) => {
   // instance
   const {
     rowHeight,
@@ -85,6 +87,19 @@ const AutoSizer = ({ uuid, hasFooter, numRows, dimensions, children }: AutoSizer
     maxTableHeight,
     estimatedRowHeight
   } = dimensions;
+
+  // hooks
+  const isFluidHeight = tableHeight <= 0 && minTableHeight <= 0 && maxTableHeight <= 0;
+  const {
+    ref,
+    width: containerWidth = 0,
+    height: containerHeight = 0
+  } = useResizeDetector<HTMLDivElement>({
+    handleHeight: !isFluidHeight,
+    refreshMode: "throttle",
+    refreshRate: 16,
+    ...resizerProps
+  });
 
   // calculate the initial height of the table
   const height = useMemo(() => {

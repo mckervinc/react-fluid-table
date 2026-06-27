@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useCallback, useEffect, useState } from "react";
-import { ColumnProps, SortDirection } from "../types";
+import type { ColumnProps, SortDirection } from "../types";
 import { cx } from "../util";
 
 type HeaderCellProps<T> = {

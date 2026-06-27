@@ -8,6 +8,7 @@ function BaseTable<T>(
   {
     id,
     rowHeight,
+    autoSizerProps,
     tableWidth = 0,
     tableHeight = 0,
     footerHeight = 0,
@@ -53,6 +54,7 @@ function BaseTable<T>(
       uuid={uuid}
       dimensions={dimensions}
       numRows={props.data.length}
+      resizerProps={autoSizerProps}
       hasFooter={!!props.footerComponent || props.columns.some(c => !!c.footer)}
     >
       {({ height, width }) => {

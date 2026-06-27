@@ -1,6 +1,6 @@
 {
   "name": "react-fluid-table",
-  "version": "2.0.0",
+  "version": "1.5.3",
   "description": "A React table inspired by @tanstack/react-virtual",
   "author": "Mckervin Ceme <mckervinc@live.com>",
   "license": "MIT",

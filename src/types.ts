@@ -1,4 +1,5 @@
-import { CSSProperties, JSX, ReactNode } from "react";
+import type { CSSProperties, JSX, ReactNode } from "react";
+import type { RefreshModeType, RefreshOptionsType } from "react-resize-detector";
 
 export type SortDirection = "ASC" | "DESC";
 
@@ -175,6 +176,15 @@ export type ColumnProps<T> = {
   footer?: (props: FooterCellProps<T>) => ReactNode | JSX.Element;
 };
 
+export type AutoSizerResizerProps = {
+  handleHeight?: boolean;
+  handleWidth?: boolean;
+  refreshMode?: RefreshModeType;
+  refreshRate?: number;
+  refreshOptions?: RefreshOptionsType;
+  observerOptions?: ResizeObserverOptions;
+};
+
 export type TableRef = {
   /**
    * scrolls to a specific pixel offset
@@ -297,8 +307,7 @@ export type TableProps<T> = {
    * or row and returns a boolean.
    */
   expandedRows?:
-    | { [x: string | number]: boolean }
-    | ((value: { row: T; index: number }) => boolean);
+    { [x: string | number]: boolean } | ((value: { row: T; index: number }) => boolean);
   /**
    * called when a row is expanded
    * @param value information about the row that is expanded/shrunk
@@ -359,4 +368,9 @@ export type TableProps<T> = {
    * optional component that gets rendered at the bottom of the table
    */
   endComponent?: (data: { isLoading: boolean; hasMoreData: boolean }) => ReactNode;
+  /**
+   * This is an advanced feature that allows you to pass in props to the AutoSizer component.
+   * This is useful if you want to customize the behavior of the AutoSizer, such as changing the refresh rate or mode.
+   */
+  autoSizerProps?: AutoSizerResizerProps;
 };

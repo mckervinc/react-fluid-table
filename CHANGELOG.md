@@ -1,8 +1,12 @@
 # CHANGELOG
 
-## 2.0.0
+## 1.5.3
 
 _2026-06-27_
+
+## Features
+
+- added `autoSizerProps` to tweak the underlying react-resize-observer.
 
 ### Other
 
