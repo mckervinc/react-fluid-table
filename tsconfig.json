@@ -1,28 +1,20 @@
 {
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "allowSyntheticDefaultImports": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "noUnusedLocals": true,
     "noImplicitAny": true,
-    "declarationDir": "dist/types",
-    "declaration": true,
+    "rootDir": "./src",
     "target": "ES2022",
     "module": "esnext",
     "strict": true,
     "jsx": "react"
   },
-  "include": [
-    "index.d.ts",
-    "custom.d.ts",
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "example",
-    "dist"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "example", "dist"]
 }

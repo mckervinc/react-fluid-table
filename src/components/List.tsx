@@ -9,7 +9,7 @@ import React, {
   useRef,
   useState
 } from "react";
-import { ScrollAlignment, TableProps, TableRef } from "../..";
+import { ScrollAlignment, TableProps, TableRef } from "../types";
 import { FOOTER_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT } from "../constants";
 import {
   arraysMatch,

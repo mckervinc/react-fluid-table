@@ -1,4 +1,4 @@
-import { ColumnProps } from "..";
+import { ColumnProps } from "./types";
 
 /**
  * combines multiple classNames conditionally

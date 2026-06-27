@@ -1,7 +1,7 @@
 import React, { forwardRef, JSX, memo } from "react";
-import { ColumnProps, SubComponentProps } from "../..";
-import Minus from "../svg/minus-circle.svg";
-import Plus from "../svg/plus-circle.svg";
+import MinusIcon from "../icons/MinusIcon";
+import PlusIcon from "../icons/PlusIcon";
+import { ColumnProps, SubComponentProps } from "../types";
 import { cx } from "../util";
 
 type TableCellProps<T> = {
@@ -38,7 +38,7 @@ function BaseTableCell<T>({
       typeof contentClassname === "function" ? contentClassname({ row, index }) : contentClassname;
 
     if (typeof column.expander === "boolean") {
-      const Logo = isExpanded ? Minus : Plus;
+      const Logo = isExpanded ? MinusIcon : PlusIcon;
       const cellStyle =
         (typeof contentStyle === "function" ? contentStyle({ row, index }) : contentStyle) || {};
 

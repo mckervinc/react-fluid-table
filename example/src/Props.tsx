@@ -4,7 +4,7 @@ import { faCheckCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { ColumnProps, Table } from "react-fluid-table";
-import typeString from "react-fluid-table/index.d.ts?raw";
+import typeString from "../../src/types.ts?raw";
 import ColumnPropsTable from "./ColumnProps";
 import { Snippet } from "./components/Snippet";
 import { InlineCode } from "./components/library/InlineCode";

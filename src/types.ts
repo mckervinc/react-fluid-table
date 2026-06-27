@@ -360,10 +360,3 @@ export type TableProps<T> = {
    */
   endComponent?: (data: { isLoading: boolean; hasMoreData: boolean }) => ReactNode;
 };
-
-/**
- * A virtualized table built on top of `@tanstack/react-virtual`.
- */
-export const Table: <T>(
-  props: TableProps<T> & { ref?: React.RefObject<TableRef | null> }
-) => JSX.Element;

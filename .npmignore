@@ -14,10 +14,10 @@ node_modules
 
 # builds
 build
-dist
 .rpt2_cache
 stats.html
 tsconfig.json
+tsup.config.ts
 
 # logs
 npm-debug.log*
@@ -25,8 +25,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # misc
-rollup.config.js
-.babelrc
 .DS_Store
 .env
 .env.local
