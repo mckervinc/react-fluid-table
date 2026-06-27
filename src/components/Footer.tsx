@@ -1,5 +1,5 @@
 import React, { forwardRef, memo } from "react";
-import { ColumnProps, FooterProps } from "../..";
+import { ColumnProps, FooterProps } from "../types";
 import { cx } from "../util";
 
 type InnerFooterCellProps<T> = {

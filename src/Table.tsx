@@ -1,5 +1,5 @@
 import React, { forwardRef, useMemo, useState } from "react";
-import { TableProps, TableRef } from "../index";
+import { TableProps, TableRef } from "./types";
 import AutoSizer from "./AutoSizer";
 import List from "./components/List";
 import { randomString } from "./util";
@@ -8,6 +8,7 @@ function BaseTable<T>(
   {
     id,
     rowHeight,
+    autoSizerProps,
     tableWidth = 0,
     tableHeight = 0,
     footerHeight = 0,
@@ -53,6 +54,7 @@ function BaseTable<T>(
       uuid={uuid}
       dimensions={dimensions}
       numRows={props.data.length}
+      resizerProps={autoSizerProps}
       hasFooter={!!props.footerComponent || props.columns.some(c => !!c.footer)}
     >
       {({ height, width }) => {
@@ -76,6 +78,9 @@ function BaseTable<T>(
   );
 }
 
+/**
+ * A virtualized table built on top of `@tanstack/react-virtual`.
+ */
 const Table = forwardRef(BaseTable) as <T>(
   props: TableProps<T> & { ref?: React.ForwardedRef<TableRef> }
 ) => React.JSX.Element;
